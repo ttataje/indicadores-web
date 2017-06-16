@@ -1,0 +1,115 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+	<meta name="robots" content="noindex,follow">
+	<title>Sistema de Gesti&oacute;n de Indicadores</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+	<link rel="stylesheet" type="text/css" href="css\default.css">
+	<link rel="stylesheet" type="text/css" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.min.css" crossorigin="anonymous">
+	<link rel="stylesheet" type="text/css" href="css\common_config.css">
+	<link rel="stylesheet" type="text/css" href="css\status_config.css">
+	<link rel="stylesheet" type="text/css" href="css\login.css">
+	<link rel="stylesheet" type="text/css" href="css\dropzone.css">
+	<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" crossorigin="anonymous">
+	<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" crossorigin="anonymous">
+	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400" crossorigin="anonymous">
+	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.43/css/bootstrap-datetimepicker.min.css" crossorigin="anonymous">
+	<link rel="stylesheet" type="text/css" href="css\ace.min.css">
+	<link rel="stylesheet" type="text/css" href="css\ace-mantis.css">
+	<link rel="stylesheet" type="text/css" href="css\ace-skins.min.css">
+	<script type="text/javascript" src="javascript_config.php"></script>
+	<script type="text/javascript" src="javascript_translations.php"></script>
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js" integrity="sha256-xNjb53/rY+WmG+4L6tTl9m6PpqknWZvRt0rO1SRnJzw=" crossorigin="anonymous"></script>
+	<script type="text/javascript" src="js\dropzone.min.js"></script>
+	<script type="text/javascript" src="js\common.js"></script>
+	<link rel="shortcut icon" href="images\favicon.ico" type="image/x-icon">
+	<link rel="search" type="application/opensearchdescription+xml" title="MantisBT: Text Search" href="browser_search_plugin.php?type=text">
+	<link rel="search" type="application/opensearchdescription+xml" title="MantisBT: Issue Id" href="browser_search_plugin-1.php?type=id">
+	<script type="text/javascript" src="javascript_config.php"></script>
+	<script type="text/javascript" src="javascript_translations.php"></script>
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js" integrity="sha256-xNjb53/rY+WmG+4L6tTl9m6PpqknWZvRt0rO1SRnJzw=" crossorigin="anonymous"></script>
+	<script type="text/javascript" src="js\dropzone.min.js"></script>
+	<script type="text/javascript" src="js\common.js"></script>
+</head>
+<body class="login-layout light-login"><div class="main-container" id="main-container">
+<div class="main-content">
+<div class="row">
+<div class="col-md-offset-3 col-md-6 col-sm-10 col-sm-offset-1">
+	<div id="login-div" class="login-container">
+		<div class="space-12 hidden-480"></div>
+		<a href="my_view_page.htm">
+			<h1 class="center white">
+				<img src="images\regionica_logo.png">
+			</h1>
+		</a>
+		<div class="space-24 hidden-480"></div>
+
+<div class="position-relative">
+	<div class="signup-box visible widget-box no-border" id="login-box">
+		<div class="widget-body">
+			<div class="widget-main">
+				<h4 class="header lighter bigger">
+					<i class="ace-icon fa fa-sign-in"></i>
+					 Inicio de sesi&oacute;n</h4>
+				<div class="space-10"></div>
+<!-- Login Form BEGIN -->
+	<form id="login-form" method="post" action="./my_view_page.html">
+		<fieldset>
+
+			<input type="hidden" name="return" value="view_all_bug_page.php">
+			<label for="username" class="block clearfix">
+				<span class="block input-icon input-icon-right">
+					<input id="username" name="username" type="text" placeholder="Nombre de usuario" size="32" maxlength="191" value="" class="form-control autofocus">
+					<i class="ace-icon fa fa-user"></i>
+				</span>
+			</label>
+			<label for="password" class="block clearfix">
+				<span class="block input-icon input-icon-right">
+					<input id="password" name="password" type="password" placeholder="Contraseña" size="32" maxlength="1024" class="form-control ">
+					<i class="ace-icon fa fa-lock"></i>
+				</span>
+			</label>
+			<div class="space-10"></div>
+
+			<input type="submit" class="width-40 pull-right btn btn-success btn-inverse bigger-110" value="iniciar sesión">
+			<div class="clearfix"></div>
+			</fieldset>
+	</form>
+
+	<!-- Login Form END -->
+
+</div>
+
+
+		</div>
+</div>
+</div>
+</div>
+</div>
+
+</div>
+</div>
+<div class="clearfix"></div>
+<div class="space-20"></div>
+<div class="footer noprint">
+<div class="footer-inner">
+<div class="footer-content">
+<div class="col-md-6 col-xs-12 no-padding">
+
+</div>
+</div>
+</div>
+</div>
+</div>
+	<script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha256-KXn5puMvxCw+dAYznun+drMdG1IFl3agK0p/pqT9KAo=" crossorigin="anonymous"></script>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.15.2/moment-with-locales.min.js" integrity="sha256-K+AZsAFjiBd4piqBmFzaxDsiQiHfREubm1ExNGW1JIA=" crossorigin="anonymous"></script>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.43/js/bootstrap-datetimepicker.min.js" integrity="sha256-I8vGZkA2jL0PptxyJBvewDVqNXcgIhcgeqi+GD/aw34=" crossorigin="anonymous"></script>
+	<script type="text/javascript" src="js\ace-extra.min.js"></script>
+	<script type="text/javascript" src="js\ace-elements.min.js"></script>
+	<script type="text/javascript" src="js\ace.min.js"></script>
+</body>
+</html>
