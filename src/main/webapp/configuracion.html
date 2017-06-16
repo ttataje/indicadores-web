@@ -2,9 +2,10 @@
 <html>
 <head>
 	<meta http-equiv="Content-type" content="text/html; charset=utf-8">
-	<title>Mi Cuenta - La Fiduciaria</title>
-<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+	<meta name="robots" content="noindex,follow">
+	<title>Configuraci&oacute;n - Sistema de Gesti&oacute;n de Indicadores</title>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
 	<link rel="stylesheet" type="text/css" href="css\default.css">
 	<link rel="stylesheet" type="text/css" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.min.css" crossorigin="anonymous">
 	<link rel="stylesheet" type="text/css" href="css\common_config.css">
@@ -20,8 +21,6 @@
 	<link rel="shortcut icon" href="images\favicon.ico" type="image/x-icon">
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js" integrity="sha256-xNjb53/rY+WmG+4L6tTl9m6PpqknWZvRt0rO1SRnJzw=" crossorigin="anonymous"></script>
-	<script type="text/javascript" src="js\dropzone.min.js"></script>
-	<script type="text/javascript" src="js\common.js"></script>
 </head>
 <body class="skin-3">
 	<div id="navbar" class="navbar navbar-default navbar-collapse navbar-fixed-top noprint">
@@ -30,23 +29,13 @@
 		<span class="sr-only">Toggle sidebar</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>
 	</button>
 	<div class="navbar-header">
-		<a href="my_view_page.htm" class="navbar-brand"><span class="smaller-75"> La Fiduciaria </span></a>
+		<a href="#" class="navbar-brand"><span class="smaller-75"> Sistema de Gesti&oacute;n de Indicadores </span></a>
 		<button type="button" class="navbar-toggle navbar-toggle-img collapsed pull-right hidden-sm hidden-md hidden-lg" data-toggle="collapse" data-target=".navbar-buttons,.navbar-menu">
 			<span class="sr-only">Toggle user menu</span><img class="nav-user-photo" src="https://secure.gravatar.com/avatar/6961e2f6353cdc06d6f2b33a67d8ff72?d=identicon&amp;r=G&amp;s=32" alt="Administrador">
 		</button>
 	</div>
 	<div class="navbar-buttons navbar-header navbar-collapse collapse">
 		<ul class="nav ace-nav">
-			<li class="hidden-sm hidden-xs">
-			<div class="btn-group btn-corner padding-right-8 padding-left-8">
-				<a class="btn btn-primary btn-sm" href="./reportar_documento.html">
-					<i class="fa fa-edit"></i> Registrar Documento
-				</a><!--
-				<a class="btn btn-primary btn-sm" href="manage_user_create_page.htm">
-					<i class="fa fa-user-plus"></i> Invitar usuarios
-				</a>-->
-			</div>
-			</li>
 			<li class="grey">
 				<a data-toggle="dropdown" href="#" class="dropdown-toggle">
 					<img class="nav-user-photo" src="https://secure.gravatar.com/avatar/6961e2f6353cdc06d6f2b33a67d8ff72?d=identicon&amp;r=G&amp;s=32" alt="administrador">
@@ -54,57 +43,45 @@
 					<i class="ace-icon fa fa-angle-down"></i>
 				</a>
 				<ul class="user-menu dropdown-menu dropdown-menu-right dropdown-yellow dropdown-caret dropdown-close">
-					<li><a href="./crear_cuenta.html"><i class="ace-icon fa fa-user"> </i> Mi cuenta</a></li>
+					<li><a href="./usuario.html"><i class="ace-icon fa fa-user"> </i> Mi cuenta</a></li>
 					<li class="divider"></li>
 					<li><a href="./index.html"><i class="ace-icon fa fa-sign-out"> </i> Salir</a></li>
 				</ul>
 			</li>
-			<li class="grey">
-				<a id="help-widget" href="http://support.mantishub.com/hc/en-us/" target="blank"><i class="ace-icon fa fa fa-question bigger-150"></i></a></li></ul></div></div></div><div class="main-container" id="main-container">
-	<div id="sidebar" class="sidebar sidebar-fixed responsive compact "><ul class="nav nav-list">
+			</ul>
+			</div>
+		</div>
+	</div>
+	<div class="main-container" id="main-container">
+	<div id="sidebar" class="sidebar sidebar-fixed responsive compact ">
+	<ul class="nav nav-list">
 		<li>
-		<a href="./my_view_page.html">
-		<i class="menu-icon fa fa-dashboard"></i>
-		<span class="menu-text"> Mi Vista </span>
-		</a>
-		<b class="arrow"></b>
+			<a href="./my_view_page.html">
+				<i class="menu-icon fa fa-cubes"></i>
+				<span class="menu-text"> Vista General </span>
+			</a>
+			<b class="arrow"></b>
 		</li>
 		<li>
-		<a href="./ver_documento.html">
-		<i class="menu-icon fa fa-list-alt"></i>
-		<span class="menu-text"> Ver Documentos </span>
-		</a>
-		<b class="arrow"></b>
-		</li>
-		<li>
-		<a href="./listar_aprobados.html">
-		<i class="menu-icon fa fa-check-square-o"></i>
-		<span class="menu-text"> Aprobados </span>
-		</a>
-		<b class="arrow"></b>
-		</li>
-		<li>
-		<a href="./listar_pendiente.html">
-		<i class="menu-icon fa fa-exclamation-circle"></i>
-		<span class="menu-text"> Pendientes </span>
-		</a>
-		<b class="arrow"></b>
-		</li>
-		<li>
-		<a href="./reportar_documento.html">
-		<i class="menu-icon fa fa-edit"></i>
-		<span class="menu-text"> Registrar documento </span>
-		</a>
-		<b class="arrow"></b>
+			<a href="./registro_indicadores.html">
+				<i class="menu-icon fa fa-tachometer"></i>
+				<span class="menu-text"> Registro Indicadores </span>
+			</a>
+			<b class="arrow"></b>
 		</li>
 		<li class="active">
-		<a href="./configuracion.html">
-		<i class="menu-icon fa fa-gears"></i>
-		<span class="menu-text"> Configuración </span>
-		</a>
-	<b class="arrow"></b>
-	</li>
-</ul><div id="sidebar" class="sidebar-toggle sidebar-collapse"><i data-icon2="ace-icon fa fa-angle-double-right" data-icon1="ace-icon fa fa-angle-double-left" class="ace-icon fa fa-angle-double-left"></i></div></div><div class="main-content">
+			<a href="./configuracion.html">
+				<i class="menu-icon fa fa-gears"></i>
+				<span class="menu-text"> Configuración </span>
+			</a>
+			<b class="arrow"></b>
+		</li>
+	</ul>
+	<div id="sidebar" class="sidebar-toggle sidebar-collapse">
+		<i data-icon2="ace-icon fa fa-angle-double-right" data-icon1="ace-icon fa fa-angle-double-left" class="ace-icon fa fa-angle-double-left"></i>
+	</div>
+</div>
+<div class="main-content">
 <div id="breadcrumbs" class="breadcrumbs noprint">
 <ul class="breadcrumb">
   <li><i class="fa fa-user home-icon active"></i>  <a href="./crear_cuenta.html">administrador ( Telly Tataje ) </a>

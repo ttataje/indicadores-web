@@ -3,9 +3,9 @@
 <head>
 	<meta http-equiv="Content-type" content="text/html; charset=utf-8">
 	<meta name="robots" content="noindex,follow">
-	<title>Mi Vista - Region Ica - Indicadores</title>
-<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+	<title>Registro - Region Ica - Indicadores</title>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
 	<link rel="stylesheet" type="text/css" href="css\default.css">
 	<link rel="stylesheet" type="text/css" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.min.css" crossorigin="anonymous">
 	<link rel="stylesheet" type="text/css" href="css\common_config.css">
@@ -22,6 +22,14 @@
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js" integrity="sha256-xNjb53/rY+WmG+4L6tTl9m6PpqknWZvRt0rO1SRnJzw=" crossorigin="anonymous"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
+	<style>
+    canvas {
+        -moz-user-select: none;
+        -webkit-user-select: none;
+        -ms-user-select: none;
+    }
+    </style>
 </head>
 <body class="skin-3">
 	<div id="navbar" class="navbar navbar-default navbar-collapse navbar-fixed-top noprint">
@@ -30,7 +38,7 @@
 		<span class="sr-only">Toggle sidebar</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>
 	</button>
 	<div class="navbar-header">
-		<a href="my_view_page.htm" class="navbar-brand"><span class="smaller-75"> Region Ica - Indicadores </span></a>
+		<a href="#" class="navbar-brand"><span class="smaller-75"> Sistema de Gesti&oacute;n de Indicadores </span></a>
 		<button type="button" class="navbar-toggle navbar-toggle-img collapsed pull-right hidden-sm hidden-md hidden-lg" data-toggle="collapse" data-target=".navbar-buttons,.navbar-menu">
 			<span class="sr-only">Toggle user menu</span><img class="nav-user-photo" src="https://secure.gravatar.com/avatar/6961e2f6353cdc06d6f2b33a67d8ff72?d=identicon&amp;r=G&amp;s=32" alt="Administrador">
 		</button>
@@ -53,35 +61,42 @@
 		</div>
 		</div>
 		</div>
-		<div class="main-container" id="main-container">
-	<div id="sidebar" class="sidebar sidebar-fixed responsive compact "><ul class="nav nav-list">
+	<div class="main-container" id="main-container">
+	<div id="sidebar" class="sidebar sidebar-fixed responsive compact ">
+	<ul class="nav nav-list">
 		<li>
-		<a href="./my_view_page.html">
-		<i class="menu-icon fa fa-cubes"></i>
-		<span class="menu-text"> Vista General </span>
-		</a>
-		<b class="arrow"></b>
+			<a href="./my_view_page.html">
+				<i class="menu-icon fa fa-cubes"></i>
+				<span class="menu-text"> Vista General </span>
+			</a>
+			<b class="arrow"></b>
 		</li>
-		<li>
-		<a href="./registro_indicadores.html">
-		<i class="menu-icon fa fa-tachometer"></i>
-		<span class="menu-text"> Registro Indicadores </span>
-		</a>
-		<b class="arrow"></b>
+		<li class="active">
+			<a href="./registro_indicadores.html">
+				<i class="menu-icon fa fa-tachometer"></i>
+				<span class="menu-text"> Registro Indicadores </span>
+			</a>
+			<b class="arrow"></b>
 		</li>
+		<!-- 
 		<li>
-		<a href="./configuracion.html">
-		<i class="menu-icon fa fa-gears"></i>
-		<span class="menu-text"> Configuración </span>
-		</a>
-	<b class="arrow"></b>
-	</li>
-</ul><div id="sidebar" class="sidebar-toggle sidebar-collapse"><i data-icon2="ace-icon fa fa-angle-double-right" data-icon1="ace-icon fa fa-angle-double-left" class="ace-icon fa fa-angle-double-left"></i></div></div><div class="main-content">
+			<a href="./configuracion.html">
+				<i class="menu-icon fa fa-gears"></i>
+				<span class="menu-text"> Configuración </span>
+			</a>
+			<b class="arrow"></b>
+		</li>-->
+	</ul>
+	<div id="sidebar" class="sidebar-toggle sidebar-collapse">
+		<i data-icon2="ace-icon fa fa-angle-double-right" data-icon1="ace-icon fa fa-angle-double-left" class="ace-icon fa fa-angle-double-left"></i>
+	</div>
+</div>
+<div class="main-content">
 <div id="breadcrumbs" class="breadcrumbs noprint">
 	<ul class="breadcrumb">
 	  <li>
 		  <i class="fa fa-user home-icon active"></i>
-		  <a href="./crear_cuenta.html">administrador ( Telly Tataje ) </a>
+		  <a href="./crear_cuenta.html">Administrador ( Telly Tataje ) </a>
 		  <span class="label hidden-xs label-default arrowed">administrador</span>
 	  </li>
 	</ul>
@@ -113,6 +128,38 @@
 <div id="jstree">
 
 </div>
+<!-- Inicio Modal -->
+<div id="modalDIV" class="modal fade">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+      	<table>
+      	<tr>
+      	<td>
+      	<img src="images/regionica_pie.png" height="45" alt="Region Ica">
+      	</td>
+      	<td>
+      	<h4 class="modal-title">titulo</h4>
+      	</td>
+      	<td>
+		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      	</td>
+      	</tr>
+      	</table>
+      </div>
+      <div class="modal-body">
+        <canvas id="chartCanvas"></canvas>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary">Modificar</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Fin Modal -->
 </div>
 </div>
 <div class="widget-toolbox padding-8 clearfix">
@@ -134,7 +181,7 @@
 </div>
 <div class="col-md-6 col-xs-12">
 <div class="pull-right">
-<img src="images\regionica_pie.png" height="35" alt="Region Ica"></a>
+<img src="images\regionica_pie.png" height="35" alt="Region Ica">
 </div>
 </div>
 </div>
@@ -151,45 +198,181 @@
 	<script type="text/javascript" src="js\ace-elements.min.js"></script>
 	<script type="text/javascript" src="js\ace.min.js"></script>
 <script type="text/javascript">
-$(function () { 
+window.chartColors = {
+	red: 'rgb(255, 99, 132)',
+	orange: 'rgb(255, 159, 64)',
+	yellow: 'rgb(255, 205, 86)',
+	green: 'rgb(75, 192, 192)',
+	blue: 'rgb(54, 162, 235)',
+	purple: 'rgb(153, 102, 255)',
+	grey: 'rgb(201, 203, 207)'
+};
+
+window.randomScalingFactor = function() {
+	//return (Math.random() > 0.5 ? 1.0 : -1.0) * Math.round(Math.random() * 100);
+	var num1 = 1000;
+	var num2 = 9999999;
+	return Math.floor(Math.random() * (num2-num1 + 1) + num1);
+};
+	
 var arrayCollection = [{
-"text" : "Region Ica",
-"state" : { "opened" : true },
-"children" : [
-				{"id": 1, "text": "2017", "state" : { "opened" : true }, "type" : "folder", "children": 
-				[
-					{"id": 2, "parent" : 1, "text": "Marzo", "state" : { "opened" : true }, "type" : "folder", "children": 
+	"text" : "Region Ica",
+	"state" : { "opened" : true },
+	"children" : [
+					{"id": 1, "text": "2017", "state" : { "opened" : true }, "type" : "folder", "children": 
 					[
-						{"id": 3, "parent" : 2, "text": "Exportacion", "state" : { "opened" : true }, "type" : "folder", "children": 
+						{"id": 2, "parent" : 1, "text": "Marzo", "state" : { "opened" : true }, "type" : "folder", "children": 
 						[
-							{"id": 4, "parent" : 3, "text": "Por Sectores", "state" : { "opened" : true }, "type" : "folder", "children": 
+							{"id": 3, "parent" : 2, "text": "Exportacion", "state" : { "opened" : true }, "type" : "folder", "children": 
 							[
-								{"id": 5, "parent" : 4, "text": "EXPORTACIONES POR SECTORES ECONÓMICOS 2000-2016 (Millones US$ FOB)","icon" : "glyphicon glyphicon-dashboard", "type" : "file"},
-								{"id": 6, "parent" : 4, "text": "EXPORTACIONES DE LOS SECTORES POR PRODUCTO 2015 (Millones US$ FOB)","icon" : "glyphicon glyphicon-dashboard", "type" : "file"},
-								{"id": 7, "parent" : 4, "text": "Sector Agrícola", "state" : { "opened" : true }, "type" : "folder", "children": 
+								{"id": 4, "parent" : 3, "text": "Por Sectores", "state" : { "opened" : true }, "type" : "folder", "children": 
 								[
-									{"id": 8, "parent" : 7, "text": "EXPORTACIONES AGROPECUARIAS POR PRODUCTO 2015 (Millones US$ FOB)","icon" : "glyphicon glyphicon-dashboard", "type" : "file"},
-									{"id": 9, "parent" : 7, "text": "EXPORTACIONES AGROPECUARIAS POR PRODUCTO 2000-2016 (Millones US$ FOB)","icon" : "glyphicon glyphicon-dashboard", "type" : "file"},
-									{"id": 10, "parent" : 7, "text": "Uvas Frescas", "state" : { "opened" : true }, "type" : "folder", "children": 
+									{"id": 5, "parent" : 4, "text": "EXPORTACIONES POR SECTORES ECONÓMICOS 2000-2016 (Millones US$ FOB)","icon" : "glyphicon glyphicon-dashboard", "type" : "file"},
+									{"id": 6, "parent" : 4, "text": "EXPORTACIONES DE LOS SECTORES POR PRODUCTO 2015 (Millones US$ FOB)","icon" : "glyphicon glyphicon-dashboard", "type" : "file"},
+									{"id": 7, "parent" : 4, "text": "Sector Agrícola", "state" : { "opened" : true }, "type" : "folder", "children": 
 									[
-										{"id": 11, "parent" : 10, "text": "VOLUMEN EXPORTADO (t) Y PRECIO FOB (US$ / kg) DE LA UVA Campañas 00/01-15/16","icon" : "glyphicon glyphicon-dashboard", "type" : "file"},
-										{"id": 12, "parent" : 10, "text": "PRECIOS (US$ / kg) Y VOLÚMENES (t) MENSUALESDE LA DE LA EXPORTACIÓN DE UVA Campañas 14/15-16/17","icon" : "glyphicon glyphicon-dashboard", "type" : "file"},
-										{"id": 13, "parent" : 10, "text": "EXPORTACIONES DE UVA POR PAÍS DE DESTINO Campañas 00/01-15/16 (t)","icon" : "glyphicon glyphicon-dashboard", "type" : "file"},
-										{"id": 14, "parent" : 10, "text": "EXPORTACIONES DE UVA POR EMPRESA EXPORTADORA Campañas 00/01-15/16 (t)","icon" : "glyphicon glyphicon-dashboard", "type" : "file"},
-									]},
-									{"id": 15, "parent" : 7, "text": "Espárragos Frescos", "state" : { "opened" : true }, "type" : "folder", "children": [
-										{"id": 16, "parent" : 15, "text": "VOLUMEN EXPORTADO (t) Y PRECIO FOB (US$ / kg) DEL ESPÁRRAGO FRESCO 2000-2016","icon" : "glyphicon glyphicon-dashboard", "type" : "file"},
-										{"id": 17, "parent" : 15, "text": "PRECIOS (US$ / kg) Y VOLÚMENES (t) MENSUALES DE LA EXPORTACIÓN DE ESPÁRRAGO FRESCO 2014-2016","icon" : "glyphicon glyphicon-dashboard", "type" : "file"},
-										{"id": 18, "parent" : 15, "text": "EXPORTACIONES DE ESPÁRRAGO FRESCO POR PAÍS DE DESTINO 2010-2016 (t)","icon" : "glyphicon glyphicon-dashboard", "type" : "file"},
-										{"id": 19, "parent" : 15, "text": "EXPORTACIONES DE ESPÁRRAGO FRESCO POR EMPRESA EXPORTADORA 2010-2016 (t)","icon" : "glyphicon glyphicon-dashboard", "type" : "file"}
+										{"id": 8, "parent" : 7, "text": "EXPORTACIONES AGROPECUARIAS POR PRODUCTO 2015 (Millones US$ FOB)","icon" : "glyphicon glyphicon-dashboard", "type" : "file"},
+										{"id": 9, "parent" : 7, "text": "EXPORTACIONES AGROPECUARIAS POR PRODUCTO 2000-2016 (Millones US$ FOB)","icon" : "glyphicon glyphicon-dashboard", "type" : "file"},
+										{"id": 10, "parent" : 7, "text": "Uvas Frescas", "state" : { "opened" : true }, "type" : "folder", "children": 
+										[
+											{"id": 11, "parent" : 10, "text": "VOLUMEN EXPORTADO (t) Y PRECIO FOB (US$ / kg) DE LA UVA Campañas 00/01-15/16","icon" : "glyphicon glyphicon-dashboard", "type" : "file"},
+											{"id": 12, "parent" : 10, "text": "PRECIOS (US$ / kg) Y VOLÚMENES (t) MENSUALESDE LA DE LA EXPORTACIÓN DE UVA Campañas 14/15-16/17","icon" : "glyphicon glyphicon-dashboard", "type" : "file"},
+											{"id": 13, "parent" : 10, "text": "EXPORTACIONES DE UVA POR PAÍS DE DESTINO Campañas 00/01-15/16 (t)","icon" : "glyphicon glyphicon-dashboard", "type" : "file"},
+											{"id": 14, "parent" : 10, "text": "EXPORTACIONES DE UVA POR EMPRESA EXPORTADORA Campañas 00/01-15/16 (t)","icon" : "glyphicon glyphicon-dashboard", "type" : "file"},
+										]},
+										{"id": 15, "parent" : 7, "text": "Espárragos Frescos", "state" : { "opened" : true }, "type" : "folder", "children": [
+											{"id": 16, "parent" : 15, "text": "VOLUMEN EXPORTADO (t) Y PRECIO FOB (US$ / kg) DEL ESPÁRRAGO FRESCO 2000-2016","icon" : "glyphicon glyphicon-dashboard", "type" : "file"},
+											{"id": 17, "parent" : 15, "text": "PRECIOS (US$ / kg) Y VOLÚMENES (t) MENSUALES DE LA EXPORTACIÓN DE ESPÁRRAGO FRESCO 2014-2016","icon" : "glyphicon glyphicon-dashboard", "type" : "file"},
+											{"id": 18, "parent" : 15, "text": "EXPORTACIONES DE ESPÁRRAGO FRESCO POR PAÍS DE DESTINO 2010-2016 (t)","icon" : "glyphicon glyphicon-dashboard", "type" : "file"},
+											{"id": 19, "parent" : 15, "text": "EXPORTACIONES DE ESPÁRRAGO FRESCO POR EMPRESA EXPORTADORA 2010-2016 (t)","icon" : "glyphicon glyphicon-dashboard", "type" : "file"}
+										]},
 									]},
 								]},
 							]},
 						]},
-					]},
-				] },
-			]
-}];
+					] },
+				]
+	}];
+
+
+var barChartData = {
+        labels: ["2010", "2011", "2012", "2013", "2014", "2015", "2016"],
+        datasets: [{
+            label: 'CFG INVESTMENT',
+            backgroundColor: window.chartColors.red,
+            data: [
+                randomScalingFactor(),
+                randomScalingFactor(),
+                randomScalingFactor(),
+                randomScalingFactor(),
+                randomScalingFactor(),
+                randomScalingFactor(),
+                randomScalingFactor()
+            ]
+        }, {
+            label: 'PESQUERA DIAMANTE',
+            backgroundColor: window.chartColors.blue,
+            data: [
+                randomScalingFactor(),
+                randomScalingFactor(),
+                randomScalingFactor(),
+                randomScalingFactor(),
+                randomScalingFactor(),
+                randomScalingFactor(),
+                randomScalingFactor()
+            ]
+        }, {
+            label: 'AUSTRAL GROUP',
+            backgroundColor: window.chartColors.green,
+            data: [
+                randomScalingFactor(),
+                randomScalingFactor(),
+                randomScalingFactor(),
+                randomScalingFactor(),
+                randomScalingFactor(),
+                randomScalingFactor(),
+                randomScalingFactor()
+            ]
+        }, {
+            label: 'PESQUERA EXALMAR',
+            backgroundColor: window.chartColors.yellow,
+            data: [
+                randomScalingFactor(),
+                randomScalingFactor(),
+                randomScalingFactor(),
+                randomScalingFactor(),
+                randomScalingFactor(),
+                randomScalingFactor(),
+                randomScalingFactor()
+            ]
+        }, {
+            label: 'PESQUERA HAYDUK',
+            backgroundColor: window.chartColors.purple,
+            data: [
+                randomScalingFactor(),
+                randomScalingFactor(),
+                randomScalingFactor(),
+                randomScalingFactor(),
+                randomScalingFactor(),
+                randomScalingFactor(),
+                randomScalingFactor()
+            ]
+        }, {
+            label: 'PESQUERA CENTINELA',
+            backgroundColor: window.chartColors.grey,
+            data: [
+                randomScalingFactor(),
+                randomScalingFactor(),
+                randomScalingFactor(),
+                randomScalingFactor(),
+                randomScalingFactor(),
+                randomScalingFactor(),
+                randomScalingFactor()
+            ]
+        }, {
+            label: 'COPEINCA',
+            backgroundColor: window.chartColors.orange,
+            data: [
+                randomScalingFactor(),
+                randomScalingFactor(),
+                randomScalingFactor(),
+                randomScalingFactor(),
+                randomScalingFactor(),
+                randomScalingFactor(),
+                randomScalingFactor()
+            ]
+        }]
+
+    };
+$(function () {
+	
+	$("#modalDIV").modal("hide");
+	
+	var ctx = document.getElementById('chartCanvas').getContext('2d');
+	
+    window.myBar = new Chart(ctx, {
+        type: 'bar',
+        data: barChartData,
+        options: {
+            title:{
+                display: false,
+                text:""
+            },
+            tooltips: {
+                mode: 'index',
+                intersect: false
+            },
+            responsive: true,
+            scales: {
+                xAxes: [{
+                    stacked: true,
+                }],
+                yAxes: [{
+                    stacked: true
+                }]
+            }
+        }
+    });
 
 	function crear() {
 		var ref = $('#jstree').jstree(true),
@@ -296,7 +479,15 @@ var arrayCollection = [{
 		var node = $('#jstree').jstree(true).get_node(item);
 
 		if(node.icon === "glyphicon glyphicon-dashboard") {
-			alert("Grafico : [" + node.id + "] " + node.text + " / Padre : " + node.parent);
+			$('.modal-title').text(node.text);
+			$("#modalDIV").modal("show");
+			//alert("Grafico : [" + node.id + "] " + node.text + " / Padre : " + node.parent);
+            barChartData.datasets.forEach(function(dataset, i) {
+                dataset.data = dataset.data.map(function() {
+                    return randomScalingFactor();
+                });
+            });
+            window.myBar.update();
 		}
 	});
 	
