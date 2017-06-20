@@ -3,7 +3,7 @@
 <head>
 	<meta http-equiv="Content-type" content="text/html; charset=utf-8">
 	<meta name="robots" content="noindex,follow">
-	<title>Mi Vista - Sistema de Gesti&oacute;n de Indicadores</title>
+	<title>Configuraci&oacute;n - Sistema de Gesti&oacute;n de Indicadores</title>
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
 	<link rel="stylesheet" type="text/css" href="css\default.css">
@@ -55,7 +55,7 @@
 	<div class="main-container" id="main-container">
 	<div id="sidebar" class="sidebar sidebar-fixed responsive compact ">
 	<ul class="nav nav-list">
-		<li class="active">
+		<li>
 			<a href="./my_view_page.html">
 				<i class="menu-icon fa fa-cubes"></i>
 				<span class="menu-text"> Vista General </span>
@@ -69,154 +69,124 @@
 			</a>
 			<b class="arrow"></b>
 		</li>
+		<li class="active">
+			<a href="./configuracion.html">
+				<i class="menu-icon fa fa-gears"></i>
+				<span class="menu-text"> Configuración </span>
+			</a>
+			<b class="arrow"></b>
+		</li>
 	</ul>
 	<div id="sidebar" class="sidebar-toggle sidebar-collapse">
 		<i data-icon2="ace-icon fa fa-angle-double-right" data-icon1="ace-icon fa fa-angle-double-left" class="ace-icon fa fa-angle-double-left"></i>
 	</div>
 </div>
 <div class="main-content">
-	<div id="breadcrumbs" class="breadcrumbs noprint">
-		<ul class="breadcrumb">
-		  <li>
-		  <i class="fa fa-user home-icon active"></i>  
-			  <a href="./crear_cuenta.html">Administrador ( Telly Tataje ) </a>
-			  <span class="label hidden-xs label-default arrowed">Administrador</span>
-		  </li>
-		</ul>
-	</div>
-<div class="page-content">
+<div id="breadcrumbs" class="breadcrumbs noprint">
+<ul class="breadcrumb">
+  <li><i class="fa fa-user home-icon active"></i>  <a href="./crear_cuenta.html">administrador ( Telly Tataje ) </a>
+  <span class="label hidden-xs label-default arrowed">administrador</span></li>
+</ul>
+<div id="nav-search" class="nav-search"><form class="form-search" method="post" action="/jump_to_bug.php"><span class="input-icon"><input type="text" name="bug_id" autocomplete="off" class="nav-search-input" placeholder="Documento #"><i class="ace-icon fa fa-search nav-search-icon"></i></span></form></div>
+</div>
+  <div class="page-content">
 <div class="row">
-<div class="col-xs-12 col-md-7">
+<ul class="nav nav-tabs padding-18">
+<li class="active">
+<a href="configuracion.html">
+Mi cuenta</a>
+</li>
+<li class="">
+<a href="/account_prefs_page.php">
+Preferencias</a>
+</li>
+<li class="">
+<a href="/account_manage_columns_page.php">
+Administrar Columnas</a>
+</li>
+<li class="">
+<a href="/api_tokens_page.php">
+API Tokens</a>
+</li>
+</ul>
 
-<div id="assigned" class="widget-box widget-color-blue2 ">
+<div class="col-md-12 col-xs-12">
+	<div class="space-10"></div>
+
+<div id="account-update-div" class="form-container">
+	<form id="account-update-form" method="post" action="./configuracion.html">
+
+<div class="widget-box widget-color-blue2">
 	<div class="widget-header widget-header-small">
 		<h4 class="widget-title lighter">
-			<i class="ace-icon fa fa-list-alt"></i>
-			<a class="white" href="view_all_set.php?type=1&amp;temporary=y&amp;handler_id=1&amp;hide_status=80">Asignadas a mí (pendientes)</a>
-			<span class="badge">  1 - 2 / 2  </span>
-		</h4>
-		<div class="widget-toolbar">
-			<a data-action="collapse" href="#">
-				<i class="1 ace-icon fa fa-chevron-up bigger-125"></i>
-			</a>
-		</div>
-		<div class="widget-toolbar no-border hidden-xs">
-			<div class="widget-menu">
-				<a class="btn btn-primary btn-white btn-round btn-sm" href="view_all_set.php?type=1&amp;temporary=y&amp;handler_id=1&amp;hide_status=80">Ver Documentos</a>			</div>
-		</div>
+			<i class="ace-icon fa fa-user"></i>
+			Editar cuenta		</h4>
 	</div>
-
 	<div class="widget-body">
 		<div class="widget-main no-padding">
 			<div class="table-responsive">
-				<table class="table table-bordered table-condensed table-striped table-hover">
-				<tbody>
+				<table class="table table-bordered table-condensed table-striped">
 
-					<tr class="my-buglist-bug ">
-						<td class="nowrap width-13 my-buglist-id">
-							<a href="/view.php?id=8">0000008</a>
-							<br>
-							<i class="fa fa-square-o fa-xlg status-50-color" title="assigned"></i>
-							<a class="edit" href="bug_update_page.php?bug_id=8">
-								<i class="fa fa-pencil bigger-130 padding-2 grey" alt="Edit" title="Edit"></i>
-							</a>
-							<i class="fa fa-minus fa-lg orange2" alt="" title="normal"></i>
-							<a class="attachments" href="view.php?id=8#attachments" title="View 1 attachment(s) for issue #8">
-								<i class="fa fa-paperclip fa-lg grey" alt="1&#32;attachment(s)" title="1&#32;attachment(s)"></i>
-							</a>
-						</td>
-						<td>
-							<span>
-								<a href="view.php?id=8">XXX_PYPR_GORT-11: DOC08 - Documento para Sorteo de Pizza</a>
-							</span>
-							<br>
-							<span class="small">[Documentos] DOC003 - Documento Para Sorteo de Pizza</span>
-							<span class="small"> - 2017-02-26 04:00</span>
-						</td>
-					</tr>
-
-				</tbody>
-				</table>
-			</div>
+		<fieldset>
+						<tr>
+				<td class="category">
+					Usuario				</td>
+				<td>
+					Administrador				</td>
+			</tr>			<tr>
+				<td class="category">
+					<span class="required"></span> Contraseña Actual				</td>
+				<td>
+					<input class="input-sm" id="password-current" type="password" name="password_current" size="32" maxlength="1024">
+				</td>
+			</tr>
+						<tr>
+				<td class="category">
+					<span class="required"></span> Nueva Contraseña				</td>
+				<td>
+					<input class="input-sm" id="password" type="password" name="password" size="32" maxlength="1024">
+				</td>
+			</tr>
+			<tr>
+				<td class="category">
+					<span class="required"></span> Confirmar Contraseña				</td>
+				<td>
+					<input class="input-sm" id="password-confirm" type="password" name="password_confirm" size="32" maxlength="1024">
+				</td>
+			</tr>
+						<tr>
+				<td class="category">
+					E-mail				</td>
+				<td>
+				<input class="input-sm" id="email-field" type="text" name="email" size="32" maxlength="64" value="ttataje@gmail.com">				</td>
+			</tr>
+			<tr><td class="category">Nombre Real</td><td><input class="input-sm" id="realname" type="text" size="32" maxlength="255" name="realname" value="Telly Tataje"></td>			</tr>
+			<tr>
+				<td class="category">
+					Nivel de acceso				</td>
+				<td>
+					administrador				</td>
+			</tr>
+			<tr>
+				<td class="category">
+					Nivel de acceso a proyecto				</td>
+				<td>
+					administrador				</td>
+			</tr>
+							</fieldset>
+			</table>
 		</div>
 	</div>
-</div>
-
-
-<div class="space-10"></div>
-</div>
-
-<div class="col-md-5 col-xs-12">
-	<div id="timeline" class="widget-box widget-color-blue2 ">
-	    <div class="widget-header widget-header-small">
-	        <h4 class="widget-title lighter">
-	            <i class="ace-icon fa fa-clock-o"></i>
-	            Línea de tiempo        </h4>
-	        <div class="widget-toolbar">
-	            <a data-action="collapse" href="#">
-	                <i class="1 ace-icon fa fa-chevron-up bigger-125"></i>
-	            </a>
-	        </div>
-	    </div>
-	
-	    <div class="widget-body">
-	        <div class="widget-toolbox">
-	            <div class="btn-toolbar">
-	                &#160;&#160;<span class="label label-yellow"> 2017-02-22 </span> .. <span class="label label-yellow"> 2017-03-01 </span>&#160;&#160;
-					<div class="btn-group"> <a class="btn btn-primary btn-xs btn-white btn-round" href="#">Anterior</a></div>
-				</div>
-			</div>
-			<div class="widget-main no-padding">
-				<div class="profile-feed"></div>
-			</div>
-			<div class="profile-activity clearfix">
-				<img class="pull-left" src="https://secure.gravatar.com/avatar/6961e2f6353cdc06d6f2b33a67d8ff72?d=identicon&amp;r=G&amp;s=40">
-				<div class="action"><span class="username">Administrador</span> picked up issue <span class="issue_id">
-					<a href="/view.php?id=8" title="[assigned] UPN_PYPR_GORT-11: CP08 - Registro para Sorteo de Pizza">0000008</a></span>
-				</div>
-				<div class="time"><i class="ace-icon fa fa-clock-o bigger-110"></i> 2017-02-26 03:46</div>
-			</div>
-			<div class="profile-activity clearfix">
-				<img class="pull-left" src="https://secure.gravatar.com/avatar/6961e2f6353cdc06d6f2b33a67d8ff72?d=identicon&amp;r=G&amp;s=40">
-				<div class="action">
-					<span class="username">Administrador</span> created issue 
-					<span class="issue_id">
-						<a href="/view.php?id=2" title="[assigned] UPN_PYPR_GORT-4: CP02 - Servicio al Cliente">0000002</a>
-					</span>
-				</div>
-				<div class="time">
-					<i class="ace-icon fa fa-clock-o bigger-110"></i> 2017-02-26 03:41
-				</div>
-			</div>
-			<div class="profile-activity clearfix">
-				<img class="pull-left" src="https://secure.gravatar.com/avatar/6961e2f6353cdc06d6f2b33a67d8ff72?d=identicon&amp;r=G&amp;s=40">
-				<div class="action">
-					<span class="username">Administrador</span> assigned issue 
-					<span class="issue_id">
-						<a href="/view.php?id=1" title="[assigned] UPN_PYPR_GORT-3: CP01 - Servicio al Cliente">0000001</a>
-					</span> to <span class="username">jocampo</span>
-				</div>
-				<div class="time">
-					<i class="ace-icon fa fa-clock-o bigger-110"></i> 2017-02-26 03:40
-				</div>
-			</div>
-			<div class="profile-activity clearfix">
-				<img class="pull-left" src="https://secure.gravatar.com/avatar/6961e2f6353cdc06d6f2b33a67d8ff72?d=identicon&amp;r=G&amp;s=40">
-				<div class="action">
-					<span class="username">Administrador</span> created issue 
-					<span class="issue_id">
-						<a href="/view.php?id=1" title="[assigned] UPN_PYPR_GORT-3: CP01 - Servicio al Cliente">0000001</a>
-					</span>
-				</div>
-				<div class="time">
-					<i class="ace-icon fa fa-clock-o bigger-110"></i> 2017-02-26 03:40
-				</div>
-			</div>
+			<div class="widget-toolbox padding-8 clearfix">
+						<input type="submit" class="btn btn-primary btn-white btn-round" value="Actualizar">
 		</div>
-	</div>
-	<div class="space-10"></div>
+		</div>
 </div>
+
+	</form>
 </div>
+
+</div></div>
 </div>
 </div>
 <div class="clearfix"></div>
@@ -225,10 +195,14 @@
 <div class="footer-inner">
 <div class="footer-content">
 <div class="col-md-6 col-xs-12 no-padding">
+<address>
+<small>Design by <a href="mailto:contacto@smartcore.pe">smartcore</a> (2017)</small><br>
+<small>Contacta al <a href="mailto:ttataje@smartcore.pe" title="Contact the webmaster via e-mail.">administrador</a> por asistencia</small><br>
+</address>
 </div>
 <div class="col-md-6 col-xs-12">
 <div class="pull-right" id="powered-by-mantisbt-logo">
-<img src="images\regionica_pie.png" height="35" alt="Powered by smartcore an internet company.">
+<img src="images\fiduciaria_logo.png" height="35" alt="Powered by SmartCore an internet company.">
 </div>
 </div>
 </div>
@@ -244,6 +218,22 @@
 	<script type="text/javascript" src="js\ace-extra.min.js"></script>
 	<script type="text/javascript" src="js\ace-elements.min.js"></script>
 	<script type="text/javascript" src="js\ace.min.js"></script>
-
-</body>
+<script type="text/javascript">
+/* <![CDATA[ */
+var google_conversion_id = 970248102;
+var google_conversion_language = "en";
+var google_conversion_format = "3";
+var google_conversion_color = "ffffff";
+var google_conversion_label = "eQWuCIrG5AkQpp_TzgM";
+var google_remarketing_only = false;
+/* ]]> */
+</script>
+<script type="text/javascript" src="//www.googleadservices.com/pagead/conversion.js">
+</script>
+<noscript>
+<div style="display:inline;">
+<img height="1" width="1" style="border-style:none;" alt="" src="//www.googleadservices.com/pagead/conversion/970248102/?label=eQWuCIrG5AkQpp_TzgM&guid=ON&script=0">
+</div>
+</noscript>
+<script>(function(w,d,t,r,u){var f,n,i;w[u]=w[u]||[],f=function(){var o={ti:"4061542"};o.q=w[u],w[u]=new UET(o),w[u].push("pageLoad")},n=d.createElement(t),n.src=r,n.async=1,n.onload=n.onreadystatechange=function(){var s=this.readyState;s&&s!=="loaded"&&s!=="complete"||(f(),n.onload=n.onreadystatechange=null)},i=d.getElementsByTagName(t)[0],i.parentNode.insertBefore(n,i)})(window,document,"script","//bat.bing.com/bat.js","uetq");</script><noscript><img src="//bat.bing.com/action/0?ti=4061542&Ver=2" height="0" width="0" style="display:none; visibility: hidden;"></noscript></body>
 </html>
