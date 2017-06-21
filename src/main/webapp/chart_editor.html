@@ -3,14 +3,13 @@
 <head>
 	<meta http-equiv="Content-type" content="text/html; charset=utf-8">
 	<meta name="robots" content="noindex,follow">
-	<title>Configuraci&oacute;n - Sistema de Gesti&oacute;n de Indicadores</title>
+	<title>Registro - Region Ica - Gr&aacute;fico</title>
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
 	<link rel="stylesheet" type="text/css" href="css\default.css">
 	<link rel="stylesheet" type="text/css" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.min.css" crossorigin="anonymous">
 	<link rel="stylesheet" type="text/css" href="css\common_config.css">
 	<link rel="stylesheet" type="text/css" href="css\status_config.css">
-	<link rel="stylesheet" type="text/css" href="css\dropzone.css">
 	<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" crossorigin="anonymous">
 	<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" crossorigin="anonymous">
 	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400" crossorigin="anonymous">
@@ -19,221 +18,445 @@
 	<link rel="stylesheet" type="text/css" href="css\ace-mantis.css">
 	<link rel="stylesheet" type="text/css" href="css\ace-skins.min.css">
 	<link rel="shortcut icon" href="images\favicon.ico" type="image/x-icon">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/themes/default/style.min.css" />
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js" integrity="sha256-xNjb53/rY+WmG+4L6tTl9m6PpqknWZvRt0rO1SRnJzw=" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
+	<style>
+    canvas {
+        -moz-user-select: none;
+        -webkit-user-select: none;
+        -ms-user-select: none;
+    }
+    </style>
 </head>
 <body class="skin-3">
+	<!-- Inicio Barra Navegacion  -->
 	<div id="navbar" class="navbar navbar-default navbar-collapse navbar-fixed-top noprint">
-	<div id="navbar-container" class="navbar-container">
-	<button id="menu-toggler" type="button" class="navbar-toggle menu-toggler pull-left hidden-lg" data-target="#sidebar">
-		<span class="sr-only">Toggle sidebar</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>
-	</button>
-	<div class="navbar-header">
-		<a href="#" class="navbar-brand"><span class="smaller-75"> Sistema de Gesti&oacute;n de Indicadores </span></a>
-		<button type="button" class="navbar-toggle navbar-toggle-img collapsed pull-right hidden-sm hidden-md hidden-lg" data-toggle="collapse" data-target=".navbar-buttons,.navbar-menu">
-			<span class="sr-only">Toggle user menu</span><img class="nav-user-photo" src="https://secure.gravatar.com/avatar/6961e2f6353cdc06d6f2b33a67d8ff72?d=identicon&amp;r=G&amp;s=32" alt="Administrador">
-		</button>
-	</div>
-	<div class="navbar-buttons navbar-header navbar-collapse collapse">
-		<ul class="nav ace-nav">
-			<li class="grey">
-				<a data-toggle="dropdown" href="#" class="dropdown-toggle">
-					<img class="nav-user-photo" src="https://secure.gravatar.com/avatar/6961e2f6353cdc06d6f2b33a67d8ff72?d=identicon&amp;r=G&amp;s=32" alt="administrador">
-					<span class="user-info">administrador</span>
-					<i class="ace-icon fa fa-angle-down"></i>
-				</a>
-				<ul class="user-menu dropdown-menu dropdown-menu-right dropdown-yellow dropdown-caret dropdown-close">
-					<li><a href="./usuario.html"><i class="ace-icon fa fa-user"> </i> Mi cuenta</a></li>
-					<li class="divider"></li>
-					<li><a href="./index.html"><i class="ace-icon fa fa-sign-out"> </i> Salir</a></li>
+		<div id="navbar-container" class="navbar-container">
+			<button id="menu-toggler" type="button" class="navbar-toggle menu-toggler pull-left hidden-lg" data-target="#sidebar">
+				<span class="sr-only">Toggle sidebar</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>
+			</button>
+			<div class="navbar-header">
+				<a href="#" class="navbar-brand"><span class="smaller-75"> Sistema de Gesti&oacute;n de Indicadores </span></a>
+				<button type="button" class="navbar-toggle navbar-toggle-img collapsed pull-right hidden-sm hidden-md hidden-lg" data-toggle="collapse" data-target=".navbar-buttons,.navbar-menu">
+					<span class="sr-only">Toggle user menu</span><img class="nav-user-photo" src="https://secure.gravatar.com/avatar/6961e2f6353cdc06d6f2b33a67d8ff72?d=identicon&amp;r=G&amp;s=32" alt="Administrador">
+				</button>
+			</div>
+			<div class="navbar-buttons navbar-header navbar-collapse collapse">
+				<ul class="nav ace-nav">
+					<li class="grey">
+						<a data-toggle="dropdown" href="#" class="dropdown-toggle">
+							<img class="nav-user-photo" src="https://secure.gravatar.com/avatar/6961e2f6353cdc06d6f2b33a67d8ff72?d=identicon&amp;r=G&amp;s=32" alt="administrador">
+							<span class="user-info">administrador</span>
+							<i class="ace-icon fa fa-angle-down"></i>
+						</a>
+						<ul class="user-menu dropdown-menu dropdown-menu-right dropdown-yellow dropdown-caret dropdown-close">
+							<li><a href="./crear_cuenta.html"><i class="ace-icon fa fa-user"> </i> Mi cuenta</a></li>
+							<li class="divider"></li>
+							<li><a href="./index.html"><i class="ace-icon fa fa-sign-out"> </i> Salir</a></li>
+						</ul>
+					</li>
 				</ul>
-			</li>
-			</ul>
 			</div>
 		</div>
 	</div>
+	<!-- Fin Barra Navegacion  -->
+	
+	<!-- Inicio Menu  -->
 	<div class="main-container" id="main-container">
-	<div id="sidebar" class="sidebar sidebar-fixed responsive compact ">
-	<ul class="nav nav-list">
-		<li>
-			<a href="./my_view_page.html">
-				<i class="menu-icon fa fa-cubes"></i>
-				<span class="menu-text"> Vista General </span>
-			</a>
-			<b class="arrow"></b>
-		</li>
-		<li>
-			<a href="./registro_indicadores.html">
-				<i class="menu-icon fa fa-tachometer"></i>
-				<span class="menu-text"> Registro Indicadores </span>
-			</a>
-			<b class="arrow"></b>
-		</li>
-		<li class="active">
-			<a href="./configuracion.html">
-				<i class="menu-icon fa fa-gears"></i>
-				<span class="menu-text"> Configuración </span>
-			</a>
-			<b class="arrow"></b>
-		</li>
-	</ul>
-	<div id="sidebar" class="sidebar-toggle sidebar-collapse">
-		<i data-icon2="ace-icon fa fa-angle-double-right" data-icon1="ace-icon fa fa-angle-double-left" class="ace-icon fa fa-angle-double-left"></i>
-	</div>
-</div>
-<div class="main-content">
-<div id="breadcrumbs" class="breadcrumbs noprint">
-<ul class="breadcrumb">
-  <li><i class="fa fa-user home-icon active"></i>  <a href="./crear_cuenta.html">administrador ( Telly Tataje ) </a>
-  <span class="label hidden-xs label-default arrowed">administrador</span></li>
-</ul>
-<div id="nav-search" class="nav-search"><form class="form-search" method="post" action="/jump_to_bug.php"><span class="input-icon"><input type="text" name="bug_id" autocomplete="off" class="nav-search-input" placeholder="Documento #"><i class="ace-icon fa fa-search nav-search-icon"></i></span></form></div>
-</div>
-  <div class="page-content">
-<div class="row">
-<ul class="nav nav-tabs padding-18">
-<li class="active">
-<a href="configuracion.html">
-Mi cuenta</a>
-</li>
-<li class="">
-<a href="/account_prefs_page.php">
-Preferencias</a>
-</li>
-<li class="">
-<a href="/account_manage_columns_page.php">
-Administrar Columnas</a>
-</li>
-<li class="">
-<a href="/api_tokens_page.php">
-API Tokens</a>
-</li>
-</ul>
-
-<div class="col-md-12 col-xs-12">
-	<div class="space-10"></div>
-
-<div id="account-update-div" class="form-container">
-	<form id="account-update-form" method="post" action="./configuracion.html">
-
-<div class="widget-box widget-color-blue2">
-	<div class="widget-header widget-header-small">
-		<h4 class="widget-title lighter">
-			<i class="ace-icon fa fa-user"></i>
-			Editar cuenta		</h4>
-	</div>
-	<div class="widget-body">
-		<div class="widget-main no-padding">
-			<div class="table-responsive">
-				<table class="table table-bordered table-condensed table-striped">
-
-		<fieldset>
-						<tr>
-				<td class="category">
-					Usuario				</td>
-				<td>
-					Administrador				</td>
-			</tr>			<tr>
-				<td class="category">
-					<span class="required"></span> Contraseña Actual				</td>
-				<td>
-					<input class="input-sm" id="password-current" type="password" name="password_current" size="32" maxlength="1024">
-				</td>
-			</tr>
-						<tr>
-				<td class="category">
-					<span class="required"></span> Nueva Contraseña				</td>
-				<td>
-					<input class="input-sm" id="password" type="password" name="password" size="32" maxlength="1024">
-				</td>
-			</tr>
-			<tr>
-				<td class="category">
-					<span class="required"></span> Confirmar Contraseña				</td>
-				<td>
-					<input class="input-sm" id="password-confirm" type="password" name="password_confirm" size="32" maxlength="1024">
-				</td>
-			</tr>
-						<tr>
-				<td class="category">
-					E-mail				</td>
-				<td>
-				<input class="input-sm" id="email-field" type="text" name="email" size="32" maxlength="64" value="ttataje@gmail.com">				</td>
-			</tr>
-			<tr><td class="category">Nombre Real</td><td><input class="input-sm" id="realname" type="text" size="32" maxlength="255" name="realname" value="Telly Tataje"></td>			</tr>
-			<tr>
-				<td class="category">
-					Nivel de acceso				</td>
-				<td>
-					administrador				</td>
-			</tr>
-			<tr>
-				<td class="category">
-					Nivel de acceso a proyecto				</td>
-				<td>
-					administrador				</td>
-			</tr>
-							</fieldset>
-			</table>
+		<div id="sidebar" class="sidebar sidebar-fixed responsive compact ">
+			<ul class="nav nav-list">
+				<li>
+					<a href="./my_view_page.html">
+						<i class="menu-icon fa fa-cubes"></i>
+						<span class="menu-text"> Vista General </span>
+					</a>
+					<b class="arrow"></b>
+				</li>
+				<li class="active">
+					<a href="./registro_indicadores.html">
+						<i class="menu-icon fa fa-tachometer"></i>
+						<span class="menu-text"> Editor de Gr&aacute;ficos </span>
+					</a>
+					<b class="arrow"></b>
+				</li>
+			</ul>
+			<div id="sidebar" class="sidebar-toggle sidebar-collapse">
+				<i data-icon2="ace-icon fa fa-angle-double-right" data-icon1="ace-icon fa fa-angle-double-left" class="ace-icon fa fa-angle-double-left"></i>
+			</div>
 		</div>
+		<!-- Fin Menu  -->
+		<!-- Inicio Contenido -->
+		<div class="main-content">
+			<!-- Inicio Barra Busqueda -->
+			<div id="breadcrumbs" class="breadcrumbs noprint">
+				<ul class="breadcrumb">
+				  <li>
+					  <i class="fa fa-user home-icon active"></i>
+					  <a href="./crear_cuenta.html">Administrador ( Telly Tataje ) </a>
+					  <span class="label hidden-xs label-default arrowed">administrador</span>
+				  </li>
+				</ul>
+			</div>
+			<!-- Fin Barra Busqueda -->
+			<!-- Inicio Contenido -->
+			<div class="page-content">
+				<div class="row">
+					<div class="col-md-12 col-xs-12">
+						<form id="report_bug_form" method="post" action="#" class="dropzone-form">
+							<input type="hidden" name="m_id" value="0">
+							<input type="hidden" name="project_id" value="1">
+							<div class="widget-box widget-color-blue2">
+								<div class="widget-header widget-header-small">
+									<h4 class="widget-title lighter">
+										<i class="ace-icon fa fa-edit"></i>
+										Registro de Indicadores
+									</h4>
+								</div>
+								<div class="widget-body dz-clickable">
+									<div class="widget-main no-padding">
+										<div class="table-responsive">
+											<canvas id="chartCanvas"></canvas>
+										</div>
+									</div>
+									<div class="widget-main no-padding">
+										<div class="table-responsive">
+											<div id="jstree"></div>
+										</div>
+									</div>
+									<div class="widget-toolbox padding-8 clearfix">
+										<input tabindex="12" type="button" class="btn btn-primary btn-white btn-round" value="Regresar">
+									</div>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+			<!-- Fin Contenido -->
+		</div>
+		<div class="clearfix"></div>
+		<div class="space-20"></div>
+		<div class="footer noprint">
+			<div class="footer-inner">
+				<div class="footer-content">
+					<div class="col-md-6 col-xs-12 no-padding">
+					</div>
+					<div class="col-md-6 col-xs-12">
+						<div class="pull-right">
+							<img src="images\regionica_pie.png" height="35" alt="Region Ica">
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<a class="btn-scroll-up btn btn-sm btn-inverse display" id="btn-scroll-up" href="#">
+			<i class="ace-icon fa fa-angle-double-up icon-only bigger-110"></i>
+		</a>
 	</div>
-			<div class="widget-toolbox padding-8 clearfix">
-						<input type="submit" class="btn btn-primary btn-white btn-round" value="Actualizar">
-		</div>
-		</div>
-</div>
-
-	</form>
-</div>
-
-</div></div>
-</div>
-</div>
-<div class="clearfix"></div>
-<div class="space-20"></div>
-<div class="footer noprint">
-<div class="footer-inner">
-<div class="footer-content">
-<div class="col-md-6 col-xs-12 no-padding">
-<address>
-<small>Design by <a href="mailto:contacto@smartcore.pe">smartcore</a> (2017)</small><br>
-<small>Contacta al <a href="mailto:ttataje@smartcore.pe" title="Contact the webmaster via e-mail.">administrador</a> por asistencia</small><br>
-</address>
-</div>
-<div class="col-md-6 col-xs-12">
-<div class="pull-right" id="powered-by-mantisbt-logo">
-<img src="images\fiduciaria_logo.png" height="35" alt="Powered by SmartCore an internet company.">
-</div>
-</div>
-</div>
-</div>
-</div>
-<a class="btn-scroll-up btn btn-sm btn-inverse display" id="btn-scroll-up" href="#">
-<i class="ace-icon fa fa-angle-double-up icon-only bigger-110"></i>
-</a>
-</div>
 	<script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha256-KXn5puMvxCw+dAYznun+drMdG1IFl3agK0p/pqT9KAo=" crossorigin="anonymous"></script>
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.15.2/moment-with-locales.min.js" integrity="sha256-K+AZsAFjiBd4piqBmFzaxDsiQiHfREubm1ExNGW1JIA=" crossorigin="anonymous"></script>
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.43/js/bootstrap-datetimepicker.min.js" integrity="sha256-I8vGZkA2jL0PptxyJBvewDVqNXcgIhcgeqi+GD/aw34=" crossorigin="anonymous"></script>
 	<script type="text/javascript" src="js\ace-extra.min.js"></script>
 	<script type="text/javascript" src="js\ace-elements.min.js"></script>
 	<script type="text/javascript" src="js\ace.min.js"></script>
-<script type="text/javascript">
-/* <![CDATA[ */
-var google_conversion_id = 970248102;
-var google_conversion_language = "en";
-var google_conversion_format = "3";
-var google_conversion_color = "ffffff";
-var google_conversion_label = "eQWuCIrG5AkQpp_TzgM";
-var google_remarketing_only = false;
-/* ]]> */
-</script>
-<script type="text/javascript" src="//www.googleadservices.com/pagead/conversion.js">
-</script>
-<noscript>
-<div style="display:inline;">
-<img height="1" width="1" style="border-style:none;" alt="" src="//www.googleadservices.com/pagead/conversion/970248102/?label=eQWuCIrG5AkQpp_TzgM&guid=ON&script=0">
-</div>
-</noscript>
-<script>(function(w,d,t,r,u){var f,n,i;w[u]=w[u]||[],f=function(){var o={ti:"4061542"};o.q=w[u],w[u]=new UET(o),w[u].push("pageLoad")},n=d.createElement(t),n.src=r,n.async=1,n.onload=n.onreadystatechange=function(){var s=this.readyState;s&&s!=="loaded"&&s!=="complete"||(f(),n.onload=n.onreadystatechange=null)},i=d.getElementsByTagName(t)[0],i.parentNode.insertBefore(n,i)})(window,document,"script","//bat.bing.com/bat.js","uetq");</script><noscript><img src="//bat.bing.com/action/0?ti=4061542&Ver=2" height="0" width="0" style="display:none; visibility: hidden;"></noscript></body>
+	<script type="text/javascript">
+	window.chartColors = {
+		red: 'rgb(255, 99, 132)',
+		orange: 'rgb(255, 159, 64)',
+		yellow: 'rgb(255, 205, 86)',
+		green: 'rgb(75, 192, 192)',
+		blue: 'rgb(54, 162, 235)',
+		purple: 'rgb(153, 102, 255)',
+		grey: 'rgb(201, 203, 207)'
+	};
+	
+	window.randomScalingFactor = function() {
+		var num1 = 1000;
+		var num2 = 9999999;
+		return Math.floor(Math.random() * (num2-num1 + 1) + num1);
+	};
+		
+	var arrayCollection = [{
+		"text" : "Region Ica",
+		"state" : { "opened" : true },
+		"children" : [
+						{"id": 1, "text": "2017", "state" : { "opened" : true }, "type" : "folder", "children": 
+						[
+							{"id": 2, "parent" : 1, "text": "Marzo", "state" : { "opened" : true }, "type" : "folder", "children": 
+							[
+								{"id": 3, "parent" : 2, "text": "Exportacion", "state" : { "opened" : true }, "type" : "folder", "children": 
+								[
+									{"id": 4, "parent" : 3, "text": "Por Sectores", "state" : { "opened" : true }, "type" : "folder", "children": 
+									[
+										{"id": 5, "parent" : 4, "text": "EXPORTACIONES POR SECTORES ECONÓMICOS 2000-2016 (Millones US$ FOB)","icon" : "glyphicon glyphicon-dashboard", "type" : "chart"},
+										{"id": 6, "parent" : 4, "text": "EXPORTACIONES DE LOS SECTORES POR PRODUCTO 2015 (Millones US$ FOB)","icon" : "glyphicon glyphicon-dashboard", "type" : "chart"},
+										{"id": 7, "parent" : 4, "text": "Sector Agrícola", "state" : { "opened" : true }, "type" : "folder", "children": 
+										[
+											{"id": 8, "parent" : 7, "text": "EXPORTACIONES AGROPECUARIAS POR PRODUCTO 2015 (Millones US$ FOB)","icon" : "glyphicon glyphicon-dashboard", "type" : "chart"},
+											{"id": 9, "parent" : 7, "text": "EXPORTACIONES AGROPECUARIAS POR PRODUCTO 2000-2016 (Millones US$ FOB)","icon" : "glyphicon glyphicon-dashboard", "type" : "chart"},
+											{"id": 10, "parent" : 7, "text": "Uvas Frescas", "state" : { "opened" : true }, "type" : "folder", "children": 
+											[
+												{"id": 11, "parent" : 10, "text": "VOLUMEN EXPORTADO (t) Y PRECIO FOB (US$ / kg) DE LA UVA Campañas 00/01-15/16","icon" : "glyphicon glyphicon-dashboard", "type" : "chart"},
+												{"id": 12, "parent" : 10, "text": "PRECIOS (US$ / kg) Y VOLÚMENES (t) MENSUALESDE LA DE LA EXPORTACIÓN DE UVA Campañas 14/15-16/17","icon" : "glyphicon glyphicon-dashboard", "type" : "chart"},
+												{"id": 13, "parent" : 10, "text": "EXPORTACIONES DE UVA POR PAÍS DE DESTINO Campañas 00/01-15/16 (t)","icon" : "glyphicon glyphicon-dashboard", "type" : "chart"},
+												{"id": 14, "parent" : 10, "text": "EXPORTACIONES DE UVA POR EMPRESA EXPORTADORA Campañas 00/01-15/16 (t)","icon" : "glyphicon glyphicon-dashboard", "type" : "chart"},
+											]},
+											{"id": 15, "parent" : 7, "text": "Espárragos Frescos", "state" : { "opened" : true }, "type" : "folder", "children": [
+												{"id": 16, "parent" : 15, "text": "VOLUMEN EXPORTADO (t) Y PRECIO FOB (US$ / kg) DEL ESPÁRRAGO FRESCO 2000-2016","icon" : "glyphicon glyphicon-dashboard", "type" : "chart"},
+												{"id": 17, "parent" : 15, "text": "PRECIOS (US$ / kg) Y VOLÚMENES (t) MENSUALES DE LA EXPORTACIÓN DE ESPÁRRAGO FRESCO 2014-2016","icon" : "glyphicon glyphicon-dashboard", "type" : "chart"},
+												{"id": 18, "parent" : 15, "text": "EXPORTACIONES DE ESPÁRRAGO FRESCO POR PAÍS DE DESTINO 2010-2016 (t)","icon" : "glyphicon glyphicon-dashboard", "type" : "chart"},
+												{"id": 19, "parent" : 15, "text": "EXPORTACIONES DE ESPÁRRAGO FRESCO POR EMPRESA EXPORTADORA 2010-2016 (t)","icon" : "glyphicon glyphicon-dashboard", "type" : "chart"}
+											]},
+										]},
+									]},
+								]},
+							]},
+						] },
+					]
+		}];
+	
+	var chartDataset = [{
+        label: 'CFG INVESTMENT',
+        backgroundColor: window.chartColors.red,
+        data: [
+            randomScalingFactor(),
+            randomScalingFactor(),
+            randomScalingFactor(),
+            randomScalingFactor(),
+            randomScalingFactor(),
+            randomScalingFactor(),
+            randomScalingFactor()
+        ]
+    }, {
+        label: 'PESQUERA DIAMANTE',
+        backgroundColor: window.chartColors.blue,
+        data: [
+            randomScalingFactor(),
+            randomScalingFactor(),
+            randomScalingFactor(),
+            randomScalingFactor(),
+            randomScalingFactor(),
+            randomScalingFactor(),
+            randomScalingFactor()
+        ]
+    }, {
+        label: 'AUSTRAL GROUP',
+        backgroundColor: window.chartColors.green,
+        data: [
+            randomScalingFactor(),
+            randomScalingFactor(),
+            randomScalingFactor(),
+            randomScalingFactor(),
+            randomScalingFactor(),
+            randomScalingFactor(),
+            randomScalingFactor()
+        ]
+    }, {
+        label: 'PESQUERA EXALMAR',
+        backgroundColor: window.chartColors.yellow,
+        data: [
+            randomScalingFactor(),
+            randomScalingFactor(),
+            randomScalingFactor(),
+            randomScalingFactor(),
+            randomScalingFactor(),
+            randomScalingFactor(),
+            randomScalingFactor()
+        ]
+    }, {
+        label: 'PESQUERA HAYDUK',
+        backgroundColor: window.chartColors.purple,
+        data: [
+            randomScalingFactor(),
+            randomScalingFactor(),
+            randomScalingFactor(),
+            randomScalingFactor(),
+            randomScalingFactor(),
+            randomScalingFactor(),
+            randomScalingFactor()
+        ]
+    }, {
+        label: 'PESQUERA CENTINELA',
+        backgroundColor: window.chartColors.grey,
+        data: [
+            randomScalingFactor(),
+            randomScalingFactor(),
+            randomScalingFactor(),
+            randomScalingFactor(),
+            randomScalingFactor(),
+            randomScalingFactor(),
+            randomScalingFactor()
+        ]
+    }, {
+        label: 'COPEINCA',
+        backgroundColor: window.chartColors.orange,
+        data: [
+            randomScalingFactor(),
+            randomScalingFactor(),
+            randomScalingFactor(),
+            randomScalingFactor(),
+            randomScalingFactor(),
+            randomScalingFactor(),
+            randomScalingFactor()
+        ]
+    }];
+	
+	var barChartData = {
+	        labels: ["2010", "2011", "2012", "2013", "2014", "2015", "2016"],
+	        datasets: chartDataset
+	
+	    };
+	$(function () {
+		
+		$("#modalDIV").modal("hide");
+		
+		var ctx = document.getElementById('chartCanvas').getContext('2d');
+		
+	    window.myBar = new Chart(ctx, {
+	        type: 'bar',
+	        data: barChartData,
+	        options: {
+	            title:{
+	                display: false,
+	                text:""
+	            },
+	            tooltips: {
+	                mode: 'index',
+	                intersect: false
+	            },
+	            responsive: true,
+	            scales: {
+	                xAxes: [{
+	                    stacked: true,
+	                }],
+	                yAxes: [{
+	                    stacked: true
+	                }]
+	            }
+	        }
+	    });
+	
+		function crear() {
+			var ref = $('#jstree').jstree(true),
+				sel = ref.get_selected();
+			if(!sel.length) { return false; }
+			sel = sel[0];
+			sel = ref.create_node(sel, {"type":"file"});
+			if(sel) {
+				ref.edit(sel);
+			}
+		};
+		function modificar() {
+			var ref = $('#jstree').jstree(true),
+				sel = ref.get_selected();
+			if(!sel.length) { return false; }
+			sel = sel[0];
+			ref.edit(sel);
+		};
+		function eliminar() {
+			var ref = $('#jstree').jstree(true),
+				sel = ref.get_selected();
+			if(!sel.length) { return false; }
+			ref.delete_node(sel);
+		};
+	
+	
+		$('#jstree').jstree({"plugins" : [ "contextmenu", "types", "search", "state", "wholerow" ],
+		'core' : {
+			'data' : arrayCollection
+		},
+		"check_callback" : true,
+		'unique' : {
+			'duplicate' : function (name, counter) {
+				return name + ' ' + counter;
+			}
+		},	
+		"contextmenu": {
+			"items": function (node) {
+				var menu = {
+					"Create": {
+						"label": "Nuevo",
+						"submenu" : {
+							"Section": {
+								"separator_after"	: true,
+								"label": "Seccion",
+								"action": function (obj) { this.create(obj); }
+							},
+							"Chart": {
+								"label": "Grafico",
+								"action": function (obj) { this.chart(obj); }
+							}
+						}
+					},
+					"Rename": {
+						"label": "Renombrar",
+						"action": function (obj) { this.rename(obj); }
+					},
+					"Delete": {
+						"label": "Eliminar",
+						"action": function (obj) { this.remove(obj); }
+					},
+					"Edit":{
+						"label": "Modificar",
+						"submenu" : {
+							"Copy": {
+								"separator_after"	: true,
+								"label": "Copiar",
+								"action": function (obj) { this.copy(obj); }
+							},
+							"Cut": {
+								"separator_after"	: true,
+								"label": "Cortar",
+								"action": function (obj) { this.cut(obj); }
+							},
+							"Paste": {
+								"label": "Pegar",
+								"action": function (obj) { this.paste(obj); },
+								"_disabled" : true
+							}
+						}
+					}
+				};
+				
+				if(node.children.length > 0){
+					delete menu.Delete;
+				}
+	
+				if(node.icon === "glyphicon glyphicon-dashboard") {
+					delete menu.Create;
+				}
+				
+				if(node.parent == "#"){
+					return null;
+				}
+				
+				return menu;
+			}
+		}
+		});
+		
+		$('#jstree').bind("dblclick.jstree",function (e) {
+			var li = $(e.target).closest("li");
+			var item = li[0].id;
+			var node = $('#jstree').jstree(true).get_node(item);
+	
+			if(node.icon === "glyphicon glyphicon-dashboard") {
+				$('.modal-title').text(node.text);
+				$("#modalDIV").modal("show");
+				//alert("Grafico : [" + node.id + "] " + node.text + " / Padre : " + node.parent);
+	            barChartData.datasets.forEach(function(dataset, i) {
+	                dataset.data = dataset.data.map(function() {
+	                    return randomScalingFactor();
+	                });
+	            });
+	            window.myBar.update();
+			}
+		});
+		
+	});
+	</script>
+</body>
 </html>
