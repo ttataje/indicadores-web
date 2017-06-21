@@ -82,14 +82,6 @@
 					</a>
 					<b class="arrow"></b>
 				</li>
-				<!-- 
-				<li>
-					<a href="./configuracion.html">
-						<i class="menu-icon fa fa-gears"></i>
-						<span class="menu-text"> Configuración </span>
-					</a>
-					<b class="arrow"></b>
-				</li>-->
 			</ul>
 			<div id="sidebar" class="sidebar-toggle sidebar-collapse">
 				<i data-icon2="ace-icon fa fa-angle-double-right" data-icon1="ace-icon fa fa-angle-double-left" class="ace-icon fa fa-angle-double-left"></i>
@@ -103,7 +95,7 @@
 				<ul class="breadcrumb">
 				  <li>
 					  <i class="fa fa-user home-icon active"></i>
-					  <a href="./crear_cuenta.html">Administrador ( Telly Tataje ) </a>
+					  <a href="#">Administrador ( Telly Tataje ) </a>
 					  <span class="label hidden-xs label-default arrowed">administrador</span>
 				  </li>
 				</ul>
@@ -152,7 +144,7 @@
 											        <canvas id="chartCanvas"></canvas>
 											      </div>
 											      <div class="modal-footer">
-											        <button type="button" class="btn btn-primary">Modificar</button>
+											        <button type="button" class="btn btn-primary odom-modificar">Modificar</button>
 											        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
 											      </div>
 											    </div>
@@ -162,7 +154,7 @@
 										</div>
 									</div>
 									<div class="widget-toolbox padding-8 clearfix">
-										<input tabindex="12" type="button" class="btn btn-primary btn-white btn-round" value="Imprimir">
+										<input tabindex="12" type="button" class="btn btn-primary btn-white btn-round odom-imprimir" value="Imprimir">
 									</div>
 								</div>
 							</div>
@@ -344,8 +336,20 @@
 	
 	    };
 	$(function () {
-		
+		var title = "";
+
 		$("#modalDIV").modal("hide");
+		
+		$('body').on('click','.odom-modificar',function(e){
+			var link = document.createElement('a');
+			link.href = './chart_editor.html?title=' + title;
+			document.body.appendChild(link);
+			link.click(); 
+		});
+		
+		$('body').on('click','.odom-imprimir',function(e){
+			alert('Imprimir!');
+		});
 		
 		var ctx = document.getElementById('chartCanvas').getContext('2d');
 		
@@ -478,6 +482,7 @@
 			var node = $('#jstree').jstree(true).get_node(item);
 	
 			if(node.icon === "glyphicon glyphicon-dashboard") {
+				title = node.text;
 				$('.modal-title').text(node.text);
 				$("#modalDIV").modal("show");
 				//alert("Grafico : [" + node.id + "] " + node.text + " / Padre : " + node.parent);
