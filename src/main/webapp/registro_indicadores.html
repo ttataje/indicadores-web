@@ -132,7 +132,7 @@
 											      	<img src="images/regionica_pie.png" height="45" alt="Region Ica">
 											      	</td>
 											      	<td>
-											      	<h4 class="modal-title">titulo</h4>
+											      	<h4 id="title-modal" class="modal-title">titulo</h4>
 											      	</td>
 											      	<td>
 													<button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -147,6 +147,53 @@
 											      </div>
 											      <div class="modal-footer">
 											        <button type="button" class="btn btn-primary odom-modificar">Modificar</button>
+											        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+											      </div>
+											    </div>
+											  </div>
+											</div>
+											<!-- Fin Modal -->
+											<!-- Inicio Modal -->
+											<div id="modalRegistroDIV" class="modal fade">
+											  <div class="modal-dialog" role="document">
+											    <div class="modal-content">
+											      <div class="modal-header">
+											      	<table>
+											      	<tr>
+											      	<td>
+											      	<img src="images/regionica_pie.png" height="45" alt="Region Ica">
+											      	</td>
+											      	<td>
+											      	<h4 id="title-registro" class="modal-title">titulo</h4>
+											      	</td>
+											      	<td>
+													<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+											          <span aria-hidden="true">&times;</span>
+											        </button>
+											      	</td>
+											      	</tr>
+											      	</table>
+											      </div>
+											      <div class="modal-body">
+											        <table>
+											        <tr>
+											        <td>Descripci&oacute;n</td>
+											        <td><input type="text" name="text" id="text" /></td>
+											        </tr>
+											        <tr id="tr-tipo">
+											        <td>Tipo Gr&aacute;fico</td>
+											        <td>
+											        <select id="tipo" name="tipo">
+											        <option value="bar">Barras</option>
+											        <option value="stackedBar">Stacked Barras</option>
+											        <option value="pie">Pie</option>
+											        </select>
+											        </td>
+											        </tr>
+											        </table>
+											      </div>
+											      <div class="modal-footer">
+											        <button type="button" class="btn btn-primary odom-modificar">Guardar</button>
 											        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
 											      </div>
 											    </div>
@@ -342,6 +389,8 @@
 
 		$("#modalDIV").modal("hide");
 		
+		$("#modalRegistroDIV").modal("hide");
+		
 		$('body').on('click','.odom-modificar',function(e){
 			var link = document.createElement('a');
 			link.href = './chart_editor.html?title=' + title;
@@ -423,7 +472,11 @@
 							"Section": {
 								"separator_after"	: true,
 								"label": "Seccion",
-								"action": function (obj) { this.create(obj); }
+								"action": function (obj) { 
+									$('#title-registro').text("Registro Indicadores");
+									//tr-tipo
+									$("#modalRegistroDIV").modal("show");
+								}
 							},
 							"Chart": {
 								"label": "Grafico",
@@ -485,7 +538,7 @@
 	
 			if(node.icon === "glyphicon glyphicon-dashboard") {
 				title = node.text;
-				$('.modal-title').text(node.text);
+				$('#title-modal').text(node.text);
 				$("#modalDIV").modal("show");
 				//alert("Grafico : [" + node.id + "] " + node.text + " / Padre : " + node.parent);
 	            barChartData.datasets.forEach(function(dataset, i) {
