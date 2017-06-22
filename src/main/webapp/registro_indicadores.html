@@ -488,7 +488,7 @@
 								"separator_after"	: true,
 								"label": "Seccion",
 								"action": function (obj) { 
-									nodeSelected = _node;
+									nodeSelected = obj;
 									$('#title-registro').text("Agregar Seccion");
 									$('#tr-tipo').hide();
 									$("#modalRegistroDIV").modal("show");
@@ -497,7 +497,7 @@
 							"Chart": {
 								"label": "Grafico",
 								"action": function (obj) { 
-									nodeSelected = _node;
+									nodeSelected = obj;
 									$('#title-registro').text("Agregar Gráfico");
 									$('#tr-tipo').show();
 									$("#modalRegistroDIV").modal("show"); 
