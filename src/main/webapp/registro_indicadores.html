@@ -178,7 +178,7 @@
 											        <table>
 											        <tr>
 											        <td>Descripci&oacute;n</td>
-											        <td><input type="text" name="text" id="text" /></td>
+											        <td><input type="text" name="descripcion" id="descripcion" /></td>
 											        </tr>
 											        <tr id="tr-tipo">
 											        <td>Tipo Gr&aacute;fico</td>
@@ -193,7 +193,7 @@
 											        </table>
 											      </div>
 											      <div class="modal-footer">
-											        <button type="button" class="btn btn-primary odom-modificar">Guardar</button>
+											        <button type="button" class="btn btn-primary odom-guardar">Guardar</button>
 											        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
 											      </div>
 											    </div>
@@ -239,6 +239,7 @@
 	<script type="text/javascript" src="js\ace-elements.min.js"></script>
 	<script type="text/javascript" src="js\ace.min.js"></script>
 	<script type="text/javascript">
+	var nodeSelected = null;
 	window.chartColors = {
 		red: 'rgb(255, 99, 132)',
 		orange: 'rgb(255, 159, 64)',
@@ -398,6 +399,19 @@
 			link.click(); 
 		});
 		
+		$('body').on('click','.odom-guardar',function(e){
+			var ref = $('#jstree').jstree(true),
+				sel = ref.get_selected();
+			//FIXME falta cambiar
+			var dd = $("#descripcion");
+			if(!sel.length) { return false; }
+			sel = sel[0];
+			sel = ref.create_node(sel, {"type":"file"});
+			if(sel) {
+				ref.edit(sel);
+			}			
+		});
+		
 		$('body').on('click','.odom-imprimir',function(e){
 			alert('Imprimir!');
 		});
@@ -465,6 +479,7 @@
 		},	
 		"contextmenu": {
 			"items": function (node) {
+				var tree = $('#jstree').jstree(true);
 				var menu = {
 					"Create": {
 						"label": "Nuevo",
@@ -473,24 +488,36 @@
 								"separator_after"	: true,
 								"label": "Seccion",
 								"action": function (obj) { 
-									$('#title-registro').text("Registro Indicadores");
-									//tr-tipo
+									nodeSelected = _node;
+									$('#title-registro').text("Agregar Seccion");
+									$('#tr-tipo').hide();
 									$("#modalRegistroDIV").modal("show");
 								}
 							},
 							"Chart": {
 								"label": "Grafico",
-								"action": function (obj) { this.chart(obj); }
+								"action": function (obj) { 
+									nodeSelected = _node;
+									$('#title-registro').text("Agregar Gráfico");
+									$('#tr-tipo').show();
+									$("#modalRegistroDIV").modal("show"); 
+								}
 							}
 						}
 					},
 					"Rename": {
 						"label": "Renombrar",
-						"action": function (obj) { this.rename(obj); }
+						"action": function (data) { 
+							nodeSelected = _node;
+							modificar();
+						}
 					},
 					"Delete": {
 						"label": "Eliminar",
-						"action": function (obj) { this.remove(obj); }
+						"action": function (obj) { 
+							nodeSelected = _node;
+							eliminar();
+						}
 					},
 					"Edit":{
 						"label": "Modificar",
