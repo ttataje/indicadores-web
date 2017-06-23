@@ -8,7 +8,14 @@
 		<welcome-file>index.jsp</welcome-file>
 		<welcome-file>index.html</welcome-file>
 	</welcome-file-list>
-
+	<filter>
+		<filter-name>WebFilter</filter-name>
+		<filter-class>pe.gob.regionica.indicadores.web.filter.WebFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>WebFilter</filter-name>
+		<servlet-name>web</servlet-name>
+	</filter-mapping>
 	<servlet>
 		<servlet-name>web</servlet-name>
 		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
