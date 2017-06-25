@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE tiles-definitions PUBLIC  "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"  "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">  
+ 
+<tiles-definitions>
+
+   <!-- Base Definition -->
+   <definition name="base-definition" template="/WEB-INF/jsp/template/defaultLayout.jsp">  
+       <put-attribute name="title" value="" />  
+       <put-attribute name="header" value="" />  
+       <put-attribute name="menu" value="" />  
+       <put-attribute name="body" value="" />  
+       <put-attribute name="footer" value="" />  
+   </definition>  
+  
+   <!-- Base Definition -->
+   <definition name="page-definition" template="/WEB-INF/jsp/template/defaultPageLayout.jsp">  
+       <put-attribute name="title" value="" />
+       <put-attribute name="searchbar" value="/WEB-INF/jsp/template/defaultSearchBar.jsp" />
+       <put-attribute name="header" value="/WEB-INF/jsp/template/defaultHeader.jsp" />  
+       <put-attribute name="menu" value="/WEB-INF/jsp/template/defaultMenu.jsp" />  
+       <put-attribute name="body" value="" />  
+       <put-attribute name="footer" value="/WEB-INF/jsp/template/defaultFooter.jsp" />  
+   </definition>
+  
+   <!-- Home Page -->
+   <definition name="login" extends="base-definition">  
+       <put-attribute name="title" value="Sistema de Gestion de Indicadores" />  
+       <put-attribute name="body" value="/WEB-INF/jsp/login.jsp" />  
+   </definition>  
+ 
+   <!-- Principal Page -->
+   <definition name="principal" extends="page-definition">  
+       <put-attribute name="title" value="Sistema de Gestion de Indicadores - Principal" />  
+       <put-attribute name="body" value="/WEB-INF/jsp/principal.jsp" />  
+   </definition>  
+       
+   <!-- Registro Page -->
+   <definition name="registro" extends="page-definition">  
+       <put-attribute name="title" value="Sistema de Gestion de Indicadores - Indicadores" />  
+       <put-attribute name="body" value="/WEB-INF/jsp/registro.jsp" />  
+   </definition>  
+
+   <!-- Grafico Page -->
+   <definition name="grafico" extends="page-definition">  
+       <put-attribute name="title" value="Sistema de Gestion de Indicadores - Grafico" />  
+       <put-attribute name="body" value="/WEB-INF/jsp/grafico.jsp" />  
+   </definition>
+  
+</tiles-definitions>
