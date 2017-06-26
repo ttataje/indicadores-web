@@ -2,33 +2,29 @@
 <div class="page-content">
 	<div class="row">
 		<div class="col-md-12 col-xs-12">
-			<form id="report_bug_form" method="post" action="#" class="dropzone-form">
-				<input type="hidden" name="m_id" value="0">
-				<input type="hidden" name="project_id" value="1">
-				<div class="widget-box widget-color-blue2">
-					<div class="widget-header widget-header-small">
-						<h4 class="widget-title lighter">
-							<i class="ace-icon fa fa-edit"></i>
-							Registro de Indicadores
-						</h4>
+			<div class="widget-box widget-color-blue2">
+				<div class="widget-header widget-header-small">
+					<h4 class="widget-title lighter">
+						<i class="ace-icon fa fa-edit"></i>
+						Registro de Indicadores
+					</h4>
+				</div>
+				<div class="widget-body dz-clickable">
+					<div class="widget-main no-padding">
+						<div class="table-responsive">
+							<canvas id="chartCanvas"></canvas>
+						</div>
 					</div>
-					<div class="widget-body dz-clickable">
-						<div class="widget-main no-padding">
-							<div class="table-responsive">
-								<canvas id="chartCanvas"></canvas>
-							</div>
+					<div class="widget-main no-padding">
+						<div class="table-responsive">
+							<div id="jstree"></div>
 						</div>
-						<div class="widget-main no-padding">
-							<div class="table-responsive">
-								<div id="jstree"></div>
-							</div>
-						</div>
-						<div class="widget-toolbox padding-8 clearfix">
-							<input tabindex="12" type="button" class="btn btn-primary btn-white btn-round odom-regresar" value="Regresar">
-						</div>
+					</div>
+					<div class="widget-toolbox padding-8 clearfix">
+						<input tabindex="12" type="button" class="btn btn-primary btn-white btn-round odom-regresar" value="Regresar">
 					</div>
 				</div>
-			</form>
+			</div>
 		</div>
 	</div>
 </div>
@@ -193,7 +189,7 @@ $(function () {
 	
 	$('body').on('click','.odom-regresar',function(e){
 		var link = document.createElement('a');
-		link.href = './registro_indicadores.html';
+		link.href = '${pageContext.request.contextPath}/registro_indicadores.html';
 		document.body.appendChild(link);
 		link.click(); 
 	});

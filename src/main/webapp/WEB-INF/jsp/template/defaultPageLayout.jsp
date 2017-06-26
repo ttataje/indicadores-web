@@ -15,6 +15,7 @@
 	<link rel="stylesheet" type="text/css" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.min.css" crossorigin="anonymous">
 	<link rel="stylesheet" type="text/css" href="css\common_config.css">
 	<link rel="stylesheet" type="text/css" href="css\status_config.css">
+	<link rel="stylesheet" type="text/css" href="css\dropzone.css">
 	<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" crossorigin="anonymous">
 	<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" crossorigin="anonymous">
 	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400" crossorigin="anonymous">
@@ -23,11 +24,13 @@
 	<link rel="stylesheet" type="text/css" href="css\ace-mantis.css">
 	<link rel="stylesheet" type="text/css" href="css\ace-skins.min.css">
 	<link rel="shortcut icon" href="images\favicon.ico" type="image/x-icon">
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/themes/default/style.min.css" />
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js" integrity="sha256-xNjb53/rY+WmG+4L6tTl9m6PpqknWZvRt0rO1SRnJzw=" crossorigin="anonymous"></script>
+
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/themes/default/style.min.css" />
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
+
 	<style>
     canvas {
         -moz-user-select: none;
@@ -37,28 +40,24 @@
     </style>
 </head>
 <body class="skin-3">
-	<header id="header">
-	    <tiles:insertAttribute name="header" />
-	</header>
+	<tiles:insertAttribute name="header" />
 	<div class="main-container" id="main-container">
-		<section id="sidemenu">
-		    <tiles:insertAttribute name="menu" />
-		</section>
-		<!-- Inicio Contenido -->
-		<div class="main-content">     
-		<section id="site-content">
-		    <tiles:insertAttribute name="searchbar" />
-		    <tiles:insertAttribute name="body" />
-		</section>
+		<div id="sidebar" class="sidebar sidebar-fixed responsive compact ">
+			<tiles:insertAttribute name="menu" />
+			<div id="sidebar" class="sidebar-toggle sidebar-collapse">
+				<i data-icon2="ace-icon fa fa-angle-double-right" data-icon1="ace-icon fa fa-angle-double-left" class="ace-icon fa fa-angle-double-left"></i>
+			</div>
 		</div>
- 
-	
-		<div class="clearfix"></div>
+		<div class="main-content">     
+		    <tiles:insertAttribute name="searchbar" />
+		    <div class="page-content">
+		    <tiles:insertAttribute name="body" />
+			</div>
+		</div>
+ 		<div class="clearfix"></div>
 		<div class="space-20"></div>
 		<div class="footer noprint">
-			<footer id="footer">
-			    <tiles:insertAttribute name="footer" />
-			</footer>
+		    <tiles:insertAttribute name="footer" />
 		</div>
 		<a class="btn-scroll-up btn btn-sm btn-inverse display" id="btn-scroll-up" href="#">
 			<i class="ace-icon fa fa-angle-double-up icon-only bigger-110"></i>
@@ -70,5 +69,56 @@
 	<script type="text/javascript" src="js\ace-extra.min.js"></script>
 	<script type="text/javascript" src="js\ace-elements.min.js"></script>
 	<script type="text/javascript" src="js\ace.min.js"></script>
+	<script type="text/javascript">
+	$(function () {
+		var currentPage = '${currentPage}';
+		
+		function goTo(page){
+			var frm = document.createElement('form');
+			frm.method = 'POST';
+			frm.action = '${pageContext.request.contextPath}/go';
+			var txt = document.createElement('input');
+			txt.type = "hidden";
+			txt.name = "page";
+			txt.value = page;
+			frm.appendChild(txt);
+			document.body.appendChild(frm);
+			frm.submit(); 
+		}
+
+		function loadChart(codigo){
+			var frm = document.createElement('form');
+			frm.method = 'POST';
+			frm.action = '${pageContext.request.contextPath}/loadChart';
+			var txt = document.createElement('input');
+			txt.type = "hidden";
+			txt.name = "codigo";
+			txt.value = codigo;
+			frm.appendChild(txt);
+			document.body.appendChild(frm);
+			frm.submit(); 
+		}
+		
+		$('ul.nav-list li').click(function(e){
+			var _class = $(this).attr('class');
+			var _nav = $(this).attr('nav');
+			if(!(_class == "active")){
+				goTo(_nav);
+			}
+		});
+		
+		$('ul.nav-list li').each(function(){
+			var current = $(this);
+			var nav = current.attr('nav');
+			if(currentPage == nav){
+				current.removeClass('active');
+				current.addClass('active');
+			}else{
+				current.removeClass('active');
+			}
+			
+		});
+	});
+	</script>
 </body>
 </html>

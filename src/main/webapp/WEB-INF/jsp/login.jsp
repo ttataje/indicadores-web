@@ -2,7 +2,7 @@
 	<div class="space-12 hidden-480"></div>
 	<a href="my_view_page.htm">
 		<h1 class="center white">
-			<img src="images\regionica_logo.png">
+			<img src="${pageContext.request.contextPath}/images/regionica_logo.png">
 		</h1>
 	</a>
 	<div class="space-24 hidden-480"></div>
@@ -17,9 +17,8 @@
 					<div class="space-10"></div>
 
 					<!-- Login Form BEGIN -->
-					<form id="login-form" method="post" action="./my_view_page.html">
+					<form id="login-form" method="post" action="${pageContext.request.contextPath}/login">
 					<fieldset>
-						<input type="hidden" name="return" value="view_all_bug_page.php">
 						<label for="username" class="block clearfix">
 							<span class="block input-icon input-icon-right">
 								<input id="username" name="username" type="text" placeholder="Nombre de usuario" size="32" maxlength="191" value="" class="form-control autofocus">
@@ -35,7 +34,7 @@
 						<div class="space-10"></div>
 
 						<input type="submit" class="width-40 pull-right btn btn-success btn-inverse bigger-110" value="iniciar sesión">
-						<div class="clearfix"></div>
+						<div class="clearfix">${message}</div>
 					</fieldset>
 					</form>
 					<!-- Login Form END -->
