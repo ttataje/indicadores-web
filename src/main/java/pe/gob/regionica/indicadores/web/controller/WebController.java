@@ -17,13 +17,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.client.RestTemplate;
 
+import pe.gob.regionica.indicadores.web.bean.Color;
 import pe.gob.regionica.indicadores.web.bean.Grafico;
 import pe.gob.regionica.indicadores.web.bean.Usuario;
 import pe.gob.regionica.indicadores.web.utils.WebConstants;
 
 @Controller
 @RequestMapping("/")
-@SessionAttributes({"usuario","currentPage"})
+@SessionAttributes({"usuario","currentPage","colors"})
 public class WebController {
 	
 	private final Logger log = LoggerFactory.getLogger(WebController.class);
@@ -50,6 +51,20 @@ public class WebController {
     		Usuario usuario = restTemplate.postForObject(WebConstants.restLogin, null, Usuario.class, vars);
 	    	model.addAttribute("usuario", usuario);
 	    	model.addAttribute("currentPage", "principal");
+	    	
+	    	Color[] colores = restTemplate.postForObject(WebConstants.restColor, null, Color[].class);
+	    	if(colores != null){
+	    		StringBuilder colors = new StringBuilder("{");
+	    		for(int i = 0; i < colores.length; i++){
+	    			colors.append(colores[i].getDescripcion());
+	    			colors.append(": ");
+	    			colors.append(colores[i].getColorRGB());
+	    			if(i != colores.length - 1)
+	    				colors.append(",");
+	    		}
+	    		colors.append("}");
+	    		model.addAttribute("colors", colors);
+	    	}
     	}catch(Exception e){
     		log.error(e.getMessage());
     		model.addAttribute("message", "Usuario y/o Contraseña son incorrectos");
@@ -68,14 +83,14 @@ public class WebController {
         return "login";
     }
     
-    @RequestMapping(value = { "/go"}, method = RequestMethod.GET)
+    @RequestMapping(value = { "/go"}, method = RequestMethod.POST)
     public String loadPage(HttpServletRequest request, ModelMap model) {
     	String page = request.getParameter("page");
     	model.addAttribute("currentPage", page);
         return page;
     }
     
-    @RequestMapping(value = { "/loadChart"}, method = RequestMethod.GET)
+    @RequestMapping(value = { "/loadChart"}, method = RequestMethod.POST)
     public String loadChart(HttpServletRequest request, ModelMap model) {
     	String codigo = request.getParameter("codigo");
     	

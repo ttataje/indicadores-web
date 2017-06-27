@@ -13,7 +13,9 @@ public class WebConstants {
 	
 	public static final String successful = "200";
 	
-	public static final String restLogin = restServer + "/rest/usuario/login";
+	public static final String restColor = restServer + "/rest/color/list";
 	
-	public static final String restGrafico = restServer + "/rest/grafico/cargar";
+	public static final String restLogin = restServer + "/rest/usuario/login?username={username}&clave={clave}";
+	
+	public static final String restGrafico = restServer + "/rest/grafico/cargar?codigo={codigo}";
 }

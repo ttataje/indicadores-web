@@ -66,6 +66,8 @@
 	}
 </script>
 <script type="text/javascript">
+window.chartColors = ${colors};
+/*
 window.chartColors = {
 	red: 'rgb(255, 99, 132)',
 	orange: 'rgb(255, 159, 64)',
@@ -75,6 +77,7 @@ window.chartColors = {
 	purple: 'rgb(153, 102, 255)',
 	grey: 'rgb(201, 203, 207)'
 };
+*/
 
 window.randomScalingFactor = function() {
 	var num1 = 1000;
