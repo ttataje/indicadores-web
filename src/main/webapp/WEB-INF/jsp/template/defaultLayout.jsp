@@ -24,17 +24,11 @@
 	<link rel="stylesheet" type="text/css" href="css\ace.min.css">
 	<link rel="stylesheet" type="text/css" href="css\ace-mantis.css">
 	<link rel="stylesheet" type="text/css" href="css\ace-skins.min.css">
-	<script type="text/javascript" src="javascript_config.php"></script>
-	<script type="text/javascript" src="javascript_translations.php"></script>
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js" integrity="sha256-xNjb53/rY+WmG+4L6tTl9m6PpqknWZvRt0rO1SRnJzw=" crossorigin="anonymous"></script>
 	<script type="text/javascript" src="js\dropzone.min.js"></script>
 	<script type="text/javascript" src="js\common.js"></script>
 	<link rel="shortcut icon" href="images\favicon.ico" type="image/x-icon">
-	<link rel="search" type="application/opensearchdescription+xml" title="MantisBT: Text Search" href="browser_search_plugin.php?type=text">
-	<link rel="search" type="application/opensearchdescription+xml" title="MantisBT: Issue Id" href="browser_search_plugin-1.php?type=id">
-	<script type="text/javascript" src="javascript_config.php"></script>
-	<script type="text/javascript" src="javascript_translations.php"></script>
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js" integrity="sha256-xNjb53/rY+WmG+4L6tTl9m6PpqknWZvRt0rO1SRnJzw=" crossorigin="anonymous"></script>
 </head>

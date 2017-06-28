@@ -115,49 +115,6 @@ window.randomScalingFactor = function() {
 	return Math.floor(Math.random() * (num2-num1 + 1) + num1);
 };
 
-var arrayCollectionChildren = [
-	{"codigo": 1, "text": "2017", "state" : { "opened" : true }, "type" : "folder", "children": 
-		[
-			{"codigo": 2, "parent" : 1, "text": "Marzo", "state" : { "opened" : true }, "type" : "folder", "children": 
-			[
-				{"codigo": 3, "parent" : 2, "text": "Exportacion", "state" : { "opened" : true }, "type" : "folder", "children": 
-				[
-					{"codigo": 4, "parent" : 3, "text": "Por Sectores", "state" : { "opened" : true }, "type" : "folder", "children": 
-					[
-						{"codigo": 5, "parent" : 4, "text": "EXPORTACIONES POR SECTORES ECONÓMICOS 2000-2016 (Millones US$ FOB)","icon" : "glyphicon glyphicon-dashboard", "type" : "chart"},
-						{"codigo": 6, "parent" : 4, "text": "EXPORTACIONES DE LOS SECTORES POR PRODUCTO 2015 (Millones US$ FOB)","icon" : "glyphicon glyphicon-dashboard", "type" : "chart"},
-						{"codigo": 7, "parent" : 4, "text": "Sector Agrícola", "state" : { "opened" : true }, "type" : "folder", "children": 
-						[
-							{"codigo": 8, "parent" : 7, "text": "EXPORTACIONES AGROPECUARIAS POR PRODUCTO 2015 (Millones US$ FOB)","icon" : "glyphicon glyphicon-dashboard", "type" : "chart"},
-							{"codigo": 9, "parent" : 7, "text": "EXPORTACIONES AGROPECUARIAS POR PRODUCTO 2000-2016 (Millones US$ FOB)","icon" : "glyphicon glyphicon-dashboard", "type" : "chart"},
-							{"codigo": 10, "parent" : 7, "text": "Uvas Frescas", "state" : { "opened" : true }, "type" : "folder", "children": 
-							[
-								{"codigo": 11, "parent" : 10, "text": "VOLUMEN EXPORTADO (t) Y PRECIO FOB (US$ / kg) DE LA UVA Campañas 00/01-15/16","icon" : "glyphicon glyphicon-dashboard", "type" : "chart"},
-								{"codigo": 12, "parent" : 10, "text": "PRECIOS (US$ / kg) Y VOLÚMENES (t) MENSUALESDE LA DE LA EXPORTACIÓN DE UVA Campañas 14/15-16/17","icon" : "glyphicon glyphicon-dashboard", "type" : "chart"},
-								{"codigo": 13, "parent" : 10, "text": "EXPORTACIONES DE UVA POR PAÍS DE DESTINO Campañas 00/01-15/16 (t)","icon" : "glyphicon glyphicon-dashboard", "type" : "chart"},
-								{"codigo": 14, "parent" : 10, "text": "EXPORTACIONES DE UVA POR EMPRESA EXPORTADORA Campañas 00/01-15/16 (t)","icon" : "glyphicon glyphicon-dashboard", "type" : "chart"},
-							]},
-							{"codigo": 15, "parent" : 7, "text": "Espárragos Frescos", "state" : { "opened" : true }, "type" : "folder", "children": [
-								{"codigo": 16, "parent" : 15, "text": "VOLUMEN EXPORTADO (t) Y PRECIO FOB (US$ / kg) DEL ESPÁRRAGO FRESCO 2000-2016","icon" : "glyphicon glyphicon-dashboard", "type" : "chart"},
-								{"codigo": 17, "parent" : 15, "text": "PRECIOS (US$ / kg) Y VOLÚMENES (t) MENSUALES DE LA EXPORTACIÓN DE ESPÁRRAGO FRESCO 2014-2016","icon" : "glyphicon glyphicon-dashboard", "type" : "chart"},
-								{"codigo": 18, "parent" : 15, "text": "EXPORTACIONES DE ESPÁRRAGO FRESCO POR PAÍS DE DESTINO 2010-2016 (t)","icon" : "glyphicon glyphicon-dashboard", "type" : "chart"},
-								{"codigo": 19, "parent" : 15, "text": "EXPORTACIONES DE ESPÁRRAGO FRESCO POR EMPRESA EXPORTADORA 2010-2016 (t)","icon" : "glyphicon glyphicon-dashboard", "type" : "chart"}
-							]},
-						]},
-					]},
-				]},
-			]},
-		] },
-	];
-
-	
-var arrayCollection = [{
-	"text" : "Region Ica",
-	"state" : { "opened" : true },
-	"children" : arrayCollectionChildren
-	}];
-
-
 var barChartData = {
         labels: ["2010", "2011", "2012", "2013", "2014", "2015", "2016"],
         datasets: [{
@@ -247,9 +204,13 @@ var barChartData = {
         }]
 
     };
+
 $(function () {
 	var title = "";
+	var selectedNode = null;
+	var typeNode = null;
 	var nextNode = 19;
+	var countChart = 0;
 
 	$("#modalDIV").modal("hide");
 	
@@ -267,17 +228,66 @@ $(function () {
 	});
 	
 	$('body').on('click','.odom-guardar',function(e){
-		var ref = $('#jstree').jstree(true),
-			sel = ref.get_selected();
 		var nodeText = $("#descripcion");
-		if(!sel.length) { return false; }
-		sel = sel[0];
-		nextNode = nextNode + 1;
-		sel = ref.create_node(sel, {"codigo": nextNode, "parent" : sel, "text": nodeText, "state" : { "opened" : true }, "type" : "folder"}, 'last');
+		var data = selectedNode;
+		data.node.text = nodeText;
+		
+		$.post('${pageContext.request.contextPath}/addNode', { 'padre' : data.node.parent, 'position' : data.position, 'text' : data.node.text, 'type' : typeNode })
+		.done(function (d) {
+			data.instance.set_id(data.node, d.codigo);
+		})
+		.fail(function () {
+			data.instance.refresh();
+		});
 	});
 	
 	$('body').on('click','.odom-imprimir',function(e){
-		alert('Imprimir!');
+		var doc = new jsPDF();
+		var cantProcess = 0;
+		
+		var chartIMG = [];
+		
+		document.getElementById('chartCanvas').toBlob(function(blob) {
+			var reader = new window.FileReader();
+			reader.readAsDataURL(blob); 
+			reader.onloadend = function() {
+				chartIMG[cantProcess] = reader.result;                
+				cantProcess = cantProcess + 1;
+			}
+		});
+		
+		refreshData()
+		
+		document.getElementById('chartCanvas').toBlob(function(blob) {
+			var reader = new window.FileReader();
+			reader.readAsDataURL(blob); 
+			reader.onloadend = function() {
+				chartIMG[cantProcess] = reader.result;                
+				cantProcess = cantProcess + 1;
+			}
+		});
+		
+		do{
+			if(cantProcess == 2){
+				doc.setFontSize(40);
+				doc.text(30, 20, 'Cuadro 1');
+				
+				console.log(chartIMG[0]);
+				doc.addImage(chartIMG[0], 'PNG', 15, 40, 180, 160);
+				
+			
+				doc.addPage();
+				refreshData()
+				
+				doc.setFontSize(40);
+				doc.text(30, 20, 'Cuadro 2');
+				
+				console.log(chartIMG[1]);
+				doc.addImage(chartIMG[1], 'PNG', 15, 40, 180, 160);
+				
+				doc.output('save','output.pdf');
+			}
+		}while(cantProcess < 2)
 	});
 	
 	var ctx = document.getElementById('chartCanvas').getContext('2d');
@@ -306,102 +316,163 @@ $(function () {
         }
     });
 
-
-	$('#jstree').jstree({"plugins" : [ "contextmenu", "types", "search", "state", "wholerow" ],
-	'core' : {
-		'data' : arrayCollection
-	},
-	"check_callback" : true,
-	'unique' : {
-		'duplicate' : function (name, counter) {
-			return name + ' ' + counter;
-		}
-	},	
-	"contextmenu": {
-		"items": function (node) {
-			var tree = $('#jstree').jstree(true);
-			var menu = {
-				"Create": {
-					"label": "Nuevo",
-					"submenu" : {
-						"Section": {
-							"separator_after"	: true,
-							"label": "Seccion",
-							"action": function (obj) { 
-								nodeSelected = obj;
-								$('#title-registro').text("Agregar Seccion");
-								$('#tr-tipo').hide();
-								$("#modalRegistroDIV").modal("show");
-							}
-						},
-						"Chart": {
-							"label": "Grafico",
-							"action": function (obj) { 
-								nodeSelected = obj;
-								$('#title-registro').text("Agregar Gráfico");
-								$('#tr-tipo').show();
-								$("#modalRegistroDIV").modal("show"); 
-							}
-						}
+	$('#jstree').jstree({
+			'core' : {
+				'data' : {
+					'url' : '${pageContext.request.contextPath}/getNode',
+					'data' : function (node) {
+						return { 'codigo' : node.codigo };
 					}
 				},
-				"Rename": {
-					"label": "Renombrar",
-					"action": function (data) { 
-						nodeSelected = _node;
-						modificar();
-					}
-				},
-				"Delete": {
-					"label": "Eliminar",
-					"action": function (obj) { 
-						nodeSelected = _node;
-						eliminar();
-					}
-				},
-				"Edit":{
-					"label": "Modificar",
-					"submenu" : {
-						"Copy": {
-							"separator_after"	: true,
-							"label": "Copiar",
-							"action": function (obj) { this.copy(obj); }
-						},
-						"Cut": {
-							"separator_after"	: true,
-							"label": "Cortar",
-							"action": function (obj) { this.cut(obj); }
-						},
-						"Paste": {
-							"label": "Pegar",
-							"action": function (obj) { this.paste(obj); },
-							"_disabled" : true
-						}
-					}
+				'force_text' : true,
+				'check_callback' : true,
+				'themes' : {
+					'stripes' : true
 				}
-			};
-			
-			if(node.children.length > 0){
-				delete menu.Delete;
-			}
+			},
+			'types' :{
+				'root' :{
+					icon : "${pageContext.request.contextPath}/images/regionica_tree.png"
+				},
+				'folder' :{
+					icon : 'fa fa-archive'
+				},
+				'chart' :{
+					icon : 'fa fa-bar-chart'
+				}
+			},
+			"contextmenu": {
+				"items": function (node) {
+					var tree = $('#jstree').jstree(true);
+					var menu = {
+						"create_node": {
+							"label": "Nuevo",
+							"submenu" : {
+								"create_section": {
+									"separator_after"	: true,
+									"label": "Seccion"
+								},
+								"create_chart": {
+									"label": "Grafico"
+								}
+							}
+						},
+						"rename_node": {
+							"label": "Renombrar"
+						},
+						"delete_node": {
+							"label": "Eliminar"
+						},
+						"edit_node":{
+							"label": "Modificar",
+							"submenu" : {
+								"copy_node": {
+									"separator_after"	: true,
+									"label": "Copiar"
+								},
+								"cut_node": {
+									"separator_after"	: true,
+									"label": "Cortar"
+								},
+								"paste_node": {
+									"label": "Pegar",
+									"_disabled" : true
+								}
+							}
+						}
+					};
+					
+					if(node.children.length > 0){
+						delete menu.Delete;
+					}
 
-			if(node.icon === "glyphicon glyphicon-dashboard") {
-				delete menu.Create;
+					if(node.icon === "glyphicon glyphicon-dashboard") {
+						delete menu.Create;
+					}
+					
+					if(node.parent == "#"){
+						return null;
+					}
+					
+					if(rol == "Consultor"){
+						return null;
+					}
+					
+					return menu;
+				}
+			},
+			'plugins' : ['state','dnd','contextmenu','types','wholerow','search']
+		})
+		.on('delete_node.jstree', function (e, data) {
+			/*
+			$.get('?operation=delete_node', { 'id' : data.node.id })
+				.fail(function () {
+					data.instance.refresh();
+				});
+			*/
+		})
+		.on('rename_node.jstree', function (e, data) {
+			/*
+			$.get('?operation=rename_node', { 'id' : data.node.id, 'text' : data.text })
+				.fail(function () {
+					data.instance.refresh();
+				});
+			*/
+		})
+		.on('move_node.jstree', function (e, data) {
+			/*
+			$.get('?operation=move_node', { 'id' : data.node.id, 'parent' : data.parent, 'position' : data.position })
+				.fail(function () {
+					data.instance.refresh();
+				});
+			*/
+		})
+		.on('copy_node.jstree', function (e, data) {
+			/*
+			$.get('?operation=copy_node', { 'id' : data.original.id, 'parent' : data.parent, 'position' : data.position })
+				.always(function () {
+					data.instance.refresh();
+				});
+			*/
+		})
+		.on('changed.jstree', function (e, data) {
+			/*
+			if(data && data.selected && data.selected.length) {
+				$.get('?operation=get_content&id=' + data.selected.join(':'), function (d) {
+					$('#data .default').text(d.content).show();
+				});
 			}
-			
-			if(node.parent == "#"){
-				return null;
+			else {
+				$('#data .content').hide();
+				$('#data .default').text('Select a file from the tree.').show();
 			}
-			
-			if(rol == "Consultor"){
-				return null;
-			}
-			
-			return menu;
-		}
-	}
-	});
+			*/
+		})
+		.on('create_section', function (e, data) {
+			selectedNode = data;
+			typeNode = 'folder';
+			$('#title-registro').text("Agregar Seccion");
+			$('#tr-tipo').hide();
+			$("#modalRegistroDIV").modal("show");
+		})
+		.on('create_chart', function (e, data) {
+			selectedNode = data;
+			typeNode = 'chart';
+			$('#title-registro').text("Agregar Gráfico");
+			$('#tr-tipo').show();
+			$("#modalRegistroDIV").modal("show"); 
+		});
 	
+	function refreshData(){
+        barChartData.datasets.forEach(function(dataset, i) {
+            dataset.data = dataset.data.map(function() {
+                return randomScalingFactor();
+            });
+        });
+        window.myBar.update();
+	}
+
+
 	$('#jstree').bind("dblclick.jstree",function (e) {
 		var li = $(e.target).closest("li");
 		var item = li[0].id;
@@ -419,14 +490,9 @@ $(function () {
 				$('.odom-modificar').show();
 			}
 			
-            barChartData.datasets.forEach(function(dataset, i) {
-                dataset.data = dataset.data.map(function() {
-                    return randomScalingFactor();
-                });
-            });
-            window.myBar.update();
+			 refreshData()
 		}
 	});
-	
+
 });
 </script>

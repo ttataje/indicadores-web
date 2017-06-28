@@ -1,24 +1,34 @@
 package pe.gob.regionica.indicadores.web.controller;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.collections.ListUtils;
+import org.apache.commons.collections.MapUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.client.RestTemplate;
 
+import com.mysql.jdbc.StringUtils;
+
 import pe.gob.regionica.indicadores.web.bean.Color;
 import pe.gob.regionica.indicadores.web.bean.Grafico;
+import pe.gob.regionica.indicadores.web.bean.Indicador;
 import pe.gob.regionica.indicadores.web.bean.Usuario;
 import pe.gob.regionica.indicadores.web.utils.WebConstants;
 
@@ -85,6 +95,9 @@ public class WebController {
     
     @RequestMapping(value = { "/go"}, method = RequestMethod.POST)
     public String loadPage(HttpServletRequest request, ModelMap model) {
+    	if(model.get("usuario") == null){
+    		return "login";
+    	}
     	String page = request.getParameter("page");
     	model.addAttribute("currentPage", page);
         return page;
@@ -102,7 +115,7 @@ public class WebController {
     	vars.put("codigo", codigo);
     	
     	try{
-    		Grafico grafico = restTemplate.postForObject(WebConstants.restGrafico, null, Grafico.class, vars);
+    		Grafico grafico = restTemplate.postForObject(WebConstants.restLoadGrafico, null, Grafico.class, vars);
 	    	model.addAttribute("currentPage", "registro");
 	    	model.addAttribute("grafico", grafico);
     	}catch(Exception e){
@@ -114,4 +127,54 @@ public class WebController {
         return "grafico";
     }
     
+    @RequestMapping(value = { "/getNode"}, method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<List<Indicador>> getNode(HttpServletRequest request, ModelMap model) {
+    	String codigo = request.getParameter("codigo");
+
+    	RestTemplate restTemplate = new RestTemplate();
+    	restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+    	restTemplate.getMessageConverters().add(new StringHttpMessageConverter());
+
+    	Map<String, String> vars = new HashMap<String, String>();
+    	vars.put("codigo", codigo);
+    	
+    	try{
+    		Indicador[] indicadores = restTemplate.postForObject(WebConstants.restGetIndicador, null, Indicador[].class, vars);
+	    	return new ResponseEntity<List<Indicador>>(Arrays.asList(indicadores), HttpStatus.ACCEPTED);
+    	}catch(Exception e){
+    		log.error(e.getMessage());
+    		return new ResponseEntity<List<Indicador>>(ListUtils.EMPTY_LIST, HttpStatus.ACCEPTED);
+    	}
+    }
+    
+    @RequestMapping(value = { "/addNode"}, method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity<Map<String,Object>> addNode(HttpServletRequest request, ModelMap model) {
+    	Indicador padre = new Indicador();
+    	padre.setCodigo(new Long(request.getParameter("padre")));
+    	
+    	Indicador indicador = new Indicador();
+    	indicador.setPadre(padre);
+    	indicador.setDescripcion(request.getParameter("text"));
+    	indicador.setTipo(request.getParameter("type"));
+    	indicador.setPosition(new Long(StringUtils.isNullOrEmpty(request.getParameter("position")) ? request.getParameter("position") : "1"));
+
+    	RestTemplate restTemplate = new RestTemplate();
+    	restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+    	restTemplate.getMessageConverters().add(new StringHttpMessageConverter());
+
+    	Map<String, Object> vars = new HashMap<String, Object>();
+    	vars.put("indicador", indicador);
+    	
+    	try{
+    		Long codigo = restTemplate.postForObject(WebConstants.restAddIndicador, null, Long.class, vars);
+    		vars.clear();
+    		vars.put("codigo", codigo);
+	    	return new ResponseEntity<Map<String,Object>>(vars, HttpStatus.ACCEPTED);
+    	}catch(Exception e){
+    		log.error(e.getMessage());
+    		return new ResponseEntity<Map<String,Object>>(MapUtils.EMPTY_MAP, HttpStatus.BAD_REQUEST);
+    	}
+    }
 }

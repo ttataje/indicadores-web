@@ -1,7 +1,8 @@
 package pe.gob.regionica.indicadores.web.bean;
 
 import java.math.BigDecimal;
-import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 public class DetalleGrafico extends GenericBean {
 
@@ -17,7 +18,7 @@ public class DetalleGrafico extends GenericBean {
 	
 	private BigDecimal valor;
 	
-	private Collection<DetalleGrafico> children;
+	private Set<DetalleGrafico> children = new HashSet<DetalleGrafico>();
 
 	public Long getCodigo() {
 		return codigo;
@@ -59,11 +60,11 @@ public class DetalleGrafico extends GenericBean {
 		this.valor = valor;
 	}
 
-	public Collection<DetalleGrafico> getChildren() {
+	public Set<DetalleGrafico> getChildren() {
 		return children;
 	}
 
-	public void setChildren(Collection<DetalleGrafico> children) {
+	public void setChildren(Set<DetalleGrafico> children) {
 		this.children = children;
 	}
 

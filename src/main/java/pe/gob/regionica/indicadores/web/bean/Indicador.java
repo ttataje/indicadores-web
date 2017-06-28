@@ -1,6 +1,7 @@
 package pe.gob.regionica.indicadores.web.bean;
 
-import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 public class Indicador extends GenericBean {
 
@@ -9,12 +10,14 @@ public class Indicador extends GenericBean {
 	private Long codigo;
 
 	private String descripcion;
+	
+	private Long position;
 
 	private Indicador padre;
 
 	private String tipo;
 
-	private Collection<Indicador> children;
+	private Set<Indicador> children = new HashSet<Indicador>();
 
 	public Long getCodigo() {
 		return codigo;
@@ -30,6 +33,14 @@ public class Indicador extends GenericBean {
 
 	public void setDescripcion(String descripcion) {
 		this.descripcion = descripcion;
+	}
+	
+	public Long getPosition() {
+		return position;
+	}
+
+	public void setPosition(Long position) {
+		this.position = position;
 	}
 
 	public Indicador getPadre() {
@@ -48,11 +59,11 @@ public class Indicador extends GenericBean {
 		this.tipo = tipo;
 	}
 
-	public Collection<Indicador> getChildren() {
+	public Set<Indicador> getChildren() {
 		return children;
 	}
 
-	public void setChildren(Collection<Indicador> children) {
+	public void setChildren(Set<Indicador> children) {
 		this.children = children;
 	}
 	
