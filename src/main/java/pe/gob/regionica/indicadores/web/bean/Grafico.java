@@ -8,7 +8,7 @@ public class Grafico extends GenericBean {
 
 	private Long codigo;
 
-	private Indicador indicador;
+	private Long indicador;
 
 	private String tipo;
 
@@ -22,11 +22,11 @@ public class Grafico extends GenericBean {
 		this.codigo = codigo;
 	}
 
-	public Indicador getIndicador() {
+	public Long getIndicador() {
 		return indicador;
 	}
 
-	public void setIndicador(Indicador indicador) {
+	public void setIndicador(Long indicador) {
 		this.indicador = indicador;
 	}
 

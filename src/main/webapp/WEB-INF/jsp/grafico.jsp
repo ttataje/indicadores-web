@@ -22,303 +22,353 @@
 					</div>
 					<div class="widget-toolbox padding-8 clearfix">
 						<input tabindex="12" type="button" class="btn btn-primary btn-white btn-round odom-regresar" value="Regresar">
+						<input tabindex="13" type="button" class="btn btn-primary btn-white btn-round odom-actualizar-grafico" value="Actualizar Gr&aacute;fico">
 					</div>
 				</div>
 			</div>
 		</div>
+		<!-- Inicio Modal -->
+		<div id="modalRegistroDIV" class="modal fade">
+		  <div class="modal-dialog" role="document">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		      	<table>
+		      	<tr>
+		      	<td>
+		      	<img src="images/regionica_pie.png" height="45" alt="Region Ica">
+		      	</td>
+		      	<td>
+		      	<h4 id="title-registro" class="modal-title">titulo</h4>
+		      	</td>
+		      	<td>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+		          <span aria-hidden="true">&times;</span>
+		        </button>
+		      	</td>
+		      	</tr>
+		      	</table>
+		      </div>
+		      <div class="modal-body">
+		        <table>
+		        <tr>
+		        <td>Valor</td>
+		        <td><input type="text" name="valor" id="valor" /></td>
+		        </tr>
+		        </table>
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-primary odom-guardar">Guardar</button>
+		        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+		<!-- Fin Modal -->
+		<!-- Inicio Modal Atributos -->
+		<div id="modalAtributosDIV" class="modal fade">
+		  <div class="modal-dialog" role="document">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		      	<table style="width: 100%;">
+		      	<tr>
+		      	<td style="width: 20%">
+		      	<img src="images/regionica_pie.png" height="45" alt="Region Ica">
+		      	</td>
+		      	<td style="width: 30%">
+		      	<h4 id="title-registro" class="modal-title">Modificar Atributos</h4>
+		      	</td>
+		      	<td style="width: 10%">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+		          <span aria-hidden="true">&times;</span>
+		        </button>
+		      	</td>
+		      	</tr>
+		      	</table>
+		      </div>
+		      <div class="modal-body">
+		        <table>
+		        <tr>
+		        <td>Color</td>
+		        <td><input type='text' id="color" name="color" /></td>
+		        </tr>
+		        <tr>
+		        <td>Tipo</td>
+		        <td>
+		        	<select id="tipo" name="tipo">
+		        		<option value="bar">Barra</option>
+		        		<option value="line">Linea</option>
+		        	</select>
+		        </td>
+		        </tr>
+		        </table>
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-primary odom-guardarAtributos">Guardar</button>
+		        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+		<!-- Fin Modal Atriburos -->
 	</div>
 </div>
 <!-- Fin Contenido -->
 <script type="text/javascript">
-	var getUrlParameter = function getUrlParameter(sParam) {
-	    var sPageURL = decodeURIComponent(window.location.search.substring(1)),
-	        sURLVariables = sPageURL.split('&'),
-	        sParameterName,
-	        i;
+var titulo = '${indicador.descripcion}';
+var objNode = null;
+var selectedNode = null;
+var typeNode = null;
+var nodeToModify = null;
 
-	    for (i = 0; i < sURLVariables.length; i++) {
-	        sParameterName = sURLVariables[i].split('=');
-
-	        if (sParameterName[0] === sParam) {
-	            return sParameterName[1] === undefined ? true : sParameterName[1];
-	        }
-	    }
-	};
-</script>
-<script type="text/javascript">
-	function convertToArrayChildren(labelDataset, chartDataset){
-		var size = labelDataset.length;
-		var children = [];
-		var autoid = 0;
-		for(var i = 0; i < size; i++){
-			autoid = autoid + 1;
-			children[i] = {"id" : autoid, "text": labelDataset[i], "state" : { "opened" : true }, "type" : "folder", "children": []};
-			for(var k = 0; k < size; k++){
-				autoid = autoid + 1;
-				for(var j = 0; j < chartDataset.length; j++){
-					children[i].children[k] = {"id" : autoid, "text": chartDataset[k].label, "state" : { "opened" : true }, "type" : "folder", "children": []};
-					autoid = autoid + 1;
-					children[i].children[k].children[0] = {"id": autoid, "parent" : autoid - 1, "text": chartDataset[k].data[i],"icon" : "glyphicon glyphicon-dashboard", "type" : "value"};
-				}					
-			}
+function refreshGrafico(){
+	$.post('${pageContext.request.contextPath}/loadChartData', {"codigo" : '${grafico.indicador}'})
+	.done(function (d) {
+		var ctx = document.getElementById('chartCanvas').getContext('2d');
+		
+		if(!jQuery.isEmptyObject(d.data)){
+			console.log(d)
+		    window.myBar = new Chart(ctx, d);
 		}
-		return children;
-	}
-</script>
-<script type="text/javascript">
-window.chartColors = ${colors};
-/*
-window.chartColors = {
-	red: 'rgb(255, 99, 132)',
-	orange: 'rgb(255, 159, 64)',
-	yellow: 'rgb(255, 205, 86)',
-	green: 'rgb(75, 192, 192)',
-	blue: 'rgb(54, 162, 235)',
-	purple: 'rgb(153, 102, 255)',
-	grey: 'rgb(201, 203, 207)'
-};
-*/
+	})
+	.fail(function (e) {
+		//FIXME falta mensaje en caso falle la carga del modal
+	});
+}
 
-window.randomScalingFactor = function() {
-	var num1 = 1000;
-	var num2 = 9999999;
-	return Math.floor(Math.random() * (num2-num1 + 1) + num1);
-};
-
-var titulo = getUrlParameter('title');
-
-var labelDataset = ["2010", "2011", "2012", "2013", "2014", "2015", "2016"];
-
-var chartDataset = [{
-       label: 'CFG INVESTMENT',
-       backgroundColor: window.chartColors.red,
-       data: [
-           randomScalingFactor(),
-           randomScalingFactor(),
-           randomScalingFactor(),
-           randomScalingFactor(),
-           randomScalingFactor(),
-           randomScalingFactor(),
-           randomScalingFactor()
-       ]
-   }, {
-       label: 'PESQUERA DIAMANTE',
-       backgroundColor: window.chartColors.blue,
-       data: [
-           randomScalingFactor(),
-           randomScalingFactor(),
-           randomScalingFactor(),
-           randomScalingFactor(),
-           randomScalingFactor(),
-           randomScalingFactor(),
-           randomScalingFactor()
-       ]
-   }, {
-       label: 'AUSTRAL GROUP',
-       backgroundColor: window.chartColors.green,
-       data: [
-           randomScalingFactor(),
-           randomScalingFactor(),
-           randomScalingFactor(),
-           randomScalingFactor(),
-           randomScalingFactor(),
-           randomScalingFactor(),
-           randomScalingFactor()
-       ]
-   }, {
-       label: 'PESQUERA EXALMAR',
-       backgroundColor: window.chartColors.yellow,
-       data: [
-           randomScalingFactor(),
-           randomScalingFactor(),
-           randomScalingFactor(),
-           randomScalingFactor(),
-           randomScalingFactor(),
-           randomScalingFactor(),
-           randomScalingFactor()
-       ]
-   }, {
-       label: 'PESQUERA HAYDUK',
-       backgroundColor: window.chartColors.purple,
-       data: [
-           randomScalingFactor(),
-           randomScalingFactor(),
-           randomScalingFactor(),
-           randomScalingFactor(),
-           randomScalingFactor(),
-           randomScalingFactor(),
-           randomScalingFactor()
-       ]
-   }, {
-       label: 'PESQUERA CENTINELA',
-       backgroundColor: window.chartColors.grey,
-       data: [
-           randomScalingFactor(),
-           randomScalingFactor(),
-           randomScalingFactor(),
-           randomScalingFactor(),
-           randomScalingFactor(),
-           randomScalingFactor(),
-           randomScalingFactor()
-       ]
-   }, {
-       label: 'COPEINCA',
-       backgroundColor: window.chartColors.orange,
-       data: [
-           randomScalingFactor(),
-           randomScalingFactor(),
-           randomScalingFactor(),
-           randomScalingFactor(),
-           randomScalingFactor(),
-           randomScalingFactor(),
-           randomScalingFactor()
-       ]
-   }];
-
-var arrayChilden = convertToArrayChildren(labelDataset, chartDataset);
-	
-var arrayCollection = [{
-	"text" : titulo,
-	"state" : { "opened" : true },
-	"children" : arrayChilden
-	}];
-
-var barChartData = {
-        labels: labelDataset,
-        datasets: chartDataset
-
-    };
 $(function () {
 	
+	$("#modalRegistroDIV").modal("hide");
+	$("#modalAtributosDIV").modal("hide");
+	$("#color").spectrum({
+		preferredFormat: "rgb",
+	    color: "rgb(255,99,132)",
+	    showPalette: true,
+	    chooseText: "Seleccionar",
+	    cancelText: "Cancelar",
+	    change: function(color){
+	    	$("#color").val(color.toRgbString());
+	    }
+	});	
+
+	$('body').on('click','.odom-guardar',function(e){
+		var txtValor = $("#valor");
+		var nodeText = txtValor[0].value;
+		var newNode = { 'padre' : objNode._model.data[selectedNode].original.codigo, 'text' : nodeText, 'type' : typeNode };
+		
+		$.post('${pageContext.request.contextPath}/addDetalle', newNode)
+		.done(function (d) {
+			newNode.codigo = d.codigo;
+			objNode.create_node(objNode, newNode);
+			txtValor.val("");
+			objNode.refresh();
+		})
+		.fail(function (e) {
+			objNode.refresh();
+		});
+		$("#modalRegistroDIV").modal("hide");
+	});
+	
+	$('body').on('click','.odom-guardarAtributos',function(e){
+		var color = $("#color").val();
+		var tipo = $("#tipo").val();
+		var codigo = objNode._model.data[selectedNode].original.codigo;
+		var newNode = { 'codigo' : codigo, 'color' : color, 'tipo' : tipo };
+		
+		$.post('${pageContext.request.contextPath}/updateDetalle', newNode)
+		.done(function (d) {
+			newNode.codigo = d.codigo;
+			objNode.create_node(objNode, newNode);
+			objNode.refresh();
+		})
+		.fail(function (e) {
+			objNode.refresh();
+		});
+		$("#modalAtributosDIV").modal("hide");
+	});
+	
 	$('body').on('click','.odom-regresar',function(e){
-		var link = document.createElement('a');
-		link.href = '${pageContext.request.contextPath}/registro_indicadores.html';
-		document.body.appendChild(link);
-		link.click(); 
+		goTo('registro'); 
 	});
 	
-	var ctx = document.getElementById('chartCanvas').getContext('2d');
+	$('body').on('click','.odom-actualizar-grafico',function(e){
+		refreshGrafico();
+	});
 	
-    window.myBar = new Chart(ctx, {
-        type: 'bar',
-        data: barChartData,
-        options: {
-            title:{
-                display: true,
-                text: titulo
-            },
-            tooltips: {
-                mode: 'index',
-                intersect: false
-            },
-            responsive: true,
-            scales: {
-                xAxes: [{
-                    stacked: true,
-                }],
-                yAxes: [{
-                    stacked: true
-                }]
-            }
-        }
-    });
-
-	function crear() {
-		var ref = $('#jstree').jstree(true),
-			sel = ref.get_selected();
-		if(!sel.length) { return false; }
-		sel = sel[0];
-		sel = ref.create_node(sel, {"type":"file"});
-		if(sel) {
-			ref.edit(sel);
-		}
-	};
-	function modificar() {
-		var ref = $('#jstree').jstree(true),
-			sel = ref.get_selected();
-		if(!sel.length) { return false; }
-		sel = sel[0];
-		ref.edit(sel);
-	};
-	function eliminar() {
-		var ref = $('#jstree').jstree(true),
-			sel = ref.get_selected();
-		if(!sel.length) { return false; }
-		ref.delete_node(sel);
-	};
-
-
-	$('#jstree').jstree({"plugins" : [ "contextmenu", "types", "search", "state", "wholerow" ],
-	'core' : {
-		'data' : arrayCollection
-	},
-	"check_callback" : true,
-	'unique' : {
-		'duplicate' : function (name, counter) {
-			return name + ' ' + counter;
-		}
-	},	
-	"contextmenu": {
-		"items": function (node) {
-			var menu = {
-				"Create": {
-					"label": "Nuevo",
-					"submenu" : {
-						"Group": {
-							"separator_after"	: true,
-							"label": "Grupo",
-							"action": function (obj) { this.group(obj); }
-						},
-						"Value": {
-							"label": "Valor",
-							"action": function (obj) { this.value(obj); }
-						}
-					}
-				},
-				"Edit": {
-					"label": "Modificar",
-					"action": function (obj) { this.edit(obj); }
-				},
-				"Delete": {
-					"label": "Eliminar",
-					"action": function (obj) { this.remove(obj); }
+	$('#jstree').jstree({
+		'core' : {
+			'data' : {
+				'url' : '${pageContext.request.contextPath}/getDetalle',
+				'data' : function (node) {
+					return { 'codigo' : node.original != null ? node.original.codigo : null };
 				}
-			};
-			
-			if(node.children.length > 0){
-				delete menu.Delete;
+			},
+			'force_text' : true,
+			'check_callback' : true,
+			'themes' : {
+				'stripes' : true
 			}
+		},
+		'types' :{
+			'root' :{
+				icon : "fa fa-bar-chart"
+			},
+			'folder' :{
+				icon : 'fa fa-archive'
+			},
+			'value' :{
+				icon : 'fa fa-calculator'
+			}
+		},
+		"contextmenu": {
+			"items": function (node) {
+				var tree = $('#jstree').jstree(true);
+				var menu = {
+					"create_node": {
+						"label": "Nuevo",
+						"submenu" : {
+							"create_group": {
+								"separator_after"	: true,
+								"label": "Grupo",
+								"action" : function(data){
+									objNode = $.jstree.reference(data.reference);
+										sel = objNode.get_selected();
+									if(!sel.length) { return false; }
+									selectedNode = sel;
+									typeNode = 'folder';
+									$('#title-registro').text("Agregar Grupo");
+									$("#modalRegistroDIV").modal("show");
+								}
+							},
+							"create_value": {
+								"label": "Valor",
+								"action" : function(data){
+									objNode = $.jstree.reference(data.reference);
+										sel = objNode.get_selected();
+									if(!sel.length) { return false; }
+									selectedNode = sel;
+									typeNode = 'value';
+									$('#title-registro').text("Agregar Valor");
+									$("#modalRegistroDIV").modal("show"); 
+								}
+							}
+						}
+					},
+					"modify_attributes": {
+						"label": "Atributos",
+						"action" : function(data){
+							objNode = $.jstree.reference(data.reference);
+								sel = objNode.get_selected();
+							if(!sel.length) { return false; }
+							selectedNode = sel;
+							$("#modalAtributosDIV").modal("show");
+						}
+					},
+					"rename_node": {
+						"label": "Modificar",
+						"action" : function(data){
+							objNode = $.jstree.reference(data.reference);
+								sel = objNode.get_selected();
+							if(!sel.length) { return false; }
+							selectedNode = sel;
+							typeNode = objNode._model.data[sel].original.type;
+							$('#valor').val(objNode._model.data[sel].original.text);
+							$('#tr-tipo').hide();
+							if( typeNode === 'folder'){
+								$('#title-registro').text("Modificar Grupo");
+							}else{
+								$('#title-registro').text("Modificar Valor");
+							}
+							$("#modalRegistroDIV").modal("show");
+						}
+					},
+					"delete_node": {
+						"label": "Eliminar"
+					}
+				};
+				
+				var degree = tree.get_path(node.id).length;
+				
+				if(node.children.length > 0){
+					delete menu.delete_node;
+				}
 
-			if(node.icon === "glyphicon glyphicon-dashboard") {
-				delete menu.Create;
-			}
-			
-			if(node.parent == "#"){
-				return null;
-			}
-			
-			return menu;
-		}
-	}
-	});
-	/*
-	$('#jstree').bind("dblclick.jstree",function (e) {
-		var li = $(e.target).closest("li");
-		var item = li[0].id;
-		var node = $('#jstree').jstree(true).get_node(item);
+				if(node.icon === "glyphicon glyphicon-dashboard") {
+					delete menu.create_node;
+				}
 
-		if(node.icon === "glyphicon glyphicon-dashboard") {
-			$('.modal-title').text(node.text);
-			$("#modalDIV").modal("show");
-			//alert("Grafico : [" + node.id + "] " + node.text + " / Padre : " + node.parent);
-            barChartData.datasets.forEach(function(dataset, i) {
-                dataset.data = dataset.data.map(function() {
-                    return randomScalingFactor();
-                });
-            });
-            window.myBar.update();
+				if(node.parent == "#"){
+					delete menu.delete_node;
+					delete menu.edit_node;
+					delete menu.rename_node;
+					delete menu.create_node.submenu.create_chart;
+				}
+				
+				var tipoGrafico = '${grafico.tipo}';
+				
+				if(tipoGrafico == 'bar' || tipoGrafico == 'stackedBar' || tipoGrafico == 'horizontalBar'){
+					if(degree != 3){
+						delete menu.modify_attributes;
+					}					
+				}else if(tipoGrafico == 'pie'){
+					if(degree != 2){
+						delete menu.modify_attributes;
+					}
+				}
+				
+				return menu;
+			}
+		},
+		'plugins' : ['state','dnd','contextmenu','types','wholerow','search']
+	})
+	.on('loaded.jstree', function() {
+		$('#jstree').jstree('open_all');
+	})
+	.on('delete_node.jstree', function (e, data) {
+		/*
+		$.get('?operation=delete_node', { 'id' : data.node.id })
+			.fail(function () {
+				data.instance.refresh();
+			});
+		*/
+	})
+	.on('rename_node.jstree', function (e, data) {
+		/*
+		$.get('?operation=rename_node', { 'id' : data.node.id, 'text' : data.text })
+			.fail(function () {
+				data.instance.refresh();
+			});
+		*/
+	})
+	.on('move_node.jstree', function (e, data) {
+		/*
+		$.get('?operation=move_node', { 'id' : data.node.id, 'parent' : data.parent, 'position' : data.position })
+			.fail(function () {
+				data.instance.refresh();
+			});
+		*/
+	})
+	.on('copy_node.jstree', function (e, data) {
+		/*
+		$.get('?operation=copy_node', { 'id' : data.original.id, 'parent' : data.parent, 'position' : data.position })
+			.always(function () {
+				data.instance.refresh();
+			});
+		*/
+	})
+	.on('changed.jstree', function (e, data) {
+		/*
+		if(data && data.selected && data.selected.length) {
+			$.get('?operation=get_content&id=' + data.selected.join(':'), function (d) {
+				$('#data .default').text(d.content).show();
+			});
 		}
+		else {
+			$('#data .content').hide();
+			$('#data .default').text('Select a file from the tree.').show();
+		}
+		*/
 	});
-	*/
+	
+	refreshGrafico();
 });
 </script>

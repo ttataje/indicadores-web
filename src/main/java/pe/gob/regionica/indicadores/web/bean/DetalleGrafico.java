@@ -1,8 +1,6 @@
 package pe.gob.regionica.indicadores.web.bean;
 
 import java.math.BigDecimal;
-import java.util.HashSet;
-import java.util.Set;
 
 public class DetalleGrafico extends GenericBean {
 
@@ -14,12 +12,20 @@ public class DetalleGrafico extends GenericBean {
 	
 	private Long grafico;
 	
-	private DetalleGrafico padre;
+	private Long padre;
 	
 	private BigDecimal valor;
 	
-	private Set<DetalleGrafico> children = new HashSet<DetalleGrafico>();
+	private String tipo = "bar";
+	
+	private String label;
+	
+	private String borderColor;
+	
+	private Long borderWidth = new Long (2);
 
+	private Boolean children = Boolean.FALSE;
+	
 	public Long getCodigo() {
 		return codigo;
 	}
@@ -44,11 +50,11 @@ public class DetalleGrafico extends GenericBean {
 		this.grafico = grafico;
 	}
 
-	public DetalleGrafico getPadre() {
+	public Long getPadre() {
 		return padre;
 	}
 
-	public void setPadre(DetalleGrafico padre) {
+	public void setPadre(Long padre) {
 		this.padre = padre;
 	}
 
@@ -60,12 +66,44 @@ public class DetalleGrafico extends GenericBean {
 		this.valor = valor;
 	}
 
-	public Set<DetalleGrafico> getChildren() {
+	public Boolean getChildren() {
 		return children;
 	}
 
-	public void setChildren(Set<DetalleGrafico> children) {
+	public void setChildren(Boolean children) {
 		this.children = children;
+	}
+
+	public String getTipo() {
+		return tipo;
+	}
+
+	public void setTipo(String tipo) {
+		this.tipo = tipo;
+	}
+
+	public String getLabel() {
+		return label;
+	}
+
+	public void setLabel(String label) {
+		this.label = label;
+	}
+
+	public String getBorderColor() {
+		return borderColor;
+	}
+
+	public void setBorderColor(String borderColor) {
+		this.borderColor = borderColor;
+	}
+
+	public Long getBorderWidth() {
+		return borderWidth;
+	}
+
+	public void setBorderWidth(Long borderWidth) {
+		this.borderWidth = borderWidth;
 	}
 
 }
