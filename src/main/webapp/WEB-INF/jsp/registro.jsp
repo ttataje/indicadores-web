@@ -150,7 +150,7 @@ $(function () {
 				$.post('${pageContext.request.contextPath}/addChart', newChart)
 				.done(function (d) {
 					// Se crea el nodo principal para el detalle
-					var newDetailChart = { 'grafico' : d.codigo, 'text' : nodeText, 'tipo' : 'folder'};
+					var newDetailChart = { 'grafico' : d.codigo, 'text' : nodeText, 'type' : 'folder'};
 					$.post('${pageContext.request.contextPath}/addDetalle', newDetailChart);
 					txtTipo.val("");					
 				})

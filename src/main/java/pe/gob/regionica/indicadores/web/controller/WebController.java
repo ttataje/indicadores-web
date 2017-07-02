@@ -157,7 +157,7 @@ public class WebController {
     	try{
     		Grafico grafico = restTemplate.postForObject(WebConstants.restLoadGrafico, null, Grafico.class, vars);
     		response.put("type", "stackedBar".equals(grafico.getTipo()) ? "bar" : grafico.getTipo());
-    		if(grafico.getData() == null || grafico.getData().isEmpty()){
+    		if(grafico.getData().size() < 2){
     			response.put("data", MapUtils.EMPTY_MAP);
     		}else{
     			Map<String,Object> data = new HashMap<String,Object>();
