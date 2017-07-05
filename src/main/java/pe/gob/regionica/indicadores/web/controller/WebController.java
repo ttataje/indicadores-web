@@ -157,9 +157,8 @@ public class WebController {
     	try{
     		Grafico grafico = restTemplate.postForObject(WebConstants.restLoadGrafico, null, Grafico.class, vars);
     		response.put("type", "stackedBar".equals(grafico.getTipo()) ? "bar" : grafico.getTipo());
-    		if(grafico.getData().size() < 2){
-    			response.put("data", MapUtils.EMPTY_MAP);
-    		}else{
+    		if(grafico.getData() != null){
+    			
     			Map<String,Object> data = new HashMap<String,Object>();
     			List<String> labels = new ArrayList<String>();
     			DetalleGrafico detalleGrafico = (DetalleGrafico)grafico.getData().toArray()[0];
@@ -178,7 +177,7 @@ public class WebController {
     				}
     				data.put("labels", labels);
     				vars = new HashMap<String, Object>();
-    		    	vars.put("codigo", listGroups[0].getCodigo());
+    		    	vars.put("codigo", listGroups.length > 1 ? listGroups[0].getCodigo() : -1);
     		    	
 					DetalleGrafico[] listLabel = restTemplate.postForObject(WebConstants.restGetDetallePorPadre, null, DetalleGrafico[].class, vars);
 
