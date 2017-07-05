@@ -13,6 +13,8 @@ public class Indicador extends GenericBean {
 	private Long padre;
 
 	private String tipo;
+	
+	private Boolean publico;
 
 	private Boolean children = Boolean.FALSE;
 
@@ -54,6 +56,14 @@ public class Indicador extends GenericBean {
 
 	public void setTipo(String tipo) {
 		this.tipo = tipo;
+	}
+	
+	public Boolean getPublico() {
+		return publico;
+	}
+
+	public void setPublico(Boolean publico) {
+		this.publico = publico;
 	}
 
 	public Boolean getChildren() {

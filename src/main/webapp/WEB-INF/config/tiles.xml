@@ -4,10 +4,15 @@
 <tiles-definitions>
 
    <!-- Base Definition -->
+   <definition name="base-public-definition" template="/WEB-INF/jsp/template/defaultPublicLayout.jsp">  
+       <put-attribute name="body" value="" />  
+   </definition>
+
+   <!-- Base Definition -->
    <definition name="base-definition" template="/WEB-INF/jsp/template/defaultLayout.jsp">  
        <put-attribute name="title" value="" />  
        <put-attribute name="body" value="" />  
-   </definition>  
+   </definition>
   
    <!-- Base Definition -->
    <definition name="page-definition" template="/WEB-INF/jsp/template/defaultPageLayout.jsp">  
@@ -41,6 +46,11 @@
    <definition name="grafico" extends="page-definition">  
        <put-attribute name="title" value="Sistema de Gestion de Indicadores - Grafico" />  
        <put-attribute name="body" value="/WEB-INF/jsp/grafico.jsp" />  
+   </definition>
+   
+   <!-- Public Page -->
+   <definition name="public" extends="base-public-definition">  
+       <put-attribute name="body" value="/WEB-INF/jsp/public.jsp" />  
    </definition>
   
 </tiles-definitions>
