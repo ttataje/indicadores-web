@@ -109,16 +109,54 @@
 		    </div>
 		  </div>
 		</div>
-		<!-- Fin Modal Atriburos -->
+		<!-- Fin Modal Atributos -->
+		<!-- Inicio Modal Copy -->
+		<div id="modalCopyDIV" class="modal fade">
+		  <div class="modal-dialog" role="document">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		      	<table>
+		      	<tr>
+		      	<td>
+		      	<img src="images/regionica_pie.png" height="45" alt="Region Ica">
+		      	</td>
+		      	<td>
+		      	<h4 id="title-registro" class="modal-title">Copiar Nodo</h4>
+		      	</td>
+		      	<td>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+		          <span aria-hidden="true">&times;</span>
+		        </button>
+		      	</td>
+		      	</tr>
+		      	</table>
+		      </div>
+		      <div class="modal-body">
+		        <table>
+		        <tr>
+		        <td>Valor</td>
+		        <td><input type="text" name="copia" id="copia" /></td>
+		        </tr>
+		        </table>
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-primary odom-guardar-copy">Guardar</button>
+		        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+		<!-- Fin Modal Copy -->
 	</div>
 </div>
 <!-- Fin Contenido -->
 <script type="text/javascript">
 var titulo = '${indicador.descripcion}';
+var tipoGrafico = '${grafico.tipo}';
 var objNode = null;
 var selectedNode = null;
 var typeNode = null;
-var nodeToModify = null;
+var nodeToModify = false;
 
 function refreshGrafico(){
 	$.post('${pageContext.request.contextPath}/loadChartData', {"codigo" : '${grafico.indicador}'})
@@ -139,6 +177,8 @@ $(function () {
 	
 	$("#modalRegistroDIV").modal("hide");
 	$("#modalAtributosDIV").modal("hide");
+	$("#modalCopyDIV").modal("hide");
+	
 	$("#color").spectrum({
 		preferredFormat: "rgb",
 	    color: "rgb(255,99,132)",
@@ -154,12 +194,20 @@ $(function () {
 		var txtValor = $("#valor");
 		var nodeText = txtValor[0].value;
 		var newNode = { 'padre' : objNode._model.data[selectedNode].original.codigo, 'text' : nodeText, 'type' : typeNode };
-		
+		if(nodeToModify){
+			newNode.codigo = objNode._model.data[selectedNode].original.codigo;
+		}		
 		$.post('${pageContext.request.contextPath}/addDetalle', newNode)
 		.done(function (d) {
 			newNode.codigo = d.codigo;
-			objNode.create_node(objNode, newNode);
+			if(!nodeToModify){
+				objNode.create_node(objNode, newNode);
+			}else{
+				objNode.text = nodeText;
+				objNode._model.data[selectedNode].original.text = nodeText;
+			}
 			txtValor.val("");
+			nodeToModify = false;
 			objNode.refresh();
 		})
 		.fail(function (e) {
@@ -184,6 +232,72 @@ $(function () {
 			objNode.refresh();
 		});
 		$("#modalAtributosDIV").modal("hide");
+	});
+	
+	$('body').on('click','.odom-guardar-copy',function(e){
+		var txtValor = $("#copia");
+		var nodeText = txtValor[0].value;
+		var tree = $('#jstree').jstree(true);
+		var parentId = tree.get_parent("[id='" + selectedNode[0] + "']");
+		var parent = tree.get_node("[id='" + parentId + "']");
+		var original = tree.get_node("[id='" + selectedNode[0] + "']");
+		var newNode = { 'padre' : parent.original.codigo, 'text' : nodeText, 'type' : typeNode };
+		// Crear Año
+		$.post('${pageContext.request.contextPath}/addDetalle', newNode)
+		.done(function (d) {
+			newNode.codigo = d.codigo;
+			objNode.create_node(objNode, newNode);
+			txtValor.val("");
+			for(var i = 0; i < original.children.length; i ++){
+				var childID = original.children[i];
+				var nodeChild = tree.get_node("[id='" + childID + "']");
+				if(tipoGrafico == 'bar' || tipoGrafico == 'stackedBar' || tipoGrafico == 'horizontalBar'){
+					var newNode2 = { 'padre' : d.codigo, 'text' : nodeChild.text, 'type' : 'folder' };
+					// Crear Tipo
+					$.post('${pageContext.request.contextPath}/addDetalle', newNode2)
+					.done(function (r) {
+						newNode2.codigo = r.codigo;
+						objNode.create_node(objNode, newNode2);
+						var newNode3 = { 'padre' : r.codigo, 'text' : 0, 'type' : 'value' };
+						// Crear Valor
+						$.post('${pageContext.request.contextPath}/addDetalle', newNode3)
+						.done(function (h) {
+							newNode3.codigo = h.codigo;
+							objNode.create_node(objNode, newNode3);
+							txtValor.val("");
+							objNode.refresh();
+						})
+						.fail(function (e) {
+							objNode.refresh();
+						});
+					})
+					.fail(function (e) {
+						objNode.refresh();
+					});
+					
+				}else{
+					// Tipo Grafico Pie
+					var newNode2 = { 'padre' : d.codigo, 'text' : 0, 'type' : 'value' };
+					// Crear Tipo
+					$.post('${pageContext.request.contextPath}/addDetalle', newNode2)
+					.done(function (r) {
+						newNode2.codigo = r.codigo;
+						objNode.create_node(objNode, newNode2);
+						txtValor.val("");
+						objNode.refresh();
+					})
+					.fail(function (e) {
+						objNode.refresh();
+					});
+					
+				}
+			}
+			objNode.refresh();
+		})
+		.fail(function (e) {
+			objNode.refresh();
+		});
+		$("#modalCopyDIV").modal("hide");
 	});
 	
 	$('body').on('click','.odom-regresar',function(e){
@@ -235,6 +349,7 @@ $(function () {
 									if(!sel.length) { return false; }
 									selectedNode = sel;
 									typeNode = 'folder';
+									nodeToModify = false;
 									$('#title-registro').text("Agregar Grupo");
 									$("#modalRegistroDIV").modal("show");
 								}
@@ -247,10 +362,22 @@ $(function () {
 									if(!sel.length) { return false; }
 									selectedNode = sel;
 									typeNode = 'value';
+									nodeToModify = false;
 									$('#title-registro').text("Agregar Valor");
 									$("#modalRegistroDIV").modal("show"); 
 								}
 							}
+						}
+					},
+					"copy_node": {
+						"label": "Copiar",
+						"action" : function(data){
+							objNode = $.jstree.reference(data.reference);
+								sel = objNode.get_selected();
+							if(!sel.length) { return false; }
+							selectedNode = sel;
+							typeNode = 'folder';
+							$("#modalCopyDIV").modal("show");
 						}
 					},
 					"modify_attributes": {
@@ -273,6 +400,7 @@ $(function () {
 							typeNode = objNode._model.data[sel].original.type;
 							$('#valor').val(objNode._model.data[sel].original.text);
 							$('#tr-tipo').hide();
+							nodeToModify = true;
 							if( typeNode === 'folder'){
 								$('#title-registro').text("Modificar Grupo");
 							}else{
@@ -300,18 +428,26 @@ $(function () {
 					delete menu.delete_node;
 					delete menu.edit_node;
 					delete menu.rename_node;
-					delete menu.create_node.submenu.create_chart;
+					delete menu.copy_node;
+					delete menu.create_node.submenu.create_value;
 				}
-				
-				var tipoGrafico = '${grafico.tipo}';
 				
 				if(tipoGrafico == 'bar' || tipoGrafico == 'stackedBar' || tipoGrafico == 'horizontalBar'){
 					if(degree != 3){
 						delete menu.modify_attributes;
-					}					
+					}
+					if(degree != 2){
+						delete menu.copy_node;
+					}
+					if(degree === 3){
+						delete menu.create_node.submenu.create_group;
+					}
 				}else if(tipoGrafico == 'pie'){
 					if(degree != 2){
 						delete menu.modify_attributes;
+					}
+					if(degree === 2){
+						delete menu.create_node.submenu.create_group;
 					}
 				}
 				

@@ -177,7 +177,7 @@ public class WebController {
     				}
     				data.put("labels", labels);
     				vars = new HashMap<String, Object>();
-    		    	vars.put("codigo", listGroups.length > 1 ? listGroups[0].getCodigo() : -1);
+    		    	vars.put("codigo", listGroups.length > 0 ? listGroups[0].getCodigo() : -1);
     		    	
 					DetalleGrafico[] listLabel = restTemplate.postForObject(WebConstants.restGetDetallePorPadre, null, DetalleGrafico[].class, vars);
 
@@ -363,12 +363,32 @@ public class WebController {
     	restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
     	restTemplate.getMessageConverters().add(new StringHttpMessageConverter());
     	
+    	String _codigo = request.getParameter("codigo");
     	String tipo = request.getParameter("type");
     	String padre = request.getParameter("padre");
     	String grafico = request.getParameter("grafico");
 
     	try{
         	Map<String, Object> params = new HashMap<String, Object>();
+        	
+        	if(!StringUtils.isEmpty(_codigo)){
+        		params.put("detalle.codigo", new Long(_codigo));
+        		params.put("detalle.grafico.codigo", null);
+        		params.put("detalle.padre.codigo", null);
+        	}else{
+        		params.put("detalle.codigo", null);
+        	}
+        	
+        	if(StringUtils.isEmpty(_codigo)){
+            	if(StringUtils.isEmpty(padre)){
+            		params.put("detalle.grafico.codigo", new Long(grafico));
+            		params.put("detalle.padre.codigo", null);
+            	}else{
+            		params.put("detalle.padre.codigo", new Long(padre));
+            		params.put("detalle.grafico.codigo", null);
+            	}        		
+        	}
+
         	if(StringUtils.isEmpty(padre)){
         		params.put("detalle.grafico.codigo", new Long(grafico));
         		params.put("detalle.padre.codigo", null);
@@ -382,7 +402,7 @@ public class WebController {
         		params.put("detalle.valor", null);
         	}else{
         		params.put("detalle.descripcion", null);
-        		params.put("detalle.valor", request.getParameter("text"));
+        		params.put("detalle.valor", request.getParameter("text").indexOf(",") > -1 ? request.getParameter("text").replaceAll(",", ".") : request.getParameter("text"));
         	}
 
         	Long codigo = restTemplate.postForObject(WebConstants.restAddDetalleGrafico, null, Long.class, params);

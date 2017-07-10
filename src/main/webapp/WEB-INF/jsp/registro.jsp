@@ -420,7 +420,7 @@ $(function () {
 			.done(function (d) {
 				var ctx = document.getElementById('chartCanvas').getContext('2d');
 				
-				if(!jQuery.isEmptyObject(d.data)){
+				if(!jQuery.isEmptyObject(d.data) && d.data.datasets.length > 0){
 					console.log(d)
 				    window.myBar = new Chart(ctx, d);
 
