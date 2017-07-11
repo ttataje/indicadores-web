@@ -16,7 +16,7 @@
 						</div>
 					</div>
 					<div class="widget-toolbox padding-8 clearfix">
-						<input tabindex="12" type="button" class="btn btn-primary btn-white btn-round odom-imprimir" value="Imprimir">
+						<input tabindex="12" type="button" class="btn btn-primary btn-white btn-round odom-show-imprimir" value="Vista Previa">
 					</div>
 				</div>
 			</div>
@@ -52,6 +52,38 @@
 		  </div>
 		</div>
 		<!-- Fin Modal -->
+		<!-- Inicio Modal Print -->
+		<div id="modalPrintDIV" class="modal fade">
+		  <div class="modal-dialog" role="document">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		      	<table>
+		      	<tr>
+		      	<td style="width: 20%">
+		      	<img src="images/regionica_pie.png" height="45" alt="Region Ica">
+		      	</td>
+		      	<td style="width: 70%">
+		      	<h4 id="title-print" class="modal-title">Vista Previa</h4>
+		      	</td>
+		      	<td  style="width: 10%">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+		          <span aria-hidden="true">&times;</span>
+		        </button>
+		      	</td>
+		      	</tr>
+		      	</table>
+		      </div>
+		      <div class="modal-body odom-pdf-source">
+		        
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-primary odom-imprimir">Imprimir</button>
+		        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+		<!--  Fin Modal Print -->
 	</div>
 </div>
 <!-- Fin Contenido -->
@@ -64,65 +96,85 @@ var countChart = 0;
 $(function () {
 	$("#modalDIV").modal("hide");
 	
-	$('body').on('click','.odom-imprimir',function(e){
-		var ref = $('#jstree').jstree(true),
+	$("#modalPrintDIV").modal("hide");
+	
+	$('body').on('click','.odom-show-imprimir',function(e){
+		var ref = $('#jstree').jstree(true);
 		sel = ref.get_selected();
 		if(!sel.length) {
 			alert("Debe seleccionar un nodo");
 			return false; 
 		}
 		sel = sel[0];
-		if(sel.padre == '#') {
+		var nodeSel = ref._model.data[sel];
+		if(nodeSel.parent == '#') {
+			alert("No puede seleccionar el nodo principal");
+			return false; 
+		}
+		if(nodeSel.parent == '#') {
 			alert("No puede seleccionar el nodo principal");
 			return false; 
 		}
 		
-		var doc = new jsPDF();
-		var cantProcess = 0;
+		var body = $(".odom-pdf-source");
+		var dataBase = nodeSel.original;
 		
-		var chartIMG = [];
+		try{
+			var anio = parseInt(dataBase.text);
+			if(!isNaN(anio)){
+				alert("Favor seleccionar un mes del año ["+anio+"]");
+				return false;
+			} 
+		}catch(e){}
 		
-		document.getElementById('chartCanvas').toBlob(function(blob) {
-			var reader = new window.FileReader();
-			reader.readAsDataURL(blob); 
-			reader.onloadend = function() {
-				chartIMG[cantProcess] = reader.result;                
-				cantProcess = cantProcess + 1;
+		// limpiamos el cuerpo
+		$(".odom-pdf-source").empty();
+		
+		var meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+		var esMes = false;
+		for(var i = 0; i < meses.length; i++){
+			var select = dataBase.text.toUpperCase();
+			var mes = meses[i].toUpperCase();
+			if(select === mes){
+				esMes = true;
+				break;
 			}
-		});
+		}
 		
-		refreshData()
-		
-		document.getElementById('chartCanvas').toBlob(function(blob) {
-			var reader = new window.FileReader();
-			reader.readAsDataURL(blob); 
-			reader.onloadend = function() {
-				chartIMG[cantProcess] = reader.result;                
-				cantProcess = cantProcess + 1;
-			}
-		});
-		
-		do{
-			if(cantProcess == 2){
-				doc.setFontSize(40);
-				doc.text(30, 20, 'Cuadro 1');
-				
-				console.log(chartIMG[0]);
-				doc.addImage(chartIMG[0], 'PNG', 15, 40, 180, 160);
-				
+		var childrens = nodeSel.children_d;
+		for(var i = 0; i < childrens.length; i++){
+			var child = childrens[i];
+			var nodeChild = ref._model.data[child];
+			var data = nodeChild.original;
 			
-				doc.addPage();
-				refreshData()
-				
-				doc.setFontSize(40);
-				doc.text(30, 20, 'Cuadro 2');
-				
-				console.log(chartIMG[1]);
-				doc.addImage(chartIMG[1], 'PNG', 15, 40, 180, 160);
-				
-				doc.output('save','output.pdf');
+			if(data.type === 'folder'){
+				body.append("<div>" + data.text + "</div>");
+			}else{
+				body.append("<canvas id='chart_"+ data.codigo + "'></canvas>");
+				$.post('${pageContext.request.contextPath}/loadChartData', {"codigo" : data.codigo})
+				.done(function (d) {
+					var ctx = document.getElementById('chart_'+data.codigo).getContext('2d');
+					
+					if(!jQuery.isEmptyObject(d.data) && d.data.datasets.length > 0){
+					    window.myBar = new Chart(ctx, d);
+					}
+				})
+				.fail(function (e) {
+					//FIXME falta mensaje en caso falle la carga del modal
+				});
 			}
-		}while(cantProcess < 2);
+		}
+		
+		$("#modalPrintDIV").modal("show");
+	});
+	
+	$('body').on('click','.odom-imprimir',function(e){
+		var doc = new jsPDF();
+	    doc.addHTML($('.odom-pdf-source')[0], 15, 15, {
+	        'background': '#fff',
+	      }, function() {
+	        doc.save('output.pdf');
+	    });
 	});
 	
 	$('#jstree').jstree({
