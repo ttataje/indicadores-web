@@ -270,6 +270,7 @@ $(function () {
 										$('#title-registro').text("Agregar Secci\u00F3n");
 										$('#tr-tipo').hide();
 										$("#modalRegistroDIV").modal("show");
+										$("#descripcion").focus();
 									}
 								},
 								"create_chart": {
@@ -282,7 +283,8 @@ $(function () {
 										typeNode = 'chart';
 										$('#title-registro').text("Agregar Gr\u00E1fico");
 										$('#tr-tipo').show();
-										$("#modalRegistroDIV").modal("show"); 
+										$("#modalRegistroDIV").modal("show");
+										$("#descripcion").focus();
 									}
 								}
 							}
@@ -303,25 +305,50 @@ $(function () {
 									$('#title-registro').text("Modificar Gr\u00E1fico");
 								}
 								$("#modalRegistroDIV").modal("show");
+								$("#descripcion").focus();
 							}
 						},
 						"delete_node": {
-							"label": "Eliminar"
+							"label": "Eliminar",
+							"action" : function(data){
+								objNode = $.jstree.reference(data.reference);
+								var ID = $.jstree.reference(data.reference);
+									sel = objNode.get_selected();
+								if(!sel.length) { return false; }
+								selectedNode = sel;
+								var $select = $('#'+ID.get_selected());
+								tree.delete_node($select);
+							}
 						},
 						"edit_node":{
 							"label": "Modificar",
 							"submenu" : {
 								"copy_node": {
 									"separator_after"	: true,
-									"label": "Copiar"
+									"label": "Copiar",
+									"action" : function(data){
+										var ID = $.jstree.reference(data.reference);
+										var $select = $('#'+ID.get_selected());
+										tree.copy_node($select);
+									}
 								},
 								"cut_node": {
 									"separator_after"	: true,
-									"label": "Cortar"
+									"label": "Cortar",
+									"action" : function(data){
+										var ID = $.jstree.reference(data.reference);
+										var $select = $('#'+ID.get_selected());
+										tree.cut_node($select);
+									}
 								},
 								"paste_node": {
 									"label": "Pegar",
-									"_disabled" : true
+									"_disabled" : true,
+									"action" : function(data){
+										var ID = $.jstree.reference(data.reference);
+										var $select = $('#'+ID.get_selected());
+										tree.paste_node($select);
+									}
 								}
 							}
 						}
@@ -349,18 +376,16 @@ $(function () {
 					return menu;
 				}
 			},
-			'plugins' : ['state','dnd','contextmenu','types','wholerow','search']
+			'plugins' : ['state','contextmenu','types','wholerow','search']
 		})
 		.on('loaded.jstree', function() {
 			$('#jstree').jstree('open_all');
 		})
 		.on('delete_node.jstree', function (e, data) {
-			/*
-			$.get('?operation=delete_node', { 'id' : data.node.id })
+			$.post('${pageContext.request.contextPath}/delNode', { 'codigo' : objNode._model.data[selectedNode].original.codigo })
 				.fail(function () {
 					data.instance.refresh();
 				});
-			*/
 		})
 		.on('rename_node.jstree', function (e, data) {
 			/*

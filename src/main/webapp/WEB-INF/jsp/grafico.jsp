@@ -410,7 +410,16 @@ $(function () {
 						}
 					},
 					"delete_node": {
-						"label": "Eliminar"
+						"label": "Eliminar",
+						"action" : function(data){
+							objNode = $.jstree.reference(data.reference);
+							var ID = $.jstree.reference(data.reference);
+								sel = objNode.get_selected();
+							if(!sel.length) { return false; }
+							selectedNode = sel;
+							var $select = $('#'+ID.get_selected());
+							tree.delete_node($select);
+						}
 					}
 				};
 				
@@ -460,12 +469,10 @@ $(function () {
 		$('#jstree').jstree('open_all');
 	})
 	.on('delete_node.jstree', function (e, data) {
-		/*
-		$.get('?operation=delete_node', { 'id' : data.node.id })
-			.fail(function () {
-				data.instance.refresh();
-			});
-		*/
+		$.post('${pageContext.request.contextPath}/delDetalle', { 'codigo' : objNode._model.data[selectedNode].original.codigo })
+		.fail(function () {
+			data.instance.refresh();
+		});
 	})
 	.on('rename_node.jstree', function (e, data) {
 		/*
