@@ -196,7 +196,7 @@ $(function () {
 		var newNode = { 'padre' : objNode._model.data[selectedNode].original.codigo, 'text' : nodeText, 'type' : typeNode };
 		if(nodeToModify){
 			newNode.codigo = objNode._model.data[selectedNode].original.codigo;
-		}		
+		}
 		$.post('${pageContext.request.contextPath}/addDetalle', newNode)
 		.done(function (d) {
 			newNode.codigo = d.codigo;
@@ -475,12 +475,11 @@ $(function () {
 		});
 	})
 	.on('rename_node.jstree', function (e, data) {
-		/*
-		$.get('?operation=rename_node', { 'id' : data.node.id, 'text' : data.text })
-			.fail(function () {
-				data.instance.refresh();
-			});
-		*/
+		var params = { 'codigo' : objNode.original.codigo, 'text' : data.text, 'type' : objNode.type };
+		$.post('${pageContext.request.contextPath}/updateDetalle', params)
+		.fail(function () {
+			data.instance.refresh();
+		});
 	})
 	.on('move_node.jstree', function (e, data) {
 		/*
@@ -513,5 +512,20 @@ $(function () {
 	});
 	
 	refreshGrafico();
+	
+	$('#jstree').bind("dblclick.jstree",function (e) {
+		var tree = $('#jstree').jstree(true);
+		var li = $(e.target).closest("li");
+		var item = li[0].id;
+		objNode = tree.get_node(item);
+		sel = tree.get_selected();
+		if(!sel.length) { return false; }
+			selectedNode = sel;
+		typeNode = objNode.type;
+
+		if(typeNode === "value") {
+			tree.edit(item)
+		}
+	});
 });
 </script>
