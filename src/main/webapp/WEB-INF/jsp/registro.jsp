@@ -104,9 +104,9 @@
 		<!-- Inicio Modal Print -->
 		<div id="modalPrintDIV" class="modal fade">
 		  <div class="modal-dialog" role="document">
-		    <div class="modal-content">
+		    <div class="modal-content" style="width: 1150px;  height: 680px">
 		      <div class="modal-header">
-		      	<table>
+		      	<table style="width: 100%">
 		      	<tr>
 		      	<td style="width: 20%">
 		      	<img src="images/regionica_pie.png" height="45" alt="Region Ica">
@@ -122,7 +122,7 @@
 		      	</tr>
 		      	</table>
 		      </div>
-		      <div class="modal-body odom-pdf-source">
+		      <div class="modal-body odom-pdf-source" style="width: 1137px; height: 639px;">
 		        
 		      </div>
 		      <div class="modal-footer">
@@ -249,9 +249,12 @@ $(function () {
 			var data = nodeChild.original;
 			
 			if(data.type === 'folder'){
-				body.append("<div>" + data.text + "</div>");
+				body.append("<div style='page-break-before: always'></div>");
+				var div = body.last();
+				div.append("<img src='${pageContext.request.contextPath}/images/pdf_titulo.png'/>")
+				div.append("<span style='font-family : Arial'>" + data.text + "</span>")
 			}else{
-				body.append("<canvas id='chart_"+ data.codigo + "'></canvas>");
+				body.append("<canvas style='page-break-before: always' id='chart_"+ data.codigo + "'></canvas>");
 				$.post('${pageContext.request.contextPath}/loadChartData', {"codigo" : data.codigo})
 				.done(function (d) {
 					var ctx = document.getElementById('chart_'+data.codigo).getContext('2d');
@@ -270,11 +273,14 @@ $(function () {
 	});
 	
 	$('body').on('click','.odom-imprimir',function(e){
-		var doc = new jsPDF();
-	    doc.addHTML($('.odom-pdf-source')[0], 15, 15, {
+		var doc = new jsPDF('landscape','p', 'pt', 'a4');
+		var options = {
+		         pagesplit: true
+		    };
+	    doc.addHTML($('.odom-pdf-source'), options, {
 	        'background': '#fff',
 	      }, function() {
-	        doc.save('output.pdf');
+	        doc.save('SIRI_' + (new Date()).getTime() + '.pdf');
 	    });
 	});
 	
