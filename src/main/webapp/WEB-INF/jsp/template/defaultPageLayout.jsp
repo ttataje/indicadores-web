@@ -42,6 +42,21 @@
         -webkit-user-select: none;
         -ms-user-select: none;
     }
+    .page-title {
+    	background: url(${pageContext.request.contextPath}/images/pdf_titulo.png);
+    	line-height: 1.4; 
+    	padding: 137px 20px 1000px 469px;
+    	width: 150px;
+    	margin: 20px auto;
+    }
+    .page-title span {
+    	position: absolute;
+    	color: #000000;
+    	display: inline;
+    	padding: 0.5rem;
+    	-webkit-box-decoration-break: clone;
+    	box-decoration-break: clone;
+    }
     </style>
 </head>
 <body class="skin-3">

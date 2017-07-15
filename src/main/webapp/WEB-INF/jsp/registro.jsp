@@ -122,7 +122,7 @@
 		      	</tr>
 		      	</table>
 		      </div>
-		      <div class="modal-body odom-pdf-source" style="width: 1137px; height: 639px;">
+		      <div class="modal-body odom-pdf-source">
 		        
 		      </div>
 		      <div class="modal-footer">
@@ -251,8 +251,7 @@ $(function () {
 			if(data.type === 'folder'){
 				body.append("<div style='page-break-before: always'></div>");
 				var div = body.last();
-				div.append("<img src='${pageContext.request.contextPath}/images/pdf_titulo.png'/>")
-				div.append("<span style='font-family : Arial'>" + data.text + "</span>")
+				div.append("<h1 class='page-title'><span>" + data.text + "</span></h1>")
 			}else{
 				body.append("<canvas style='page-break-before: always' id='chart_"+ data.codigo + "'></canvas>");
 				$.post('${pageContext.request.contextPath}/loadChartData', {"codigo" : data.codigo})
