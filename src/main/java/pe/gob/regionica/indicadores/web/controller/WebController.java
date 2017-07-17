@@ -215,8 +215,10 @@ public class WebController {
 							vars.put("codigo", listLabel[j].getCodigo());
 							DetalleGrafico[] listValues = restTemplate.postForObject(
 									WebConstants.restGetDetallePorPadre, null, DetalleGrafico[].class, vars);
-							if (listValues != null) {
+							if (listValues != null && listValues.length > 0) {
 								((List<BigDecimal>) itemDataSet.get("data")).add(listValues[0].getValor());
+							}else{
+								((List<BigDecimal>) itemDataSet.get("data")).add(listData[0].getValor());
 							}
 						}
 					}
