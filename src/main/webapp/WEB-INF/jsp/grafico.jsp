@@ -441,7 +441,7 @@ $(function () {
 					delete menu.create_node.submenu.create_value;
 				}
 				
-				if(tipoGrafico == 'bar' || tipoGrafico == 'stackedBar' || tipoGrafico == 'horizontalBar'){
+				if(tipoGrafico == 'stackedBar'){
 					if(degree != 3){
 						delete menu.modify_attributes;
 					}
@@ -449,6 +449,16 @@ $(function () {
 						delete menu.copy_node;
 					}
 					if(degree === 3){
+						delete menu.create_node.submenu.create_group;
+					}
+				}else if(tipoGrafico == 'bar' || tipoGrafico == 'horizontalBar'){
+					if(degree != 2){
+						delete menu.modify_attributes;
+					}
+					if(degree != 1){
+						delete menu.copy_node;
+					}
+					if(degree === 2){
 						delete menu.create_node.submenu.create_group;
 					}
 				}else if(tipoGrafico == 'pie'){
