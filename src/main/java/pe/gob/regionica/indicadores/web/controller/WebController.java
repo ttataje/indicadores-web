@@ -192,13 +192,23 @@ public class WebController {
 							datasets.add(itemDataSet);
 						}
 						itemDataSet = datasets.get(i);
-
-						if (!itemDataSet.containsKey("label")
-								|| !itemDataSet.get("label").equals(listLabel[i].getDescripcion())) {
-							itemDataSet.put("label", listLabel[i].getDescripcion());
-							itemDataSet.put("backgroundColor", listLabel[i].getBorderColor() != null
-									? listLabel[i].getBorderColor() : "rgb(255,99,132)");
-							itemDataSet.put("data", new ArrayList<BigDecimal>(listLabel.length));
+						
+						if(StringUtils.isEmpty(listLabel[i].getDescripcion())){
+							if (!itemDataSet.containsKey("label")
+									|| !itemDataSet.get("label").equals(listGroups[i].getDescripcion())) {
+								itemDataSet.put("label", listGroups[i].getDescripcion());
+								itemDataSet.put("backgroundColor", listLabel[i].getBorderColor() != null
+										? listGroups[i].getBorderColor() : "rgb(255,99,132)");
+								itemDataSet.put("data", new ArrayList<BigDecimal>(listGroups.length));
+							}
+						}else{
+							if (!itemDataSet.containsKey("label")
+									|| !itemDataSet.get("label").equals(listLabel[i].getDescripcion())) {
+								itemDataSet.put("label", listLabel[i].getDescripcion());
+								itemDataSet.put("backgroundColor", listLabel[i].getBorderColor() != null
+										? listLabel[i].getBorderColor() : "rgb(255,99,132)");
+								itemDataSet.put("data", new ArrayList<BigDecimal>(listLabel.length));
+							}	
 						}
 					}
 

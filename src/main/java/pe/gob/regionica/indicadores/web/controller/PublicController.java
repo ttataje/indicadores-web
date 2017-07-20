@@ -49,118 +49,242 @@ public class PublicController {
     @RequestMapping(value = { "/publico/loadChartData"}, method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity<Map<String,Object>> loadChartData(HttpServletRequest request, ModelMap model) {
-    	Map<String,Object> response = new HashMap<String,Object>();
-    	String codigo = request.getParameter("codigo");
-    	
-    	RestTemplate restTemplate = new RestTemplate();
-    	restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
-    	restTemplate.getMessageConverters().add(new StringHttpMessageConverter());
-    	
-    	Map<String, Object> vars = new HashMap<String, Object>();
-    	vars.put("codigo", codigo);
-    	
-    	try{
-    		Grafico grafico = restTemplate.postForObject(WebConstants.restLoadGrafico, null, Grafico.class, vars);
-    		response.put("type", "stackedBar".equals(grafico.getTipo()) ? "bar" : grafico.getTipo());
-    		if(grafico.getData().size() < 2){
-    			response.put("data", MapUtils.EMPTY_MAP);
-    		}else{
-    			Map<String,Object> data = new HashMap<String,Object>();
-    			List<String> labels = new ArrayList<String>();
-    			DetalleGrafico detalleGrafico = (DetalleGrafico)grafico.getData().toArray()[0];
-    			if("pie".equals(grafico.getTipo())){
-    				// Grafico tipo pie
-    			}else{
-    				// Todos los otros graficos
-    				// Obtenemos los Labels
-    				vars = new HashMap<String, Object>();
-    		    	vars.put("codigo", detalleGrafico.getCodigo());
+		Map<String, Object> response = new HashMap<String, Object>();
+		String codigo = request.getParameter("codigo");
 
-    				DetalleGrafico[] listGroups = restTemplate.postForObject(WebConstants.restGetDetallePorPadre, null, DetalleGrafico[].class, vars);
-    				// Cargamos los labels
-    				for(int i = 0; i < listGroups.length; i++){
-    					labels.add(listGroups[i].getDescripcion());
-    				}
-    				data.put("labels", labels);
-    				vars = new HashMap<String, Object>();
-    		    	vars.put("codigo", listGroups[0].getCodigo());
-    		    	
-					DetalleGrafico[] listLabel = restTemplate.postForObject(WebConstants.restGetDetallePorPadre, null, DetalleGrafico[].class, vars);
+		RestTemplate restTemplate = new RestTemplate();
+		restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+		restTemplate.getMessageConverters().add(new StringHttpMessageConverter());
 
-    				data.put("datasets", new ArrayList<Map<String,Object>>(listLabel.length));
-    				List<Map<String,Object>> datasets = (List<Map<String,Object>>)data.get("datasets");
-    				
-    				// Creamos estructura de data
-    				for(int i = 0; i < listLabel.length; i++){
-    					Map<String,Object> itemDataSet = null;
-    					try{
-    						itemDataSet = datasets.get(i);
-    					}catch(IndexOutOfBoundsException e){
-    						itemDataSet = new HashMap<String,Object>();
-    						datasets.add(itemDataSet);
-    					}
-    					itemDataSet = datasets.get(i);
-    					
-						if(!itemDataSet.containsKey("label") || !itemDataSet.get("label").equals(listLabel[i].getDescripcion())){
-							itemDataSet.put("label", listLabel[i].getDescripcion());
-							itemDataSet.put("backgroundColor", listLabel[i].getBorderColor() != null ? listLabel[i].getBorderColor() : "rgb(255,99,132)");
+		Map<String, Object> vars = new HashMap<String, Object>();
+		vars.put("codigo", codigo);
+
+		try {
+			Grafico grafico = restTemplate.postForObject(WebConstants.restLoadGrafico, null, Grafico.class, vars);
+			response.put("type", "stackedBar".equals(grafico.getTipo()) ? "bar" : grafico.getTipo());
+			if (grafico.getData() != null) {
+
+				Map<String, Object> data = new HashMap<String, Object>();
+				List<String> labels = new ArrayList<String>();
+				DetalleGrafico detalleGrafico = (DetalleGrafico) grafico.getData().toArray()[0];
+				if ("pie".equals(grafico.getTipo())) {
+					// Grafico tipo pie
+					// Obtenemos los Labels
+					vars = new HashMap<String, Object>();
+					vars.put("codigo", detalleGrafico.getCodigo());
+					
+					/****
+					 * 
+					 * 
+    var config = {
+        type: 'pie',
+        data: {
+            datasets: [{
+                data: [
+                    randomScalingFactor(),
+                    randomScalingFactor(),
+                    randomScalingFactor(),
+                    randomScalingFactor(),
+                    randomScalingFactor(),
+                ],
+                backgroundColor: [
+                    window.chartColors.red,
+                    window.chartColors.orange,
+                    window.chartColors.yellow,
+                    window.chartColors.green,
+                    window.chartColors.blue,
+                ],
+                label: 'Dataset 1'
+            }],
+            labels: [
+                "Red",
+                "Orange",
+                "Yellow",
+                "Green",
+                "Blue"
+            ]
+        },
+        options: {
+            responsive: true
+        }
+    };
+					 * 
+					 * 
+					 */
+
+					DetalleGrafico[] listGroups = restTemplate.postForObject(WebConstants.restGetDetallePorPadre, null,
+							DetalleGrafico[].class, vars);
+					// Cargamos los labels
+					for (int i = 0; i < listGroups.length; i++) {
+						labels.add(listGroups[i].getDescripcion());
+					}
+					data.put("labels", labels);
+					
+					vars = new HashMap<String, Object>();
+					vars.put("codigo", listGroups.length > 0 ? listGroups[0].getCodigo() : -1);
+
+					DetalleGrafico[] listLabel = restTemplate.postForObject(WebConstants.restGetDetallePorPadre, null,
+							DetalleGrafico[].class, vars);
+					
+					List<Map<String, Object>> datasets = new ArrayList<Map<String, Object>>();
+					List<BigDecimal> itemData = new ArrayList<BigDecimal>();
+					/*itemData
+					datasets.add(itemData);
+
+					data.put("datasets", datasets);
+					
+					Map<String, Object> label = new HashMap<String, Object>();
+					label.put("label", "Dataset 1");
+					datasets.add(label);
+
+					// Creamos estructura de data
+					for (int i = 0; i < listLabel.length; i++) {
+						
+						try {
+							itemDataSet = datasets.get(i);
+						} catch (IndexOutOfBoundsException e) {
+							itemDataSet = new HashMap<String, Object>();
+							datasets.add(itemDataSet);
+						}
+						itemDataSet = datasets.get(i);
+						
+						if (!itemDataSet.containsKey("label")
+								|| !itemDataSet.get("label").equals(listLabel[i].getDescripcion())) {
+							itemDataSet.put("backgroundColor", new ArrayList<BigDecimal>(listLabel.length));
 							itemDataSet.put("data", new ArrayList<BigDecimal>(listLabel.length));
 						}
-    				}
-    				
-    				for(int i = 0; i < listGroups.length; i++){
-        				vars = new HashMap<String, Object>();
-        		    	vars.put("codigo", listGroups[i].getCodigo());
-        		    	
-    					DetalleGrafico[] listData = restTemplate.postForObject(WebConstants.restGetDetallePorPadre, null, DetalleGrafico[].class, vars);
-    					for(int j = 0; j < listData.length; j++){
-    						Map<String,Object> itemDataSet = datasets.get(j);
-    						// Obtenemos los valores
-    	    				vars = new HashMap<String, Object>();
-    	    		    	vars.put("codigo", listLabel[j].getCodigo());
-    						DetalleGrafico[] listValues = restTemplate.postForObject(WebConstants.restGetDetallePorPadre, null, DetalleGrafico[].class, vars);
-    						if(listValues != null){
-    							((List<BigDecimal>)itemDataSet.get("data")).add(listValues[0].getValor());
-    						}    						
-    					}
-    				}
-    			}
-    			response.put("data", data);
-    		}
-    		Map<String,Object> options = new HashMap<String,Object>();
-    		
-	    		Map<String,Object> title = new HashMap<String,Object>();
-		    		title.put("display", Boolean.FALSE);
-		    		title.put("text", "");
-	    		options.put("title", title);
+					}
 
-	    		Map<String,Object> tooltips = new HashMap<String,Object>();
-		    		tooltips.put("mode", "index");
-		    		tooltips.put("intersect", Boolean.FALSE);
-	    		options.put("tooltips", tooltips);
-	    		options.put("responsive", Boolean.TRUE);
-	    		// Usado cuando es stackedBar
-	    		if("stackedBar".equals(grafico.getTipo())){
-		    		Map<String,Object> scales = new HashMap<String,Object>();
-		    			List<Map<String,Object>> xAxes = new ArrayList<Map<String,Object>>();
-		    				Map<String,Object> xAxes_stacked = new HashMap<String,Object>();
-		    				xAxes_stacked.put("stacked", Boolean.TRUE);
-		    				xAxes.add(xAxes_stacked);
-		    			scales.put("xAxes", xAxes);
-		    			List<Map<String,Object>> yAxes = new ArrayList<Map<String,Object>>();
-		    				Map<String,Object> yAxes_stacked = new HashMap<String,Object>();
-		    				yAxes_stacked.put("stacked", Boolean.TRUE);
-		    			scales.put("yAxes", yAxes);
-		    		options.put("scales", scales);
-	    		}
+					for (int i = 0; i < listGroups.length; i++) {
+						vars = new HashMap<String, Object>();
+						vars.put("codigo", listGroups[i].getCodigo());
 
-    		response.put("options", options);
-	    	return new ResponseEntity<Map<String,Object>>(response, HttpStatus.ACCEPTED);
-    	}catch(Exception e){
-    		log.error(e.getMessage());
-    		model.addAttribute("message", "No se pudo cargar el elemento seleccionado");
-    		return new ResponseEntity<Map<String,Object>>(MapUtils.EMPTY_MAP, HttpStatus.BAD_REQUEST);
-    	}
+						DetalleGrafico[] listData = restTemplate.postForObject(WebConstants.restGetDetallePorPadre,
+								null, DetalleGrafico[].class, vars);
+						for (int j = 0; j < listData.length; j++) {
+							Map<String, Object> itemDataSet = datasets.get(j);
+							// Obtenemos los valores
+							vars = new HashMap<String, Object>();
+							vars.put("codigo", listLabel[j].getCodigo());
+							DetalleGrafico[] listValues = restTemplate.postForObject(
+									WebConstants.restGetDetallePorPadre, null, DetalleGrafico[].class, vars);
+							if (listValues != null && listValues.length > 0) {
+								((List<BigDecimal>) itemDataSet.get("data")).add(listValues[0].getValor());
+							}else{
+								((List<BigDecimal>) itemDataSet.get("data")).add(listData[0].getValor());
+							}
+						}
+					}
+					*/
+				} else {
+					// Todos los otros graficos
+					// Obtenemos los Labels
+					vars = new HashMap<String, Object>();
+					vars.put("codigo", detalleGrafico.getCodigo());
+
+					DetalleGrafico[] listGroups = restTemplate.postForObject(WebConstants.restGetDetallePorPadre, null,
+							DetalleGrafico[].class, vars);
+					// Cargamos los labels
+					for (int i = 0; i < listGroups.length; i++) {
+						labels.add(listGroups[i].getDescripcion());
+					}
+					data.put("labels", labels);
+					vars = new HashMap<String, Object>();
+					vars.put("codigo", listGroups.length > 0 ? listGroups[0].getCodigo() : -1);
+
+					DetalleGrafico[] listLabel = restTemplate.postForObject(WebConstants.restGetDetallePorPadre, null,
+							DetalleGrafico[].class, vars);
+
+					data.put("datasets", new ArrayList<Map<String, Object>>(listLabel.length));
+					List<Map<String, Object>> datasets = (List<Map<String, Object>>) data.get("datasets");
+
+					// Creamos estructura de data
+					for (int i = 0; i < listLabel.length; i++) {
+						Map<String, Object> itemDataSet = null;
+						try {
+							itemDataSet = datasets.get(i);
+						} catch (IndexOutOfBoundsException e) {
+							itemDataSet = new HashMap<String, Object>();
+							datasets.add(itemDataSet);
+						}
+						itemDataSet = datasets.get(i);
+						
+						if(StringUtils.isEmpty(listLabel[i].getDescripcion())){
+							if (!itemDataSet.containsKey("label")
+									|| !itemDataSet.get("label").equals(listGroups[i].getDescripcion())) {
+								itemDataSet.put("label", listGroups[i].getDescripcion());
+								itemDataSet.put("backgroundColor", listLabel[i].getBorderColor() != null
+										? listGroups[i].getBorderColor() : "rgb(255,99,132)");
+								itemDataSet.put("data", new ArrayList<BigDecimal>(listGroups.length));
+							}
+						}else{
+							if (!itemDataSet.containsKey("label")
+									|| !itemDataSet.get("label").equals(listLabel[i].getDescripcion())) {
+								itemDataSet.put("label", listLabel[i].getDescripcion());
+								itemDataSet.put("backgroundColor", listLabel[i].getBorderColor() != null
+										? listLabel[i].getBorderColor() : "rgb(255,99,132)");
+								itemDataSet.put("data", new ArrayList<BigDecimal>(listLabel.length));
+							}	
+						}
+					}
+
+					for (int i = 0; i < listGroups.length; i++) {
+						vars = new HashMap<String, Object>();
+						vars.put("codigo", listGroups[i].getCodigo());
+
+						DetalleGrafico[] listData = restTemplate.postForObject(WebConstants.restGetDetallePorPadre,
+								null, DetalleGrafico[].class, vars);
+						for (int j = 0; j < listData.length; j++) {
+							Map<String, Object> itemDataSet = datasets.get(j);
+							// Obtenemos los valores
+							vars = new HashMap<String, Object>();
+							vars.put("codigo", listLabel[j].getCodigo());
+							DetalleGrafico[] listValues = restTemplate.postForObject(
+									WebConstants.restGetDetallePorPadre, null, DetalleGrafico[].class, vars);
+							if (listValues != null && listValues.length > 0) {
+								((List<BigDecimal>) itemDataSet.get("data")).add(listValues[0].getValor());
+							}else{
+								((List<BigDecimal>) itemDataSet.get("data")).add(listData[0].getValor());
+							}
+						}
+					}
+				}
+				response.put("data", data);
+			}
+			Map<String, Object> options = new HashMap<String, Object>();
+
+			Map<String, Object> title = new HashMap<String, Object>();
+			title.put("display", Boolean.FALSE);
+			title.put("text", "");
+			options.put("title", title);
+
+			Map<String, Object> tooltips = new HashMap<String, Object>();
+			tooltips.put("mode", "index");
+			tooltips.put("intersect", Boolean.FALSE);
+			options.put("tooltips", tooltips);
+			options.put("responsive", Boolean.TRUE);
+			// Usado cuando es stackedBar
+			if ("stackedBar".equals(grafico.getTipo())) {
+				Map<String, Object> scales = new HashMap<String, Object>();
+				List<Map<String, Object>> xAxes = new ArrayList<Map<String, Object>>();
+				Map<String, Object> xAxes_stacked = new HashMap<String, Object>();
+				xAxes_stacked.put("stacked", Boolean.TRUE);
+				xAxes.add(xAxes_stacked);
+				scales.put("xAxes", xAxes);
+				List<Map<String, Object>> yAxes = new ArrayList<Map<String, Object>>();
+				Map<String, Object> yAxes_stacked = new HashMap<String, Object>();
+				yAxes_stacked.put("stacked", Boolean.TRUE);
+				scales.put("yAxes", yAxes);
+				options.put("scales", scales);
+			}
+
+			response.put("options", options);
+			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.ACCEPTED);
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			model.addAttribute("message", "No se pudo cargar el elemento seleccionado");
+			return new ResponseEntity<Map<String, Object>>(MapUtils.EMPTY_MAP, HttpStatus.BAD_REQUEST);
+		}
     }
 
     @RequestMapping(value = { "/publico/getNode"}, method = RequestMethod.GET)
