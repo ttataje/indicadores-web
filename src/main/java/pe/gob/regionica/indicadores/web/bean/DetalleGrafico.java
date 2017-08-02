@@ -8,38 +8,18 @@ public class DetalleGrafico extends GenericBean {
 
 	private Long codigo;
 	
-	private String descripcion;
-	
 	private Long grafico;
 	
-	private Long padre;
-	
-	private BigDecimal valor;
-	
-	private String tipo = "bar";
-	
-	private String label;
-	
-	private String borderColor;
-	
-	private Long borderWidth = new Long (2);
+	private String data;
 
-	private Boolean children = Boolean.FALSE;
-	
+	private String attributes;
+
 	public Long getCodigo() {
 		return codigo;
 	}
 
 	public void setCodigo(Long codigo) {
 		this.codigo = codigo;
-	}
-
-	public String getDescripcion() {
-		return descripcion;
-	}
-
-	public void setDescripcion(String descripcion) {
-		this.descripcion = descripcion;
 	}
 
 	public Long getGrafico() {
@@ -50,60 +30,20 @@ public class DetalleGrafico extends GenericBean {
 		this.grafico = grafico;
 	}
 
-	public Long getPadre() {
-		return padre;
+	public String getData() {
+		return data;
 	}
 
-	public void setPadre(Long padre) {
-		this.padre = padre;
+	public void setData(String data) {
+		this.data = data;
 	}
 
-	public BigDecimal getValor() {
-		return valor;
+	public String getAttributes() {
+		return attributes;
 	}
 
-	public void setValor(BigDecimal valor) {
-		this.valor = valor;
-	}
-
-	public Boolean getChildren() {
-		return children;
-	}
-
-	public void setChildren(Boolean children) {
-		this.children = children;
-	}
-
-	public String getTipo() {
-		return tipo;
-	}
-
-	public void setTipo(String tipo) {
-		this.tipo = tipo;
-	}
-
-	public String getLabel() {
-		return label;
-	}
-
-	public void setLabel(String label) {
-		this.label = label;
-	}
-
-	public String getBorderColor() {
-		return borderColor;
-	}
-
-	public void setBorderColor(String borderColor) {
-		this.borderColor = borderColor;
-	}
-
-	public Long getBorderWidth() {
-		return borderWidth;
-	}
-
-	public void setBorderWidth(Long borderWidth) {
-		this.borderWidth = borderWidth;
+	public void setAttributes(String attributes) {
+		this.attributes = attributes;
 	}
 
 }

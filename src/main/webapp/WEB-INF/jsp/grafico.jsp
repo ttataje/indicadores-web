@@ -79,6 +79,14 @@
 <script type="text/javascript">
 var titulo = '${indicador.descripcion}';
 var tipoGrafico = '${grafico.tipo}';
+var grafico = ${json_grafico};
+var detalleGrafico = ${json_detalleGrafico};
+
+var colors = ['rgb(255, 99, 132)','rgb(255, 159, 64)','rgb(255, 205, 86)','rgb(75, 192, 192)','rgb(54, 162, 235)','rgb(153, 102, 255)','rgb(201, 203, 207)',
+	'rgb(255, 99, 132)','rgb(255, 159, 64)','rgb(255, 205, 86)','rgb(75, 192, 192)','rgb(54, 162, 235)','rgb(153, 102, 255)','rgb(201, 203, 207)',
+	'rgb(255, 99, 132)','rgb(255, 159, 64)','rgb(255, 205, 86)','rgb(75, 192, 192)','rgb(54, 162, 235)','rgb(153, 102, 255)','rgb(201, 203, 207)',
+	'rgb(255, 99, 132)','rgb(255, 159, 64)','rgb(255, 205, 86)','rgb(75, 192, 192)','rgb(54, 162, 235)','rgb(153, 102, 255)','rgb(201, 203, 207)'];
+	
 
 $(function () {
 	
@@ -111,7 +119,7 @@ $(function () {
 		$("#modalAtributosDIV").modal("hide");
 	});
 	
-	$('body').on('click','odom-guardar-grafico',function(e){
+	$('body').on('click','.odom-guardar-grafico',function(e){
 		var item = {
 					'data' : data,
 					'attributes' : attributes
@@ -232,6 +240,10 @@ $(function () {
 			processInformation(data);
 		}
 	});
+	
+	if(!(typeof detalleGrafico.data === "undefined")){
+		processInformation(JSON.parse(detalleGrafico.data));
+	}
 	
 	function processInformation(data){
 		labelDataset = [];

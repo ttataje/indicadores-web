@@ -119,11 +119,13 @@ public class WebController {
 			Grafico grafico = restTemplate.postForObject(WebConstants.restLoadGrafico, null, Grafico.class, vars);
 			Indicador indicador = restTemplate.postForObject(WebConstants.restGetIndicador, null, Indicador.class, vars);
 			vars.put("codigo", String.valueOf(grafico.getCodigo()));
-			DetalleGrafico detalleGrafico = restTemplate.postForObject(WebConstants.restGetDetallePorGrafico, null, DetalleGrafico.class, vars);
+			DetalleGrafico[] detalleGrafico = restTemplate.postForObject(WebConstants.restGetDetallePorGrafico, null, DetalleGrafico[].class, vars);
 			model.addAttribute("currentPage", "registro");
 			model.addAttribute("grafico", grafico);
 			model.addAttribute("indicador", indicador);
-			model.addAttribute("detalleGrafico", detalleGrafico);
+			model.addAttribute("detalleGrafico", detalleGrafico[0]);
+			model.addAttribute("json_grafico", new JSONObject(grafico));
+			model.addAttribute("json_detalleGrafico", new JSONObject(detalleGrafico[0]));
 		} catch (Exception e) {
 			log.error(e.getMessage());
 			model.addAttribute("message", "No se pudo cargar el elemento seleccionado");
@@ -132,6 +134,40 @@ public class WebController {
 
 		return "grafico";
 	}
+	
+    /*
+     * 
+     * Carga de Data de Cuadro
+     * 
+     */
+    
+    @RequestMapping(value = { "/loadChartData"}, method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity<Map<String,Object>> loadChartData(HttpServletRequest request, ModelMap model) {
+		Map<String, Object> response = new HashMap<String, Object>();
+		String codigo = request.getParameter("codigo");
+
+		RestTemplate restTemplate = new RestTemplate();
+		restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+		restTemplate.getMessageConverters().add(new StringHttpMessageConverter());
+
+		Map<String, Object> vars = new HashMap<String, Object>();
+		vars.put("codigo", codigo);
+
+		try {
+			Grafico grafico = restTemplate.postForObject(WebConstants.restLoadGrafico, null, Grafico.class, vars);
+			response.put("grafico", grafico);
+			vars.put("codigo", grafico.getCodigo());
+			DetalleGrafico[] detalleGrafico = restTemplate.postForObject(WebConstants.restGetDetallePorGrafico, null, DetalleGrafico[].class, vars);
+			response.put("detalleGrafico", detalleGrafico[0]);
+			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.ACCEPTED);
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			model.addAttribute("message", "No se pudo cargar el elemento seleccionado");
+			return new ResponseEntity<Map<String, Object>>(MapUtils.EMPTY_MAP, HttpStatus.BAD_REQUEST);
+		}
+    }
+
 
 	/*
 	 * 
@@ -297,7 +333,7 @@ public class WebController {
 			Map<String, Object> params = new HashMap<String, Object>();
 			params.put("detalle.codigo", detalleGrafico.getCodigo());
 			params.put("detalle.data", jsonObject.get("data"));
-			params.put("detalle.attributes", jsonObject.get("attribute"));
+			params.put("detalle.attributes", jsonObject.get("attributes"));
 
 			detalleGrafico = restTemplate.postForObject(WebConstants.restSaveDetalleGrafico, null, DetalleGrafico.class, params);
 			params.clear();

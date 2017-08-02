@@ -145,6 +145,12 @@ var selectedNode = null;
 var typeNode = null;
 var countChart = 0;
 var nodeToModify = null;
+var tipoGrafico = null;
+var colors = ['rgb(255, 99, 132)','rgb(255, 159, 64)','rgb(255, 205, 86)','rgb(75, 192, 192)','rgb(54, 162, 235)','rgb(153, 102, 255)','rgb(201, 203, 207)',
+	'rgb(255, 99, 132)','rgb(255, 159, 64)','rgb(255, 205, 86)','rgb(75, 192, 192)','rgb(54, 162, 235)','rgb(153, 102, 255)','rgb(201, 203, 207)',
+	'rgb(255, 99, 132)','rgb(255, 159, 64)','rgb(255, 205, 86)','rgb(75, 192, 192)','rgb(54, 162, 235)','rgb(153, 102, 255)','rgb(201, 203, 207)',
+	'rgb(255, 99, 132)','rgb(255, 159, 64)','rgb(255, 205, 86)','rgb(75, 192, 192)','rgb(54, 162, 235)','rgb(153, 102, 255)','rgb(201, 203, 207)'];
+	
 
 function openChartModify(codigo){
 	var link = document.createElement('a');
@@ -482,13 +488,99 @@ $(function () {
 			*/
 		});
 	
-	function refreshData(){
-        barChartData.datasets.forEach(function(dataset, i) {
-            dataset.data = dataset.data.map(function() {
-                return randomScalingFactor();
-            });
-        });
-        window.myBar.update();
+	function processInformation(data){
+		labelDataset = [];
+		chartDataset = [];
+		
+		if(tipoGrafico === 'pie'){
+			for (i=0; i < data[0].length; i++){
+				labelDataset.push(data[0][i]);
+			}
+			for (i=1; i< data.length - 1; i++) {
+				var item = {}
+				item.data = new Array();
+				item.backgroundColor = new Array();
+				item.label = 'Dataset 1';
+				for (j=0; j<data[i].length; j++) {
+					item.backgroundColor = colors[i];
+					item.data.push(fixNumberExcel(data[i][j]));
+				}
+				chartDataset.push(item);
+			}
+			window.myBar.data.labels = labelDataset;
+			window.myBar.data.datasets = chartDataset;
+		}else if(tipoGrafico === 'stackedBar'){
+			for (i=1; i < data[0].length; i++){
+				labelDataset.push(data[0][i]);
+			}
+			for (i=1; i< data.length - 1; i++) {
+				var item = {}
+				item.data = new Array();
+				for (j=0; j<data[i].length; j++) {
+					if(j==0){
+						item.label = data[i][j];
+						item.backgroundColor = colors[i];
+					}else{
+						item.data.push(fixNumberExcel(data[i][j]));
+					}
+				}
+				chartDataset.push(item);
+			}
+			window.myBar.data.labels = labelDataset;
+			window.myBar.data.datasets = chartDataset;
+		} else if(tipoGrafico === 'horizontalBar'){
+			for (i=1; i< data.length - 1; i++) {
+				var item = {}
+				item.data = new Array();
+				for (j=0; j<data[i].length; j++) {
+					if(j==0){
+						item.label = data[i][j];
+						item.backgroundColor = colors[i];
+					}else{
+						item.data.push(fixNumberExcel(data[i][j]));
+					}
+				}
+				chartDataset.push(item);
+			}
+			window.myBar.data.labels = labelDataset;
+			window.myBar.data.datasets = chartDataset;
+		} else {
+			for (i=1; i< data.length - 1; i++) {
+				var item = {}
+				item.data = new Array();
+				for (j=0; j<data[i].length; j++) {
+					if(j==0){
+						item.label = data[i][j];
+						item.backgroundColor = colors[i];
+					}else{
+						item.data.push(fixNumberExcel(data[i][j]));
+					}
+				}
+				chartDataset.push(item);
+			}
+			window.myBar.data.labels = labelDataset;
+			window.myBar.data.datasets = chartDataset;			
+		}
+		
+		window.myBar.update();
+	}
+	
+	function fixNumberExcel(n){
+		var pos = n.lastIndexOf(',');
+		if(pos == -1){
+			return parseFloat(n);
+		}else{
+			var num = '';
+			for(var i = 0; i < n.length; i++){
+				var c = n.charAt(i);
+				if(c != ','){
+					num += c;
+				}
+			}
+			var npos = pos - (n.length - num.length);
+			num = num.slice(0, npos + 1) + "." + num.slice(npos + 1);
+			return parseFloat(num);
+		}
 	}
 
 	$('#jstree').bind("dblclick.jstree",function (e) {
@@ -502,9 +594,99 @@ $(function () {
 			.done(function (d) {
 				var ctx = document.getElementById('chartCanvas').getContext('2d');
 				
-				if(!jQuery.isEmptyObject(d.data) && d.data.datasets.length > 0){
-					console.log(d)
-				    window.myBar = new Chart(ctx, d);
+				var grafico = d.grafico;
+				var detalleGrafico = d.detalleGrafico;
+				tipoGrafico = grafico.tipo;
+				
+				if(!(typeof detalleGrafico.data === "undefined")){
+					var labelDataset = [];
+					
+					var chartDataset = [];
+					
+					var data = [];
+					
+					var attributes = [];
+					
+					var chartData = {
+					        labels: labelDataset,
+					        datasets: chartDataset
+					    };
+					
+					var ctx = document.getElementById('chartCanvas').getContext('2d');
+					
+					window.myBar;
+					
+					var typeGraph = tipoGrafico === 'stackedBar' ? 'bar' : tipoGrafico;
+					if(tipoGrafico === 'pie'){
+					    window.myBar = new Chart(ctx, {
+					        type: typeGraph,
+					        data: chartData,
+					        options: {
+					            responsive: true
+					        }
+					    });
+					}else if(tipoGrafico === 'stackedBar'){
+					    window.myBar = new Chart(ctx, {
+					        type: typeGraph,
+					        data: chartData,
+					        options: {
+					            title:{
+					                display: false,
+					                text: 'Chart.js Horizontal Bar Chart'
+					            },
+					            tooltips: {
+					                mode: 'index',
+					                intersect: false
+					            },
+					            responsive: true,
+					            scales: {
+					                xAxes: [{
+					                    stacked: true,
+					                }],
+					                yAxes: [{
+					                    stacked: true
+					                }]
+					            }
+					        }
+					    });			
+					} else if(tipoGrafico === 'horizontalBar'){
+					    window.myBar = new Chart(ctx, {
+					        type: typeGraph,
+					        data: chartData,
+				               options: {
+				                   elements: {
+				                       rectangle: {
+				                           borderWidth: 2,
+				                       }
+				                   },
+				                   responsive: true,
+				                   legend: {
+				                       position: 'right',
+				                   },
+				                   title: {
+				                       display: false,
+				                       text: 'Chart.js Horizontal Bar Chart'
+				                   }
+				               }
+					    });
+					} else {
+					    window.myBar = new Chart(ctx, {
+					        type: typeGraph,
+					        data: chartData,
+				               options: {
+				                   responsive: true,
+				                   legend: {
+				                       position: 'top',
+				                   },
+				                   title: {
+				                       display: false,
+				                       text: 'Chart.js Bar Chart'
+				                   }
+				               }
+					    });
+					}
+					
+					processInformation(JSON.parse(detalleGrafico.data));
 
 					$('#title-modal').text(node.text);
 					$("#modalDIV").modal("show");
