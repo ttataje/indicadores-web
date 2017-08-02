@@ -11,8 +11,6 @@ public class WebConstants {
 
 	public static final String restServer = bundle.getString("rest-server");
 	
-	public static final String restColor = restServer + "/rest/color/list";
-	
 	public static final String restLogin = restServer + "/rest/usuario/login?username={username}&clave={clave}";
 	
 	// Operaciones Grafico
@@ -23,15 +21,9 @@ public class WebConstants {
 	public static final String restDelGrafico = restServer + "/rest/grafico/eliminar?grafico.codigo={grafico.codigo}";
 	
 	// Operaciones DetalleGrafico
-	public static final String restAddDetalleGrafico = restServer + "/rest/detalleGrafico/guardar?detalle.codigo={detalle.codigo}&detalle.grafico.codigo={detalle.grafico.codigo}&detalle.padre.codigo={detalle.padre.codigo}&detalle.descripcion={detalle.descripcion}&detalle.valor={detalle.valor}";
+	public static final String restAddDetalleGrafico = restServer + "/rest/detalleGrafico/guardar?detalle.codigo={detalle.codigo}&detalle.grafico.codigo={detalle.grafico.codigo}";
 	
-	public static final String restEditDetalleGrafico = restServer + "/rest/detalleGrafico/modificar?detalle.codigo={detalle.codigo}&detalle.borderColor={detalle.borderColor}&detalle.tipo={detalle.tipo}";
-
-	public static final String restDelDetalleGrafico = restServer + "/rest/detalleGrafico/eliminar?detalle.codigo={detalle.codigo}";
-	
-	public static final String restGetDetalleGrafico = restServer + "/rest/detalleGrafico/get?codigo={codigo}";
-	
-	public static final String restGetDetallePorPadre = restServer + "/rest/detalleGrafico/getByParent?codigo={codigo}";
+	public static final String restSaveDetalleGrafico = restServer + "/rest/detalleGrafico/guardar?detalle.codigo={detalle.codigo}&detalle.data={detalle.data}&detalle.attributes={detalle.attributes}";
 	
 	public static final String restGetDetallePorGrafico = restServer + "/rest/detalleGrafico/getByChart?codigo={codigo}";
 	
