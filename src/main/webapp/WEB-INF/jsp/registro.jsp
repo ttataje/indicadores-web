@@ -598,7 +598,7 @@ $(function () {
 				var detalleGrafico = d.detalleGrafico;
 				tipoGrafico = grafico.tipo;
 				
-				if(!(typeof detalleGrafico.data === "undefined")){
+				if(!(typeof detalleGrafico.data === "undefined") && !(detalleGrafico.data === null)){
 					var labelDataset = [];
 					
 					var chartDataset = [];
