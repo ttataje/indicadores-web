@@ -1,0 +1,361 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+	<meta name="robots" content="noindex,follow">
+	<title>Registro - Region Ica - Gr&aacute;fico</title>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+	<link rel="stylesheet" type="text/css" href="css\default.css">
+	<link rel="stylesheet" type="text/css" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.min.css" crossorigin="anonymous">
+	<link rel="stylesheet" type="text/css" href="css\common_config.css">
+	<link rel="stylesheet" type="text/css" href="css\status_config.css">
+	<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" crossorigin="anonymous">
+	<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" crossorigin="anonymous">
+	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400" crossorigin="anonymous">
+	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.43/css/bootstrap-datetimepicker.min.css" crossorigin="anonymous">
+	<link rel="stylesheet" type="text/css" href="css\ace.min.css">
+	<link rel="stylesheet" type="text/css" href="css\ace-mantis.css">
+	<link rel="stylesheet" type="text/css" href="css\ace-skins.min.css">
+	<link rel="shortcut icon" href="images\favicon.ico" type="image/x-icon">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/themes/default/style.min.css" />
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js" integrity="sha256-xNjb53/rY+WmG+4L6tTl9m6PpqknWZvRt0rO1SRnJzw=" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
+	<style>
+    canvas {
+        -moz-user-select: none;
+        -webkit-user-select: none;
+        -ms-user-select: none;
+    }
+    </style>
+</head>
+<body class="skin-3">
+	<!-- Inicio Barra Navegacion  -->
+	<div id="navbar" class="navbar navbar-default navbar-collapse navbar-fixed-top noprint">
+		<div id="navbar-container" class="navbar-container">
+			<button id="menu-toggler" type="button" class="navbar-toggle menu-toggler pull-left hidden-lg" data-target="#sidebar">
+				<span class="sr-only">Toggle sidebar</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>
+			</button>
+			<div class="navbar-header">
+				<a href="#" class="navbar-brand"><span class="smaller-75"> Sistema de Gesti&oacute;n de Indicadores </span></a>
+				<button type="button" class="navbar-toggle navbar-toggle-img collapsed pull-right hidden-sm hidden-md hidden-lg" data-toggle="collapse" data-target=".navbar-buttons,.navbar-menu">
+					<span class="sr-only">Toggle user menu</span><img class="nav-user-photo" src="https://secure.gravatar.com/avatar/6961e2f6353cdc06d6f2b33a67d8ff72?d=identicon&amp;r=G&amp;s=32" alt="Administrador">
+				</button>
+			</div>
+			<div class="navbar-buttons navbar-header navbar-collapse collapse">
+				<ul class="nav ace-nav">
+					<li class="grey">
+						<a data-toggle="dropdown" href="#" class="dropdown-toggle">
+							<img class="nav-user-photo" src="https://secure.gravatar.com/avatar/6961e2f6353cdc06d6f2b33a67d8ff72?d=identicon&amp;r=G&amp;s=32" alt="administrador">
+							<span class="user-info">administrador</span>
+							<i class="ace-icon fa fa-angle-down"></i>
+						</a>
+						<ul class="user-menu dropdown-menu dropdown-menu-right dropdown-yellow dropdown-caret dropdown-close">
+						<!--
+							<li><a href="./crear_cuenta.html"><i class="ace-icon fa fa-user"> </i> Mi cuenta</a></li>
+							<li class="divider"></li>
+						-->
+							<li><a href="./index.html"><i class="ace-icon fa fa-sign-out"> </i> Salir</a></li>
+						</ul>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+	<!-- Fin Barra Navegacion  -->
+	
+	<!-- Inicio Menu  -->
+	<div class="main-container" id="main-container">
+		<div id="sidebar" class="sidebar sidebar-fixed responsive compact ">
+			<ul class="nav nav-list">
+				<li>
+					<a href="./my_view_page.html">
+						<i class="menu-icon fa fa-cubes"></i>
+						<span class="menu-text"> Vista General </span>
+					</a>
+					<b class="arrow"></b>
+				</li>
+				<li class="active">
+					<a href="./registro_indicadores.html">
+						<i class="menu-icon fa fa-tachometer"></i>
+						<span class="menu-text"> Editor de Gr&aacute;ficos </span>
+					</a>
+					<b class="arrow"></b>
+				</li>
+			</ul>
+			<div id="sidebar" class="sidebar-toggle sidebar-collapse">
+				<i data-icon2="ace-icon fa fa-angle-double-right" data-icon1="ace-icon fa fa-angle-double-left" class="ace-icon fa fa-angle-double-left"></i>
+			</div>
+		</div>
+		<!-- Fin Menu  -->
+		<!-- Inicio Contenido -->
+		<div class="main-content">
+			<!-- Inicio Barra Busqueda -->
+			<div id="breadcrumbs" class="breadcrumbs noprint">
+				<ul class="breadcrumb">
+				  <li>
+					  <i class="fa fa-user home-icon active"></i>
+					  <a href="./crear_cuenta.html">Administrador ( Telly Tataje ) </a>
+					  <span class="label hidden-xs label-default arrowed">administrador</span>
+				  </li>
+				</ul>
+			</div>
+			<!-- Fin Barra Busqueda -->
+			<!-- Inicio Contenido -->
+			<div class="page-content">
+				<div class="row">
+					<div class="col-md-12 col-xs-12">
+						<form id="report_bug_form" method="post" action="#" class="dropzone-form">
+							<input type="hidden" name="m_id" value="0">
+							<input type="hidden" name="project_id" value="1">
+							<div class="widget-box widget-color-blue2">
+								<div class="widget-header widget-header-small">
+									<h4 class="widget-title lighter">
+										<i class="ace-icon fa fa-edit"></i>
+										Registro de Indicadores
+									</h4>
+								</div>
+								<div class="widget-body dz-clickable">
+									<div class="widget-main no-padding">
+										<div class="table-responsive">
+											<canvas id="chartCanvas"></canvas>
+										</div>
+									</div>
+									<div class="widget-main no-padding">
+										<div class="table-responsive">
+											
+										</div>
+									</div>
+									<div class="widget-toolbox padding-8 clearfix">
+										<input tabindex="12" type="button" class="btn btn-primary btn-white btn-round odom-regresar" value="Regresar">
+									</div>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+			<!-- Fin Contenido -->
+		</div>
+		<div class="clearfix"></div>
+		<div class="space-20"></div>
+		<div class="footer noprint">
+			<div class="footer-inner">
+				<div class="footer-content">
+					<div class="col-md-6 col-xs-12 no-padding">
+					</div>
+					<div class="col-md-6 col-xs-12">
+						<div class="pull-right">
+							<img src="images\regionica_pie.png" height="35" alt="Region Ica">
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<a class="btn-scroll-up btn btn-sm btn-inverse display" id="btn-scroll-up" href="#">
+			<i class="ace-icon fa fa-angle-double-up icon-only bigger-110"></i>
+		</a>
+	</div>
+	<script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha256-KXn5puMvxCw+dAYznun+drMdG1IFl3agK0p/pqT9KAo=" crossorigin="anonymous"></script>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.15.2/moment-with-locales.min.js" integrity="sha256-K+AZsAFjiBd4piqBmFzaxDsiQiHfREubm1ExNGW1JIA=" crossorigin="anonymous"></script>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.43/js/bootstrap-datetimepicker.min.js" integrity="sha256-I8vGZkA2jL0PptxyJBvewDVqNXcgIhcgeqi+GD/aw34=" crossorigin="anonymous"></script>
+	<script type="text/javascript" src="js\ace-extra.min.js"></script>
+	<script type="text/javascript" src="js\ace-elements.min.js"></script>
+	<script type="text/javascript" src="js\ace.min.js"></script>
+	<script type="text/javascript">
+		var getUrlParameter = function getUrlParameter(sParam) {
+		    var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+		        sURLVariables = sPageURL.split('&'),
+		        sParameterName,
+		        i;
+	
+		    for (i = 0; i < sURLVariables.length; i++) {
+		        sParameterName = sURLVariables[i].split('=');
+	
+		        if (sParameterName[0] === sParam) {
+		            return sParameterName[1] === undefined ? true : sParameterName[1];
+		        }
+		    }
+		};
+	</script>
+	<script type="text/javascript">
+	window.chartColors = {
+		red: 'rgb(255, 99, 132)',
+		orange: 'rgb(255, 159, 64)',
+		yellow: 'rgb(255, 205, 86)',
+		green: 'rgb(75, 192, 192)',
+		blue: 'rgb(54, 162, 235)',
+		purple: 'rgb(153, 102, 255)',
+		grey: 'rgb(201, 203, 207)'
+	};
+	
+	var colors = ['rgb(255, 99, 132)','rgb(255, 159, 64)','rgb(255, 205, 86)','rgb(75, 192, 192)','rgb(54, 162, 235)','rgb(153, 102, 255)','rgb(201, 203, 207)',
+	'rgb(255, 99, 132)','rgb(255, 159, 64)','rgb(255, 205, 86)','rgb(75, 192, 192)','rgb(54, 162, 235)','rgb(153, 102, 255)','rgb(201, 203, 207)',
+	'rgb(255, 99, 132)','rgb(255, 159, 64)','rgb(255, 205, 86)','rgb(75, 192, 192)','rgb(54, 162, 235)','rgb(153, 102, 255)','rgb(201, 203, 207)',
+	'rgb(255, 99, 132)','rgb(255, 159, 64)','rgb(255, 205, 86)','rgb(75, 192, 192)','rgb(54, 162, 235)','rgb(153, 102, 255)','rgb(201, 203, 207)'];
+	
+	window.randomScalingFactor = function() {
+		var num1 = 1000;
+		var num2 = 9999999;
+		return Math.floor(Math.random() * (num2-num1 + 1) + num1);
+	};
+	
+	var titulo = getUrlParameter('title');
+	
+	var table = $('.table-responsive');
+
+	var barChartData = {
+	        labels: labelDataset,
+	        datasets: chartDataset
+	
+	    };
+	$(function () {
+		
+		$('body').on('click','.odom-regresar',function(e){
+			var link = document.createElement('a');
+			link.href = './registro_indicadores.html';
+			document.body.appendChild(link);
+			link.click(); 
+		});
+		
+		var ctx = document.getElementById('chartCanvas').getContext('2d');
+		
+	    window.myBar = new Chart(ctx, {
+	        type: 'bar',
+	        data: barChartData,
+	        options: {
+	            title:{
+	                display: true,
+	                text: titulo
+	            },
+	            tooltips: {
+	                mode: 'index',
+	                intersect: false
+	            },
+	            responsive: true,
+	            scales: {
+	                xAxes: [{
+	                    stacked: true,
+	                }],
+	                yAxes: [{
+	                    stacked: true
+	                }]
+	            }
+	        }
+	    });
+	
+		function crear() {
+			var ref = $('#jstree').jstree(true),
+				sel = ref.get_selected();
+			if(!sel.length) { return false; }
+			sel = sel[0];
+			sel = ref.create_node(sel, {"type":"file"});
+			if(sel) {
+				ref.edit(sel);
+			}
+		};
+		function modificar() {
+			var ref = $('#jstree').jstree(true),
+				sel = ref.get_selected();
+			if(!sel.length) { return false; }
+			sel = sel[0];
+			ref.edit(sel);
+		};
+		function eliminar() {
+			var ref = $('#jstree').jstree(true),
+				sel = ref.get_selected();
+			if(!sel.length) { return false; }
+			ref.delete_node(sel);
+		};
+		/*
+		$('#jstree').bind("dblclick.jstree",function (e) {
+			var li = $(e.target).closest("li");
+			var item = li[0].id;
+			var node = $('#jstree').jstree(true).get_node(item);
+	
+			if(node.icon === "glyphicon glyphicon-dashboard") {
+				$('.modal-title').text(node.text);
+				$("#modalDIV").modal("show");
+				//alert("Grafico : [" + node.id + "] " + node.text + " / Padre : " + node.parent);
+	            barChartData.datasets.forEach(function(dataset, i) {
+	                dataset.data = dataset.data.map(function() {
+	                    return randomScalingFactor();
+	                });
+	            });
+	            window.myBar.update();
+			}
+		});
+		*/
+	});
+	
+	var labelDataset = [];
+	
+	var chartDataset = [];
+	
+	var data;
+	
+	document.addEventListener('paste', function (evt) {
+		var info = evt.clipboardData.getData('text/plain');
+		if (info != null) {
+			clipRows = info.split(String.fromCharCode(13));
+
+			// split rows into columns
+
+			for (i=0; i<clipRows.length; i++) {
+				clipRows[i] = clipRows[i].split(String.fromCharCode(9));
+			}
+			
+			data = clipRows;
+			processInformation(data);
+		}
+	});
+	
+	function processInformation(data){
+		labelDataset = [];
+		chartDataset = [];
+		
+		for (i=1; i < data[0].length; i++){
+			labelDataset.push(data[0][i]);
+		}
+		for (i=1; i< data.length - 1; i++) {
+			var item = {}
+			item.data = new Array();
+			for (j=0; j<data[i].length; j++) {
+				if(j==0){
+					item.label = data[i][j];
+					item.backgroundColor = colors[i];
+				}else{
+					item.data.push(fixNumberExcel(data[i][j]));
+				}
+			}
+			chartDataset.push(item);
+		}
+		console.log(chartDataset);
+		window.myBar.data.labels = labelDataset;
+		window.myBar.data.datasets = chartDataset;
+		window.myBar.update();
+	}
+	
+	function fixNumberExcel(n){
+		var pos = n.lastIndexOf(',');
+		if(pos == -1){
+			return parseFloat(n);
+		}else{
+			var num = '';
+			for(var i = 0; i < n.length; i++){
+				var c = n.charAt(i);
+				if(c != ','){
+					num += c;
+				}
+			}
+			var npos = pos - (n.length - num.length);
+			num = num.slice(0, npos + 1) + "." + num.slice(npos + 1);
+			console.log(num);
+			return parseFloat(num);
+		}
+	}
+	</script>
+</body>
+</html>
