@@ -42,7 +42,7 @@
 		      	</tr>
 		      	</table>
 		      </div>
-		      <div class="modal-body">
+		      <div class="modal-body modal-body-canvas">
 		        <canvas id="chartCanvas"></canvas>
 		      </div>
 		      <div class="modal-footer">
@@ -57,7 +57,7 @@
 		  <div class="modal-dialog" role="document">
 		    <div class="modal-content">
 		      <div class="modal-header">
-		      	<table>
+		      	<table style="width: 100%">
 		      	<tr>
 		      	<td style="width: 20%">
 		      	<img src="images/regionica_pie.png" height="45" alt="Region Ica">
@@ -73,7 +73,7 @@
 		      	</tr>
 		      	</table>
 		      </div>
-		      <div class="modal-body odom-pdf-source">
+		      <div class="modal-body odom-pdf-source" style="overflow: auto;">
 		        
 		      </div>
 		      <div class="modal-footer">
@@ -91,7 +91,12 @@
 <script type="text/javascript">
 var objNode = null;
 var selectedNode = null;
-var countChart = 0;
+var tipoGrafico = null;
+var colors = ['rgb(255, 99, 132)','rgb(255, 159, 64)','rgb(255, 205, 86)','rgb(75, 192, 192)','rgb(54, 162, 235)','rgb(153, 102, 255)','rgb(201, 203, 207)',
+	'rgb(255, 99, 132)','rgb(255, 159, 64)','rgb(255, 205, 86)','rgb(75, 192, 192)','rgb(54, 162, 235)','rgb(153, 102, 255)','rgb(201, 203, 207)',
+	'rgb(255, 99, 132)','rgb(255, 159, 64)','rgb(255, 205, 86)','rgb(75, 192, 192)','rgb(54, 162, 235)','rgb(153, 102, 255)','rgb(201, 203, 207)',
+	'rgb(255, 99, 132)','rgb(255, 159, 64)','rgb(255, 205, 86)','rgb(75, 192, 192)','rgb(54, 162, 235)','rgb(153, 102, 255)','rgb(201, 203, 207)'];
+
 
 $(function () {
 	$("#modalDIV").modal("hide");
@@ -146,18 +151,18 @@ $(function () {
 			var child = childrens[i];
 			var nodeChild = ref._model.data[child];
 			var data = nodeChild.original;
-			
+
 			if(data.type === 'folder'){
-				body.append("<div>" + data.text + "</div>");
+				body.append("<div class='new_page' style='width: 297mm; min-height: 210mm; padding: 20mm; margin: 10mm auto; border: 1px #D3D3D3 solid; border-radius: 5px; background: white; box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);'></div>");
+				var div = body.last();
+				div.append("<h1 class='page-title'><span>" + data.text + "</span></h1>")
 			}else{
-				body.append("<canvas id='chart_"+ data.codigo + "'></canvas>");
-				$.post('${pageContext.request.contextPath}/loadChartData', {"codigo" : data.codigo})
+				body.append("<div class='new_page' style='width: 297mm; min-height: 210mm; padding: 20mm; margin: 10mm auto; border: 1px #D3D3D3 solid; border-radius: 5px; background: white; box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);'></div>");
+				var div = body.last();
+				div.append("<canvas id='chart_"+ data.codigo + "'></canvas>");
+				$.post('${pageContext.request.contextPath}/publico/loadChartData', {"codigo" : data.codigo})
 				.done(function (d) {
-					var ctx = document.getElementById('chart_'+data.codigo).getContext('2d');
-					
-					if(!jQuery.isEmptyObject(d.data) && d.data.datasets.length > 0){
-					    window.myBar = new Chart(ctx, d);
-					}
+					writeChart(d, 'chart_'+data.codigo);
 				})
 				.fail(function (e) {
 					//FIXME falta mensaje en caso falle la carga del modal
@@ -169,12 +174,19 @@ $(function () {
 	});
 	
 	$('body').on('click','.odom-imprimir',function(e){
-		var doc = new jsPDF();
-	    doc.addHTML($('.odom-pdf-source')[0], 15, 15, {
-	        'background': '#fff',
-	      }, function() {
-	        doc.save('output.pdf');
-	    });
+		var doc = new jsPDF('landscape');
+		var options = {
+		         pagesplit: true
+		    };
+		var items = $('.new_page');
+		$.each(items, function(index, value){
+			doc.addHTML(value, options, {'background': '#fff'});
+			if(items.length > index){
+				doc.addPage();	
+			}
+		});
+	    
+	    doc.save('SIRI_' + (new Date()).getTime() + '.pdf');
 	});
 	
 	$('#jstree').jstree({
@@ -207,6 +219,116 @@ $(function () {
 		.on('loaded.jstree', function() {
 			$('#jstree').jstree('open_all');
 		});
+	
+	function processInformation(data, chart){
+		labelDataset = [];
+		chartDataset = [];
+		
+		if(tipoGrafico === 'pie'){
+			for (i=0; i < data[0].length; i++){
+				labelDataset.push(data[0][i]);
+			}
+			for (i=1; i< data.length - 1; i++) {
+				var item = {}
+				item.data = new Array();
+				item.backgroundColor = new Array();
+				item.label = 'Dataset 1';
+				for (j=0; j<data[i].length; j++) {
+					item.backgroundColor = colors[i];
+					item.data.push(fixNumberExcel(data[i][j]));
+				}
+				chartDataset.push(item);
+			}
+			window.myBar.data.labels = labelDataset;
+			window.myBar.data.datasets = chartDataset;
+		}else if(tipoGrafico === 'stackedBar'){
+			for (i=1; i < data[0].length; i++){
+				labelDataset.push(data[0][i]);
+			}
+			for (i=1; i< data.length - 1; i++) {
+				var item = {}
+				item.data = new Array();
+				for (j=0; j<data[i].length; j++) {
+					if(j==0){
+						item.label = data[i][j];
+						item.backgroundColor = colors[i];
+					}else{
+						item.data.push(fixNumberExcel(data[i][j]));
+					}
+				}
+				chartDataset.push(item);
+			}
+		} else if(tipoGrafico === 'horizontalBar'){
+			for (i=1; i< data.length - 1; i++) {
+				var item = {}
+				item.data = new Array();
+				for (j=0; j<data[i].length; j++) {
+					if(j==0){
+						item.label = data[i][j];
+						item.backgroundColor = colors[i];
+					}else{
+						item.data.push(fixNumberExcel(data[i][j]));
+					}
+				}
+				chartDataset.push(item);
+			}
+		} else {
+			var combo = data[0].length > 2;
+			if(combo){
+				for (i=1; i < data.length; i++){
+					labelDataset.push(data[i][0]);
+				}
+				for (c=1; c < data[0].length - 1; c++) {
+					var item = {}
+					item.data = new Array();
+					item.type = (c % 2 === 0) ? 'line' : 'bar';
+					item.fill = item.type == 'bar';
+					item.label = data[0][c];
+					item.backgroundColor = colors[c];
+					for (l=1; l < data.length -1; l++) {
+						item.data.push(fixNumberExcel(data[l][c]));
+					}
+					chartDataset.push(item);
+				}
+			}else{
+				for (i=1; i< data.length - 1; i++) {
+					var item = {}
+					item.data = new Array();
+					for (j=0; j<data[i].length; j++) {
+						if(j==0){
+							item.label = data[i][j];
+							item.backgroundColor = colors[i];
+						}else{
+							item.data.push(fixNumberExcel(data[i][j]));
+						}
+					}
+					chartDataset.push(item);
+				}
+			}			
+		}
+		
+		chart.data.labels = labelDataset;
+		chart.data.datasets = chartDataset;
+		chart.update();
+	}
+	
+	function fixNumberExcel(n){
+		var pos = n.lastIndexOf(',');
+		if(pos == -1){
+			return parseFloat(n);
+		}else{
+			var num = '';
+			for(var i = 0; i < n.length; i++){
+				var c = n.charAt(i);
+				if(c != ','){
+					num += c;
+				}
+			}
+			var npos = pos - (n.length - num.length);
+			num = num.slice(0, npos + 1) + "." + num.slice(npos + 1);
+			return parseFloat(num);
+		}
+	}
 
 	$('#jstree').bind("dblclick.jstree",function (e) {
 		var li = $(e.target).closest("li");
@@ -217,15 +339,16 @@ $(function () {
 		if(node.type === "chart") {
 			$.post('${pageContext.request.contextPath}/publico/loadChartData', {"codigo" : node.original.codigo})
 			.done(function (d) {
-				var ctx = document.getElementById('chartCanvas').getContext('2d');
-				
-				if(!jQuery.isEmptyObject(d.data)){
-					console.log(d)
-				    window.myBar = new Chart(ctx, d);
-
+				if(!(typeof d.detalleGrafico.data === "undefined") && !(d.detalleGrafico.data === null)){
+					writeChart(d,'chartCanvas');
 					$('#title-modal').text(node.text);
 					$("#modalDIV").modal("show");
-									
+					
+					if(rol == "Consultor"){
+						$('.odom-modificar').hide();
+					}else{
+						$('.odom-modificar').show();
+					}					
 				}
 			})
 			.fail(function (e) {

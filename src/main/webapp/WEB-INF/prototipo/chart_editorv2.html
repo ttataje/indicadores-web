@@ -6,18 +6,18 @@
 	<title>Registro - Region Ica - Gr&aacute;fico</title>
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
-	<link rel="stylesheet" type="text/css" href="css\default.css">
+	<link rel="stylesheet" type="text/css" href="..\..\css\default.css">
 	<link rel="stylesheet" type="text/css" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.min.css" crossorigin="anonymous">
-	<link rel="stylesheet" type="text/css" href="css\common_config.css">
-	<link rel="stylesheet" type="text/css" href="css\status_config.css">
+	<link rel="stylesheet" type="text/css" href="..\..\css\common_config.css">
+	<link rel="stylesheet" type="text/css" href="..\..\css\status_config.css">
 	<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" crossorigin="anonymous">
 	<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" crossorigin="anonymous">
 	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400" crossorigin="anonymous">
 	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.43/css/bootstrap-datetimepicker.min.css" crossorigin="anonymous">
-	<link rel="stylesheet" type="text/css" href="css\ace.min.css">
-	<link rel="stylesheet" type="text/css" href="css\ace-mantis.css">
-	<link rel="stylesheet" type="text/css" href="css\ace-skins.min.css">
-	<link rel="shortcut icon" href="images\favicon.ico" type="image/x-icon">
+	<link rel="stylesheet" type="text/css" href="..\..\css\ace.min.css">
+	<link rel="stylesheet" type="text/css" href="..\..\css\ace-mantis.css">
+	<link rel="stylesheet" type="text/css" href="..\..\css\ace-skins.min.css">
+	<link rel="shortcut icon" href="..\..\images\favicon.ico" type="image/x-icon">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/themes/default/style.min.css" />
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js" integrity="sha256-xNjb53/rY+WmG+4L6tTl9m6PpqknWZvRt0rO1SRnJzw=" crossorigin="anonymous"></script>
@@ -148,7 +148,7 @@
 					</div>
 					<div class="col-md-6 col-xs-12">
 						<div class="pull-right">
-							<img src="images\regionica_pie.png" height="35" alt="Region Ica">
+							<img src="..\..\images\regionica_pie.png" height="35" alt="Region Ica">
 						</div>
 					</div>
 				</div>
@@ -181,6 +181,7 @@
 		};
 	</script>
 	<script type="text/javascript">
+	var tipoGrafico = 'bar';
 	window.chartColors = {
 		red: 'rgb(255, 99, 132)',
 		orange: 'rgb(255, 159, 64)',
@@ -206,7 +207,7 @@
 	
 	var table = $('.table-responsive');
 
-	var barChartData = {
+	var chartData = {
 	        labels: labelDataset,
 	        datasets: chartDataset
 	
@@ -222,30 +223,75 @@
 		
 		var ctx = document.getElementById('chartCanvas').getContext('2d');
 		
-	    window.myBar = new Chart(ctx, {
-	        type: 'bar',
-	        data: barChartData,
-	        options: {
-	            title:{
-	                display: true,
-	                text: titulo
-	            },
-	            tooltips: {
-	                mode: 'index',
-	                intersect: false
-	            },
-	            responsive: true,
-	            scales: {
-	                xAxes: [{
-	                    stacked: true,
-	                }],
-	                yAxes: [{
-	                    stacked: true
-	                }]
-	            }
-	        }
-	    });
-	
+		var typeGraph = tipoGrafico === 'stackedBar' ? 'bar' : tipoGrafico;
+		if(tipoGrafico === 'pie'){
+		    window.myBar = new Chart(ctx, {
+		        type: typeGraph,
+		        data: chartData,
+		        options: {
+		            responsive: true
+		        }
+		    });
+		}else if(tipoGrafico === 'stackedBar'){
+		    window.myBar = new Chart(ctx, {
+		        type: typeGraph,
+		        data: chartData,
+		        options: {
+		            title:{
+		                display: false,
+		                text: 'Chart.js Horizontal Bar Chart'
+		            },
+		            tooltips: {
+		                mode: 'index',
+		                intersect: false
+		            },
+		            responsive: true,
+		            scales: {
+		                xAxes: [{
+		                    stacked: true,
+		                }],
+		                yAxes: [{
+		                    stacked: true
+		                }]
+		            }
+		        }
+		    });			
+		} else if(tipoGrafico === 'horizontalBar'){
+		    window.myBar = new Chart(ctx, {
+		        type: typeGraph,
+		        data: chartData,
+	               options: {
+	                   elements: {
+	                       rectangle: {
+	                           borderWidth: 2,
+	                       }
+	                   },
+	                   responsive: true,
+	                   legend: {
+	                       position: 'right',
+	                   },
+	                   title: {
+	                       display: false,
+	                       text: 'Chart.js Horizontal Bar Chart'
+	                   }
+	               }
+		    });
+		} else {
+		    window.myBar = new Chart(ctx, {
+		        type: typeGraph,
+		        data: chartData,
+	               options: {
+	                   responsive: true,
+	                   legend: {
+	                       position: 'top',
+	                   },
+	                   title: {
+	                       display: false,
+	                       text: 'Chart.js Bar Chart'
+	                   }
+	               }
+		    });
+		}
 		function crear() {
 			var ref = $('#jstree').jstree(true),
 				sel = ref.get_selected();
@@ -269,25 +315,6 @@
 			if(!sel.length) { return false; }
 			ref.delete_node(sel);
 		};
-		/*
-		$('#jstree').bind("dblclick.jstree",function (e) {
-			var li = $(e.target).closest("li");
-			var item = li[0].id;
-			var node = $('#jstree').jstree(true).get_node(item);
-	
-			if(node.icon === "glyphicon glyphicon-dashboard") {
-				$('.modal-title').text(node.text);
-				$("#modalDIV").modal("show");
-				//alert("Grafico : [" + node.id + "] " + node.text + " / Padre : " + node.parent);
-	            barChartData.datasets.forEach(function(dataset, i) {
-	                dataset.data = dataset.data.map(function() {
-	                    return randomScalingFactor();
-	                });
-	            });
-	            window.myBar.update();
-			}
-		});
-		*/
 	});
 	
 	var labelDataset = [];
@@ -308,34 +335,100 @@
 			}
 			
 			data = clipRows;
-			processInformation(data);
+			processInformation(data,window.myBar);
 		}
 	});
 	
-	function processInformation(data){
+	function processInformation(data, chart){
 		labelDataset = [];
 		chartDataset = [];
 		
-		for (i=1; i < data[0].length; i++){
-			labelDataset.push(data[0][i]);
-		}
-		for (i=1; i< data.length - 1; i++) {
-			var item = {}
-			item.data = new Array();
-			for (j=0; j<data[i].length; j++) {
-				if(j==0){
-					item.label = data[i][j];
+		if(tipoGrafico === 'pie'){
+			for (i=0; i < data[0].length; i++){
+				labelDataset.push(data[0][i]);
+			}
+			for (i=1; i< data.length - 1; i++) {
+				var item = {}
+				item.data = new Array();
+				item.backgroundColor = new Array();
+				item.label = 'Dataset 1';
+				for (j=0; j<data[i].length; j++) {
 					item.backgroundColor = colors[i];
-				}else{
 					item.data.push(fixNumberExcel(data[i][j]));
 				}
+				chartDataset.push(item);
 			}
-			chartDataset.push(item);
+			window.myBar.data.labels = labelDataset;
+			window.myBar.data.datasets = chartDataset;
+		}else if(tipoGrafico === 'stackedBar'){
+			for (i=1; i < data[0].length; i++){
+				labelDataset.push(data[0][i]);
+			}
+			for (i=1; i< data.length - 1; i++) {
+				var item = {}
+				item.data = new Array();
+				for (j=0; j<data[i].length; j++) {
+					if(j==0){
+						item.label = data[i][j];
+						item.backgroundColor = colors[i];
+					}else{
+						item.data.push(fixNumberExcel(data[i][j]));
+					}
+				}
+				chartDataset.push(item);
+			}
+		} else if(tipoGrafico === 'horizontalBar'){
+			for (i=1; i< data.length - 1; i++) {
+				var item = {}
+				item.data = new Array();
+				for (j=0; j<data[i].length; j++) {
+					if(j==0){
+						item.label = data[i][j];
+						item.backgroundColor = colors[i];
+					}else{
+						item.data.push(fixNumberExcel(data[i][j]));
+					}
+				}
+				chartDataset.push(item);
+			}
+		} else {
+			var combo = data[0].length > 2;
+			if(combo){
+				for (i=1; i < data.length; i++){
+					labelDataset.push(data[i][0]);
+				}
+				for (c=1; c < data[0].length - 1; c++) {
+					var item = {}
+					item.data = new Array();
+					item.type = (c % 2 === 0) ? 'line' : 'bar';
+					item.fill = item.type == 'bar';
+					item.label = data[0][c];
+					item.backgroundColor = colors[c];
+					for (l=1; l < data.length -1; l++) {
+						item.data.push(fixNumberExcel(data[l][c]));
+					}
+					chartDataset.push(item);
+				}
+			}else{
+				for (i=1; i< data.length - 1; i++) {
+					var item = {}
+					item.data = new Array();
+					for (j=0; j<data[i].length; j++) {
+						if(j==0){
+							item.label = data[i][j];
+							item.backgroundColor = colors[i];
+						}else{
+							item.data.push(fixNumberExcel(data[i][j]));
+						}
+					}
+					chartDataset.push(item);
+				}
+			}			
 		}
-		console.log(chartDataset);
-		window.myBar.data.labels = labelDataset;
-		window.myBar.data.datasets = chartDataset;
-		window.myBar.update();
+		
+		chart.data.labels = labelDataset;
+		chart.data.datasets = chartDataset;
+		chart.update();
 	}
 	
 	function fixNumberExcel(n){
@@ -352,7 +445,6 @@
 			}
 			var npos = pos - (n.length - num.length);
 			num = num.slice(0, npos + 1) + "." + num.slice(npos + 1);
-			console.log(num);
 			return parseFloat(num);
 		}
 	}

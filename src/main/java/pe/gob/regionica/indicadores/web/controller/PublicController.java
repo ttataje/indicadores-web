@@ -1,6 +1,5 @@
 package pe.gob.regionica.indicadores.web.controller;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -95,13 +94,13 @@ public class PublicController {
 	    				vars.put("type", indicadores[i].getTipo());
 	    				vars.put("parent", indicadores[i].getPadre() != null ? indicadores[i].getPadre()  : "#");
 	    				vars.put("children", indicadores[i].getChildren());
-	    			if("chart".equals(indicadores[i].getTipo())){
+	    			/*if("chart".equals(indicadores[i].getTipo())){
 	    				if(indicadores[i].getPublico()){
 	    					result.add(vars);
 	    				}
-    				}else{
+    				}else{*/
     					result.add(vars);
-    				}
+    				//}
     			}
     			return new ResponseEntity<List<Map<String,Object>>>(result, HttpStatus.ACCEPTED);
     		}else{

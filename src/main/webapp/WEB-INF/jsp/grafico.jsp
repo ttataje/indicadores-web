@@ -237,15 +237,15 @@ $(function () {
 			}
 			
 			data = clipRows;
-			processInformation(data);
+			processInformation(data, window.myBar);
 		}
 	});
 	
 	if(!(typeof detalleGrafico.data === "undefined")){
-		processInformation(JSON.parse(detalleGrafico.data));
+		processInformation(JSON.parse(detalleGrafico.data), window.myBar);
 	}
 	
-	function processInformation(data){
+	function processInformation(data, chart){
 		labelDataset = [];
 		chartDataset = [];
 		
@@ -283,8 +283,6 @@ $(function () {
 				}
 				chartDataset.push(item);
 			}
-			window.myBar.data.labels = labelDataset;
-			window.myBar.data.datasets = chartDataset;
 		} else if(tipoGrafico === 'horizontalBar'){
 			for (i=1; i< data.length - 1; i++) {
 				var item = {}
@@ -299,27 +297,44 @@ $(function () {
 				}
 				chartDataset.push(item);
 			}
-			window.myBar.data.labels = labelDataset;
-			window.myBar.data.datasets = chartDataset;
 		} else {
-			for (i=1; i< data.length - 1; i++) {
-				var item = {}
-				item.data = new Array();
-				for (j=0; j<data[i].length; j++) {
-					if(j==0){
-						item.label = data[i][j];
-						item.backgroundColor = colors[i];
-					}else{
-						item.data.push(fixNumberExcel(data[i][j]));
-					}
+			var combo = data[0].length > 2;
+			if(combo){
+				for (i=1; i < data.length; i++){
+					labelDataset.push(data[i][0]);
 				}
-				chartDataset.push(item);
-			}
-			window.myBar.data.labels = labelDataset;
-			window.myBar.data.datasets = chartDataset;			
+				for (c=1; c < data[0].length - 1; c++) {
+					var item = {}
+					item.data = new Array();
+					item.type = (c % 2 === 0) ? 'line' : 'bar';
+					item.fill = item.type == 'bar';
+					item.label = data[0][c];
+					item.backgroundColor = colors[c];
+					for (l=1; l < data.length -1; l++) {
+						item.data.push(fixNumberExcel(data[l][c]));
+					}
+					chartDataset.push(item);
+				}
+			}else{
+				for (i=1; i< data.length - 1; i++) {
+					var item = {}
+					item.data = new Array();
+					for (j=0; j<data[i].length; j++) {
+						if(j==0){
+							item.label = data[i][j];
+							item.backgroundColor = colors[i];
+						}else{
+							item.data.push(fixNumberExcel(data[i][j]));
+						}
+					}
+					chartDataset.push(item);
+				}
+			}			
 		}
 		
-		window.myBar.update();
+		chart.data.labels = labelDataset;
+		chart.data.datasets = chartDataset;
+		chart.update();
 	}
 	
 	function fixNumberExcel(n){
