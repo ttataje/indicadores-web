@@ -42,35 +42,28 @@
         -webkit-user-select: none;
         -ms-user-select: none;
     }
-    .page-title {
-    	position: relative;
-    	background: url(${pageContext.request.contextPath}/images/pdf_titulo.png);
-    	background-repeat: no-repeat;
-    	background-position: center;
-    	line-height: 1.4; 
-    	padding: 137px 20px 1000px 469px;
-    	width: 150px;
-    	margin: 20px auto;
-    }
-    .page-title span {
-    	position: absolute;
-    	color: #000000;
-    	font-family: arial;
-    	font-weight: bold;
-    	display: inline;
-	    top: 350px;
-	    left: 63px;
-		font-size: xx-large;
-    	-webkit-box-decoration-break: clone;
-    	box-decoration-break: clone;
-    }
-    .title-chart{
-    	font-family: arial;
-    	font-weight: bold;
-    	color: #000000;
-    	font-size: large;
-    }
     </style>
+	<style>
+		@page { size: landscape; }
+		
+		@media print {
+		  body * {
+		    visibility: hidden;
+		  }
+		  .new_page,
+		  .new_page * {
+		    visibility: visible;
+		  }
+		  #printAreaSIRI {
+		    position: absolute;
+		    left: 0;
+		    top: 0;
+		    width: 100%;
+		    height: 100%;
+		    background: yellow;
+		  }
+		}
+	</style>
 </head>
 <body class="skin-3">
 	<tiles:insertAttribute name="header" />
@@ -102,6 +95,7 @@
 	<script type="text/javascript" src="js\ace-extra.min.js"></script>
 	<script type="text/javascript" src="js\ace-elements.min.js"></script>
 	<script type="text/javascript" src="js\ace.min.js"></script>
+	<script type="text/javascript" src="js\html2canvas.js"></script>
 	<script type="text/javascript">
 	function goTo(page){
 		var frm = document.createElement('form');

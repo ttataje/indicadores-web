@@ -103,8 +103,8 @@
 		<!-- Fin Modal -->
 		<!-- Inicio Modal Print -->
 		<div id="modalPrintDIV" class="modal fade">
-		  <div class="modal-dialog" role="document">
-		    <div class="modal-content">
+		  <div class="modal-dialog" role="document" style="width: 320mm">
+		    <div class="modal-content" style="width: 320mm">
 		      <div class="modal-header">
 		      	<table style="width: 100%">
 		      	<tr>
@@ -204,7 +204,7 @@ $(function () {
 		});
 		$("#modalRegistroDIV").modal("hide");
 	});
-	
+
 	$('body').on('click','.odom-show-imprimir',function(e){
 		var ref = $('#jstree').jstree(true);
 		sel = ref.get_selected();
@@ -235,7 +235,9 @@ $(function () {
 		}catch(e){}
 		
 		// limpiamos el cuerpo
-		$(".odom-pdf-source").empty();
+		body.empty();
+		body.append("<div id='printAreaSIRI'></div>");
+		body = $("#printAreaSIRI");
 		
 		var meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
 		var esMes = false;
@@ -255,14 +257,24 @@ $(function () {
 			var data = nodeChild.original;
 
 			if(data.type === 'folder'){
-				var div = $("<div class='new_page page-title' style='width: 297mm; min-height: 210mm; padding: 20mm; margin: 10mm auto; border: 1px #D3D3D3 solid; border-radius: 5px; box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);'></div>");
-				body.append(div);
-				div.append("<span>" + data.text + "</span>")
+				var folder = [];
+				var page = $("<div class='new_page'></div>");
+				var div = $("<div style='position: relative; width: 297mm; min-height: 210mm; margin: 10mm auto; background: white;'></div>");
+				var span = $("<span style='position: absolute; color: #000000; font-family: arial; font-weight: bold; display: inline; top: 350px; left: 63px; font-size: xx-large; -webkit-box-decoration-break: clone; box-decoration-break: clone;'>" + data.text + "</span>");
+				var img = $("<img src='${pageContext.request.contextPath}/images/pdf_titulo.png' style='position: absolute; top: 10mm; width: 270mm; min-height: 190mm;'>")
+				body.append(page);
+				page.append(div);
+				div.append(img);
+				div.append(span)
 			}else{
-				var div = $("<div class='new_page' style='width: 297mm; min-height: 210mm; padding: 20mm; margin: 10mm auto; border: 1px #D3D3D3 solid; border-radius: 5px; background: white; box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);'></div>");
-				body.append(div);
-				div.append("<div class='title-chart'>" + data.text + "</div>");
-				div.append("<canvas id='chart_"+ data.codigo + "'></canvas>");
+				var page = $("<div class='new_page'></div>");
+				var div = $("<div style='width: 297mm; min-height: 210mm; padding: 20mm; margin: 10mm auto; background: white;'></div>");
+				var span = $("<span style='font-family: arial; font-weight: bold; color: #000000; font-size: large;'>" + data.text + "</span>");
+				var canvas = $("<canvas id='chart_"+ data.codigo + "'></canvas>");
+				body.append(page);
+				page.append(div);
+				div.append(span);
+				div.append(canvas);
 
 				$.post('${pageContext.request.contextPath}/loadChartData', {"codigo" : data.codigo})
 				.done(function (d) {
@@ -278,16 +290,72 @@ $(function () {
 	});
 	
 	$('body').on('click','.odom-imprimir',function(e){
-		var pdf = new jsPDF('l', 'pt', 'a4');
-		var elements = $('.new_page');
+		window.print();
+		/*
+		var pdf = new jsPDF('l', 'mm', 'a4');
+		var export_items = $('.new_page');
+
+		pdf.addHTML(export_items, 0, 0,  {'background': '#fff'}, function () {
+			pdf.save('SIRI_' + (new Date()).getTime() + '.pdf');
+		});*/
+		//var elements = $('.new_page');
+		//var hc = [];
+		/*
+		$.each(elements, function(index, value){
+	        html2canvas(value, {
+	            onrendered: function(canvas) {         
+	                var imgData = canvas.toDataURL('image/png');
+	                hc.push(imgData);
+	            }
+	        });
+		});
+		
+		$.each(hc, function(index, value){
+            pdf.addImage(imgData, 'PNG', 10, 10);
+			if(hc.length > index){
+				pdf.addPage();	
+			}
+		});
+
+		pdf.save('SIRI_' + (new Date()).getTime() + '.pdf');
+		*/
+		/*
 		var count = 0;
 		var recursiveAddHtml = function () {
 		    if (count < elements.length) {
 		    	var element = elements.get(count);
-		    	var x = 0, y = count * 20;
+		        html2canvas(element, {
+		            onrendered: function(canvas) {         
+		                var imgData = canvas.toDataURL('image/png');
+		                hc.push(imgData);
+			        	count++;
+			            recursiveAddHtml();
+		            }
+		        });
+		    } else {
+				$.each(hc, function(index, value){
+					console.log(value);
+		            pdf.addImage(value, 'PNG', 10, 10);
+					if(hc.length > index){
+						pdf.addPage();	
+					}
+				});
+		    	pdf.save('SIRI_' + (new Date()).getTime() + '.pdf');
+		    }
+		}
+
+		recursiveAddHtml();
+		*/
+/*		
+		var count = 0;
+		var recursiveAddHtml = function () {
+		    if (count < elements.length) {
+		    	var element = elements.get(count);
+		    	var x = 0, y = count * 210;
 		        pdf.addHTML(element, x, y,  {background:"#ffffff"}, function () {
 		        	count++;
-		            pdf.addPage();
+		        	if(count < elements.length)
+		            	pdf.addPage();
 		            recursiveAddHtml();
 		        });
 		    } else {
@@ -296,6 +364,7 @@ $(function () {
 		}
 
 		recursiveAddHtml();
+*/
 		/*
 		$.each(items, function(index, value){
 			doc.addHTML(value, options, {'background': '#fff'});
@@ -645,7 +714,7 @@ $(function () {
 		}
 	});
 
-	function writeChart(d,chart_id){
+	function writeChart(d,chart_id, optional){
 		var grafico = d.grafico;
 		var detalleGrafico = d.detalleGrafico;
 		tipoGrafico = grafico.tipo;

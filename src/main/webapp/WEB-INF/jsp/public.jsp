@@ -54,8 +54,8 @@
 		<!-- Fin Modal -->
 		<!-- Inicio Modal Print -->
 		<div id="modalPrintDIV" class="modal fade">
-		  <div class="modal-dialog" role="document">
-		    <div class="modal-content">
+		  <div class="modal-dialog" role="document" style="width: 320mm">
+		    <div class="modal-content" style="width: 320mm">
 		      <div class="modal-header">
 		      	<table style="width: 100%">
 		      	<tr>
@@ -133,7 +133,9 @@ $(function () {
 		}catch(e){}
 		
 		// limpiamos el cuerpo
-		$(".odom-pdf-source").empty();
+		body.empty();
+		body.append("<div id='printAreaSIRI'></div>");
+		body = $("#printAreaSIRI");
 		
 		var meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
 		var esMes = false;
@@ -153,13 +155,25 @@ $(function () {
 			var data = nodeChild.original;
 
 			if(data.type === 'folder'){
-				body.append("<div class='new_page' style='width: 297mm; min-height: 210mm; padding: 20mm; margin: 10mm auto; border: 1px #D3D3D3 solid; border-radius: 5px; background: white; box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);'></div>");
-				var div = body.last();
-				div.append("<h1 class='page-title'><span>" + data.text + "</span></h1>")
+				var folder = [];
+				var page = $("<div class='new_page'></div>");
+				var div = $("<div style='position: relative; width: 297mm; min-height: 210mm; margin: 10mm auto; background: white;'></div>");
+				var span = $("<span style='position: absolute; color: #000000; font-family: arial; font-weight: bold; display: inline; top: 350px; left: 63px; font-size: xx-large; -webkit-box-decoration-break: clone; box-decoration-break: clone;'>" + data.text + "</span>");
+				var img = $("<img src='${pageContext.request.contextPath}/images/pdf_titulo.png' style='position: absolute; top: 10mm; width: 270mm; min-height: 190mm;'>")
+				body.append(page);
+				page.append(div);
+				div.append(img);
+				div.append(span)
 			}else{
-				body.append("<div class='new_page' style='width: 297mm; min-height: 210mm; padding: 20mm; margin: 10mm auto; border: 1px #D3D3D3 solid; border-radius: 5px; background: white; box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);'></div>");
-				var div = body.last();
-				div.append("<canvas id='chart_"+ data.codigo + "'></canvas>");
+				var page = $("<div class='new_page'></div>");
+				var div = $("<div style='width: 297mm; min-height: 210mm; padding: 20mm; margin: 10mm auto; background: white;'></div>");
+				var span = $("<span style='font-family: arial; font-weight: bold; color: #000000; font-size: large;'>" + data.text + "</span>");
+				var canvas = $("<canvas id='chart_"+ data.codigo + "'></canvas>");
+				body.append(page);
+				page.append(div);
+				div.append(span);
+				div.append(canvas);
+
 				$.post('${pageContext.request.contextPath}/publico/loadChartData', {"codigo" : data.codigo})
 				.done(function (d) {
 					writeChart(d, 'chart_'+data.codigo);
@@ -174,19 +188,7 @@ $(function () {
 	});
 	
 	$('body').on('click','.odom-imprimir',function(e){
-		var doc = new jsPDF('landscape');
-		var options = {
-		         pagesplit: true
-		    };
-		var items = $('.new_page');
-		$.each(items, function(index, value){
-			doc.addHTML(value, options, {'background': '#fff'});
-			if(items.length > index){
-				doc.addPage();	
-			}
-		});
-	    
-	    doc.save('SIRI_' + (new Date()).getTime() + '.pdf');
+		window.print(); 
 	});
 	
 	$('#jstree').jstree({
