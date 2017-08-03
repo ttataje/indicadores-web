@@ -278,21 +278,33 @@ $(function () {
 	});
 	
 	$('body').on('click','.odom-imprimir',function(e){
-		var pdf = new jsPDF('l', 'mm', 'a4');
-		var options = {
-		         pagesplit: true
-		    };
-		var items = $('.new_page');
+		var pdf = new jsPDF('l', 'pt', 'a4');
+		var elements = $('.new_page');
+		var count = 0;
+		var recursiveAddHtml = function () {
+		    if (count < elements.length) {
+		    	var element = elements.get(count);
+		    	var x = 0, y = count * 20;
+		        pdf.addHTML(element, x, y,  {background:"#ffffff"}, function () {
+		        	count++;
+		            pdf.addPage();
+		            recursiveAddHtml();
+		        });
+		    } else {
+		    	pdf.save('SIRI_' + (new Date()).getTime() + '.pdf');
+		    }
+		}
 
+		recursiveAddHtml();
+		/*
 		$.each(items, function(index, value){
-			pdf.addHTML(value, options, {'background': '#fff'}, function () {
-				if(items.length > index){
-					pdf.addPage();	
-				}	        	
-	        });
+			doc.addHTML(value, options, {'background': '#fff'});
+			if(items.length > index){
+				doc.addPage();	
+			}
 		});
-		
-		pdf.save('SIRI_' + (new Date()).getTime() + '.pdf');
+	    */
+	    
 	});
 	
 	$('#jstree').jstree({
