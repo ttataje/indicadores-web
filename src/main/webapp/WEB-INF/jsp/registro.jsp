@@ -255,13 +255,15 @@ $(function () {
 			var data = nodeChild.original;
 
 			if(data.type === 'folder'){
-				body.append("<div class='new_page' style='width: 297mm; min-height: 210mm; padding: 20mm; margin: 10mm auto; border: 1px #D3D3D3 solid; border-radius: 5px; background: white; box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);'></div>");
-				var div = body.last();
-				div.append("<h1 class='page-title'><span>" + data.text + "</span></h1>")
+				var div = $("<div class='new_page page-title' style='width: 297mm; min-height: 210mm; padding: 20mm; margin: 10mm auto; border: 1px #D3D3D3 solid; border-radius: 5px; box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);'></div>");
+				body.append(div);
+				div.append("<span>" + data.text + "</span>")
 			}else{
-				body.append("<div class='new_page' style='width: 297mm; min-height: 210mm; padding: 20mm; margin: 10mm auto; border: 1px #D3D3D3 solid; border-radius: 5px; background: white; box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);'></div>");
-				var div = body.last();
+				var div = $("<div class='new_page' style='width: 297mm; min-height: 210mm; padding: 20mm; margin: 10mm auto; border: 1px #D3D3D3 solid; border-radius: 5px; background: white; box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);'></div>");
+				body.append(div);
+				div.append("<div class='title-chart'>" + data.text + "</div>");
 				div.append("<canvas id='chart_"+ data.codigo + "'></canvas>");
+
 				$.post('${pageContext.request.contextPath}/loadChartData', {"codigo" : data.codigo})
 				.done(function (d) {
 					writeChart(d, 'chart_'+data.codigo);
@@ -276,19 +278,21 @@ $(function () {
 	});
 	
 	$('body').on('click','.odom-imprimir',function(e){
-		var doc = new jsPDF('landscape');
+		var pdf = new jsPDF('l', 'mm', 'a4');
 		var options = {
 		         pagesplit: true
 		    };
 		var items = $('.new_page');
+
 		$.each(items, function(index, value){
-			doc.addHTML(value, options, {'background': '#fff'});
-			if(items.length > index){
-				doc.addPage();	
-			}
+			pdf.addHTML(value, options, {'background': '#fff'}, function () {
+				if(items.length > index){
+					pdf.addPage();	
+				}	        	
+	        });
 		});
-	    
-	    doc.save('SIRI_' + (new Date()).getTime() + '.pdf');
+		
+		pdf.save('SIRI_' + (new Date()).getTime() + '.pdf');
 	});
 	
 	$('#jstree').jstree({

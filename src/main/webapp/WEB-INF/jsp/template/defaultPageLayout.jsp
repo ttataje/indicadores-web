@@ -43,7 +43,10 @@
         -ms-user-select: none;
     }
     .page-title {
+    	position: relative;
     	background: url(${pageContext.request.contextPath}/images/pdf_titulo.png);
+    	background-repeat: no-repeat;
+    	background-position: center;
     	line-height: 1.4; 
     	padding: 137px 20px 1000px 469px;
     	width: 150px;
@@ -52,10 +55,20 @@
     .page-title span {
     	position: absolute;
     	color: #000000;
+    	font-family: arial;
+    	font-weight: bold;
     	display: inline;
-    	padding: 0.5rem;
+	    top: 350px;
+	    left: 63px;
+		font-size: xx-large;
     	-webkit-box-decoration-break: clone;
     	box-decoration-break: clone;
+    }
+    .title-chart{
+    	font-family: arial;
+    	font-weight: bold;
+    	color: #000000;
+    	font-size: large;
     }
     </style>
 </head>
