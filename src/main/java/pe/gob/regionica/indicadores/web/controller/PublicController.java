@@ -61,8 +61,9 @@ public class PublicController {
 		try {
 			Grafico grafico = restTemplate.postForObject(WebConstants.restLoadGrafico, null, Grafico.class, vars);
 			response.put("grafico", grafico);
-			DetalleGrafico detalleGrafico = restTemplate.postForObject(WebConstants.restGetDetallePorGrafico, null, DetalleGrafico.class, vars);
-			response.put("detalleGrafico", detalleGrafico);
+			vars.put("codigo", grafico.getCodigo());
+			DetalleGrafico[] detalleGrafico = restTemplate.postForObject(WebConstants.restGetDetallePorGrafico, null, DetalleGrafico[].class, vars);
+			response.put("detalleGrafico", detalleGrafico[0]);
 			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.ACCEPTED);
 		} catch (Exception e) {
 			log.error(e.getMessage());

@@ -153,7 +153,7 @@ $(function () {
 
 	var ctx = document.getElementById('chartCanvas').getContext('2d');
 	
-	window.myBar;
+	var chart = window.myBar;
 	
 	var typeGraph = tipoGrafico === 'stackedBar' ? 'bar' : tipoGrafico;
 	if(tipoGrafico === 'pie'){
@@ -264,8 +264,6 @@ $(function () {
 				}
 				chartDataset.push(item);
 			}
-			window.myBar.data.labels = labelDataset;
-			window.myBar.data.datasets = chartDataset;
 		}else if(tipoGrafico === 'stackedBar'){
 			for (i=1; i < data[0].length; i++){
 				labelDataset.push(data[0][i]);
@@ -300,13 +298,48 @@ $(function () {
 		} else {
 			var combo = data[0].length > 2;
 			if(combo){
+				chart = new Chart(ctx, {
+			        type: typeGraph,
+			        data: chartData,
+		               options: {
+		                   responsive: true,
+		                   hoverMode: 'index',
+		                   stacked: false,
+		                   legend: {
+		                       position: 'top',
+		                   },
+		                   title: {
+		                       display: false,
+		                       text: 'Chart.js Bar Chart'
+		                   },
+		                   scales: {
+		                       yAxes: [{
+		                           type: "linear", // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
+		                           display: true,
+		                           position: "left",
+		                           id: "y-axis-1",
+		                       }, {
+		                           type: "linear", // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
+		                           display: true,
+		                           position: "right",
+		                           id: "y-axis-2",
+
+		                           // grid line settings
+		                           gridLines: {
+		                               drawOnChartArea: false, // only want the grid lines for one axis to show up
+		                           },
+		                       }],
+		                   }
+		               }
+			    });
 				for (i=1; i < data.length; i++){
 					labelDataset.push(data[i][0]);
 				}
-				for (c=1; c < data[0].length - 1; c++) {
+				for (c=1; c < data[0].length; c++) {
 					var item = {}
 					item.data = new Array();
 					item.type = (c % 2 === 0) ? 'line' : 'bar';
+					item.yAxisID = (c % 2 === 0) ? 'y-axis-2' : 'y-axis-1';
 					item.fill = item.type == 'bar';
 					item.label = data[0][c];
 					item.backgroundColor = colors[c];
@@ -349,8 +382,6 @@ $(function () {
 					num += c;
 				}
 			}
-			var npos = pos - (n.length - num.length);
-			num = num.slice(0, npos + 1) + "." + num.slice(npos + 1);
 			return parseFloat(num);
 		}
 	}

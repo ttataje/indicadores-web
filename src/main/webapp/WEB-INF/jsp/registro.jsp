@@ -23,8 +23,8 @@
 		</form>
 		<!-- Inicio Modal -->
 		<div id="modalDIV" class="modal fade">
-		  <div class="modal-dialog" role="document">
-		    <div class="modal-content">
+		  <div class="modal-dialog" role="document" style="width: 320mm">
+		    <div class="modal-content" style="width: 320mm">
 		      <div class="modal-header">
 		      	<table>
 		      	<tr>
@@ -236,8 +236,6 @@ $(function () {
 		
 		// limpiamos el cuerpo
 		body.empty();
-		body.append("<div id='printAreaSIRI'></div>");
-		body = $("#printAreaSIRI");
 		
 		var meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
 		var esMes = false;
@@ -258,21 +256,17 @@ $(function () {
 
 			if(data.type === 'folder'){
 				var folder = [];
-				var page = $("<div class='new_page'></div>");
-				var div = $("<div style='position: relative; width: 297mm; min-height: 210mm; margin: 10mm auto; background: white;'></div>");
+				var div = $("<div class='new_page' style='position: relative; width: 297mm; min-height: 210mm; margin: 10mm auto; background: white;'></div>");
 				var span = $("<span style='position: absolute; color: #000000; font-family: arial; font-weight: bold; display: inline; top: 350px; left: 63px; font-size: xx-large; -webkit-box-decoration-break: clone; box-decoration-break: clone;'>" + data.text + "</span>");
 				var img = $("<img src='${pageContext.request.contextPath}/images/pdf_titulo.png' style='position: absolute; top: 10mm; width: 270mm; min-height: 190mm;'>")
-				body.append(page);
-				page.append(div);
+				body.append(div);
 				div.append(img);
 				div.append(span)
 			}else{
-				var page = $("<div class='new_page'></div>");
-				var div = $("<div style='width: 297mm; min-height: 210mm; padding: 20mm; margin: 10mm auto; background: white;'></div>");
+				var div = $("<div class='new_page' style='position:relative; width: 297mm; min-height: 210mm; padding: 20mm; margin: 10mm auto; background: white;'></div>");
 				var span = $("<span style='font-family: arial; font-weight: bold; color: #000000; font-size: large;'>" + data.text + "</span>");
-				var canvas = $("<canvas id='chart_"+ data.codigo + "'></canvas>");
-				body.append(page);
-				page.append(div);
+				var canvas = $("<canvas id='chart_"+ data.codigo + "' style='width: 270mm; min-height: 150mm;'></canvas>");
+				body.append(div);
 				div.append(span);
 				div.append(canvas);
 
@@ -576,8 +570,8 @@ $(function () {
 		});
 	
 	function processInformation(data, chart){
-		labelDataset = [];
-		chartDataset = [];
+		var labelDataset = [];
+		var chartDataset = [];
 		
 		if(tipoGrafico === 'pie'){
 			for (i=0; i < data[0].length; i++){
@@ -594,8 +588,6 @@ $(function () {
 				}
 				chartDataset.push(item);
 			}
-			window.myBar.data.labels = labelDataset;
-			window.myBar.data.datasets = chartDataset;
 		}else if(tipoGrafico === 'stackedBar'){
 			for (i=1; i < data[0].length; i++){
 				labelDataset.push(data[0][i]);
@@ -633,10 +625,11 @@ $(function () {
 				for (i=1; i < data.length; i++){
 					labelDataset.push(data[i][0]);
 				}
-				for (c=1; c < data[0].length - 1; c++) {
+				for (c=1; c < data[0].length; c++) {
 					var item = {}
 					item.data = new Array();
 					item.type = (c % 2 === 0) ? 'line' : 'bar';
+					item.yAxisID = (c % 2 === 0) ? 'y-axis-2' : 'y-axis-1';
 					item.fill = item.type == 'bar';
 					item.label = data[0][c];
 					item.backgroundColor = colors[c];
@@ -679,8 +672,6 @@ $(function () {
 					num += c;
 				}
 			}
-			var npos = pos - (n.length - num.length);
-			num = num.slice(0, npos + 1) + "." + num.slice(npos + 1);
 			return parseFloat(num);
 		}
 	}
@@ -714,7 +705,7 @@ $(function () {
 		}
 	});
 
-	function writeChart(d,chart_id, optional){
+	function writeChart(d,chart_id){
 		var grafico = d.grafico;
 		var detalleGrafico = d.detalleGrafico;
 		tipoGrafico = grafico.tipo;
@@ -728,7 +719,7 @@ $(function () {
 		
 		var chartDataset = [];
 		
-		var data = [];
+		var data = JSON.parse(detalleGrafico.data);
 		
 		var attributes = [];
 		
@@ -784,7 +775,7 @@ $(function () {
 	                   },
 	                   responsive: true,
 	                   legend: {
-	                       position: 'right',
+	                       position: 'top',
 	                   },
 	                   title: {
 	                       display: false,
@@ -793,23 +784,61 @@ $(function () {
 	               }
 		    });
 		} else {
-			chart = new Chart(ctx, {
-		        type: typeGraph,
-		        data: chartData,
-	               options: {
-	                   responsive: true,
-	                   legend: {
-	                       position: 'top',
-	                   },
-	                   title: {
-	                       display: false,
-	                       text: 'Chart.js Bar Chart'
-	                   }
-	               }
-		    });
+			var combo = data[0].length > 2;
+			if(combo){
+				chart = new Chart(ctx, {
+			        type: typeGraph,
+			        data: chartData,
+		               options: {
+		                   responsive: true,
+		                   hoverMode: 'index',
+		                   stacked: false,
+		                   legend: {
+		                       position: 'top',
+		                   },
+		                   title: {
+		                       display: false,
+		                       text: 'Chart.js Bar Chart'
+		                   },
+		                   scales: {
+		                       yAxes: [{
+		                           type: "linear", // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
+		                           display: true,
+		                           position: "left",
+		                           id: "y-axis-1",
+		                       }, {
+		                           type: "linear", // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
+		                           display: true,
+		                           position: "right",
+		                           id: "y-axis-2",
+
+		                           // grid line settings
+		                           gridLines: {
+		                               drawOnChartArea: false, // only want the grid lines for one axis to show up
+		                           },
+		                       }],
+		                   }
+		               }
+			    });
+			}else{
+				chart = new Chart(ctx, {
+			        type: typeGraph,
+			        data: chartData,
+		               options: {
+		                   responsive: true,
+		                   legend: {
+		                       position: 'top',
+		                   },
+		                   title: {
+		                       display: false,
+		                       text: 'Chart.js Bar Chart'
+		                   }
+		               }
+			    });
+			}
 		}
 		
-		processInformation(JSON.parse(detalleGrafico.data),chart);
+		processInformation(data,chart);
 
 	}
 });
