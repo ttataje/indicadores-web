@@ -249,19 +249,38 @@ $(function () {
 		}
 		
 		var childrens = nodeSel.children_d;
-		for(var i = 0; i < childrens.length; i++){
+		var count = -1;
+		
+		if(!esMes){
+			var div = $("<div class='new_page' style='position: relative; width: 297mm; min-height: 210mm; margin: 10mm auto; background: white;'></div>");
+			var span = $("<span style='position: absolute; color: #000000; font-family: arial; font-weight: bold; display: inline; top: 350px; left: 63px; font-size: xx-large; -webkit-box-decoration-break: clone; box-decoration-break: clone;'>" + dataBase.text + "</span>");
+			var img = $("<img src='${pageContext.request.contextPath}/images/pdf_titulo.png' style='position: absolute; top: 10mm; width: 270mm; min-height: 190mm;'>")
+			body.append(div);
+			div.append(img);
+			div.append(span)			
+		}
+
+		generateExport(count, body, childrens);
+	
+		$("#modalPrintDIV").modal("show");
+	});
+
+	function generateExport(i, body, childrens){
+		var ref = $('#jstree').jstree(true);
+		i++;
+		if(i < childrens.length){
 			var child = childrens[i];
 			var nodeChild = ref._model.data[child];
 			var data = nodeChild.original;
 
 			if(data.type === 'folder'){
-				var folder = [];
 				var div = $("<div class='new_page' style='position: relative; width: 297mm; min-height: 210mm; margin: 10mm auto; background: white;'></div>");
 				var span = $("<span style='position: absolute; color: #000000; font-family: arial; font-weight: bold; display: inline; top: 350px; left: 63px; font-size: xx-large; -webkit-box-decoration-break: clone; box-decoration-break: clone;'>" + data.text + "</span>");
 				var img = $("<img src='${pageContext.request.contextPath}/images/pdf_titulo.png' style='position: absolute; top: 10mm; width: 270mm; min-height: 190mm;'>")
 				body.append(div);
 				div.append(img);
-				div.append(span)
+				div.append(span);
+				generateExport(i, body, childrens);
 			}else{
 				var div = $("<div class='new_page' style='position:relative; width: 297mm; min-height: 210mm; padding: 20mm; margin: 10mm auto; background: white;'></div>");
 				var span = $("<span style='font-family: arial; font-weight: bold; color: #000000; font-size: large;'>" + data.text + "</span>");
@@ -273,16 +292,15 @@ $(function () {
 				$.post('${pageContext.request.contextPath}/loadChartData', {"codigo" : data.codigo})
 				.done(function (d) {
 					writeChart(d, 'chart_'+data.codigo);
+					generateExport(i, body, childrens);
 				})
 				.fail(function (e) {
 					//FIXME falta mensaje en caso falle la carga del modal
-				});
+				});				
 			}
 		}
-		
-		$("#modalPrintDIV").modal("show");
-	});
-	
+	}
+
 	$('body').on('click','.odom-imprimir',function(e){
 		window.print();
 		/*

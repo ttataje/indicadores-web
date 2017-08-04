@@ -51,7 +51,7 @@
 		  .new_page * {
 		    visibility: visible;
 		  }
-		  #printAreaSIRI {
+		  .odom-pdf-source {
 		    position: absolute;
 		    left: 0;
 		    top: 0;
