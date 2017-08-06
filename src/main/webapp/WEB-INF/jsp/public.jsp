@@ -103,7 +103,10 @@ $(function () {
 	
 	$("#modalPrintDIV").modal("hide");
 	
+	var images = [];
+	
 	$('body').on('click','.odom-show-imprimir',function(e){
+		images = [];
 		var ref = $('#jstree').jstree(true);
 		sel = ref.get_selected();
 		if(!sel.length) {
@@ -152,14 +155,27 @@ $(function () {
 		if(!esMes){
 			var div = $("<div class='new_page' style='position: relative; width: 297mm; min-height: 210mm; margin: 10mm auto; background: white;'></div>");
 			var span = $("<span style='position: absolute; color: #000000; font-family: arial; font-weight: bold; display: inline; top: 350px; left: 63px; font-size: xx-large; -webkit-box-decoration-break: clone; box-decoration-break: clone;'>" + dataBase.text + "</span>");
-			var img = $("<img src='${pageContext.request.contextPath}/images/pdf_titulo.png' style='position: absolute; top: 10mm; width: 270mm; min-height: 190mm;'>")
+			var img = $("<img id='img_"+data.codigo+"'/>").on('load', function() {
+						            	var item = {};
+						            	item.type = 'folder';
+										var canvas = document.createElement("canvas");
+										var ctx = canvas.getContext("2d");
+										ctx.drawImage(document.getElementById('img_'+dataBase.codigo), 0, 0);
+						            	item.img = canvas.toDataURL();
+						            	item.title = dataBase.text;
+										images.push(item);
+										generateExport(i, body, childrens);
+									})
+		    					 .on('error', function() { console.log("error loading image"); })
+		    					 .attr("src", '${pageContext.request.contextPath}/images/pdf_titulo.png')
+		    					 .attr("style", 'position: absolute; top: 10mm; width: 270mm; min-height: 190mm;');
 			body.append(div);
 			div.append(img);
-			div.append(span)			
+			div.append(span)
+		}else{
+			generateExport(count, body, childrens);
 		}
 
-		generateExport(count, body, childrens);
-		
 		$("#modalPrintDIV").modal("show");
 	});
 	
@@ -174,11 +190,23 @@ $(function () {
 			if(data.type === 'folder'){
 				var div = $("<div class='new_page' style='position: relative; width: 297mm; min-height: 210mm; margin: 10mm auto; background: white;'></div>");
 				var span = $("<span style='position: absolute; color: #000000; font-family: arial; font-weight: bold; display: inline; top: 350px; left: 63px; font-size: xx-large; -webkit-box-decoration-break: clone; box-decoration-break: clone;'>" + data.text + "</span>");
-				var img = $("<img src='${pageContext.request.contextPath}/images/pdf_titulo.png' style='position: absolute; top: 10mm; width: 270mm; min-height: 190mm;'>")
+				var img = $("<img id='img_"+data.codigo+"'/>").on('load', function() {
+							            	var item = {};
+							            	item.type = 'folder';
+											var canvas = document.createElement("canvas");
+											var ctx = canvas.getContext("2d");
+											ctx.drawImage(document.getElementById('img_'+data.codigo), 0, 0);
+							            	item.img = canvas.toDataURL();
+							            	item.title = data.text;
+											images.push(item);
+											generateExport(i, body, childrens);
+										})
+			    					 .on('error', function() { console.log("error loading image"); })
+			    					 .attr("src", '${pageContext.request.contextPath}/images/pdf_titulo.png')
+			    					 .attr("style", 'position: absolute; top: 10mm; width: 270mm; min-height: 190mm;');
 				body.append(div);
 				div.append(img);
 				div.append(span);
-				generateExport(i, body, childrens);
 			}else{
 				var div = $("<div class='new_page' style='position:relative; width: 297mm; min-height: 210mm; padding: 20mm; margin: 10mm auto; background: white;'></div>");
 				var span = $("<span style='font-family: arial; font-weight: bold; color: #000000; font-size: large;'>" + data.text + "</span>");
@@ -187,10 +215,13 @@ $(function () {
 				div.append(span);
 				div.append(canvas);
 
-				$.post('${pageContext.request.contextPath}/loadChartData', {"codigo" : data.codigo})
+				$.post('${pageContext.request.contextPath}/publico/loadChartData', {"codigo" : data.codigo})
 				.done(function (d) {
-					writeChart(d, 'chart_'+data.codigo);
-					generateExport(i, body, childrens);
+	            	var item = {};
+	            	item.type = 'chart';
+	            	item.title = data.text;
+					images.push(item);
+					writeChart(d, 'chart_'+data.codigo, true, i, body, childrens);
 				})
 				.fail(function (e) {
 					//FIXME falta mensaje en caso falle la carga del modal
@@ -200,7 +231,50 @@ $(function () {
 	}
 	
 	$('body').on('click','.odom-imprimir',function(e){
-		window.print(); 
+		var pdf = new jsPDF('l', 'mm', 'a4');
+		var control = -1;
+		var recursiveFillPDF = function () {
+			control++;
+		    if (control < images.length) {
+		    	var value = images[control];
+				if(value != null){
+					if(value.type == 'folder'){
+						pdf.setFontSize(30);
+						pdf.text(350, 63, value.title);
+						var width = pdf.internal.pageSize.width;
+						var height = pdf.internal.pageSize.height;
+						console.log('img_' + control + " = " + value.img);
+						pdf.addImage(value.img, 'PNG', 0, 0, width, height);
+						if(images.length > control){
+							pdf.addPage();	
+						}
+						recursiveFillPDF();
+					}else{
+						var reader = new window.FileReader();
+						reader.readAsDataURL(value.img);
+						reader.onloadend = function() {
+							base64data = reader.result;
+							pdf.setFontSize(16);
+							var width = pdf.internal.pageSize.width;
+							var title = pdf.splitTextToSize(value.title, width - 40);
+							pdf.text(20, 25, title);
+				            pdf.addImage(base64data, 'PNG', 20, 30);
+							if(images.length > control){
+								pdf.addPage();	
+							}
+							
+							recursiveFillPDF();
+						}						
+					}
+				}else{
+					recursiveFillPDF();
+				}
+		    } else {
+		    	pdf.save('SIRI_' + (new Date()).getTime() + '.pdf');
+		    }
+		}
+
+		recursiveFillPDF();	    
 	});
 	
 	$('#jstree').jstree({
@@ -235,8 +309,8 @@ $(function () {
 		});
 	
 	function processInformation(data, chart){
-		labelDataset = [];
-		chartDataset = [];
+		var labelDataset = [];
+		var chartDataset = [];
 		
 		if(tipoGrafico === 'pie'){
 			for (i=0; i < data[0].length; i++){
@@ -368,7 +442,7 @@ $(function () {
 		}
 	});
 
-	function writeChart(d,chart_id){
+	function writeChart(d,chart_id, toImage, count, body, childrens){
 		var grafico = d.grafico;
 		var detalleGrafico = d.detalleGrafico;
 		tipoGrafico = grafico.tipo;
@@ -399,7 +473,23 @@ $(function () {
 		        type: typeGraph,
 		        data: chartData,
 		        options: {
-		            responsive: true
+					responsive: true,
+					animation: {
+						onComplete: function(animation){
+							if(toImage){
+								var canvas = document.getElementById(chart_id);
+								if (canvas.toBlob) {
+								    canvas.toBlob(
+								            function (blob) {
+								            	images[count].img = blob;
+												generateExport(count, body, childrens);	
+								            },
+								            'image/png'
+								        );
+								}
+							}
+						}
+					}
 		        }
 		    });
 		}else if(tipoGrafico === 'stackedBar'){
@@ -423,7 +513,23 @@ $(function () {
 		                yAxes: [{
 		                    stacked: true
 		                }]
-		            }
+		            },
+                   animation: {
+                	   onComplete: function(animation){
+							if(toImage){
+								var canvas = document.getElementById(chart_id);
+								if (canvas.toBlob) {
+								    canvas.toBlob(
+								            function (blob) {
+								            	images[count].img = blob;
+												generateExport(count, body, childrens);	
+								            },
+								            'image/png'
+								        );
+								}
+							}
+                	   }
+                   }
 		        }
 		    });			
 		} else if(tipoGrafico === 'horizontalBar'){
@@ -443,6 +549,22 @@ $(function () {
 	                   title: {
 	                       display: false,
 	                       text: 'Chart.js Horizontal Bar Chart'
+	                   },
+	                   animation: {
+	                	   onComplete: function(animation){
+								if(toImage){
+									var canvas = document.getElementById(chart_id);
+									if (canvas.toBlob) {
+									    canvas.toBlob(
+									            function (blob) {
+									            	images[count].img = blob;
+													generateExport(count, body, childrens);
+									            },
+									            'image/png'
+									        );
+									}
+								}
+	                	   }
 	                   }
 	               }
 		    });
@@ -480,6 +602,22 @@ $(function () {
 		                               drawOnChartArea: false, // only want the grid lines for one axis to show up
 		                           },
 		                       }],
+		                   },
+		                   animation: {
+		                	   onComplete: function(animation){
+									if(toImage){
+										var canvas = document.getElementById(chart_id);
+										if (canvas.toBlob) {
+										    canvas.toBlob(
+										            function (blob) {
+										            	images[count].img = blob;
+														generateExport(count, body, childrens);
+										            },
+										            'image/png'
+										        );
+										}
+									}
+		                	   }
 		                   }
 		               }
 			    });
@@ -495,6 +633,22 @@ $(function () {
 		                   title: {
 		                       display: false,
 		                       text: 'Chart.js Bar Chart'
+		                   },
+		                   animation: {
+		                	   onComplete: function(animation){
+									if(toImage){
+										var canvas = document.getElementById(chart_id);
+										if (canvas.toBlob) {
+										    canvas.toBlob(
+										            function (blob) {
+										            	images[count].img = blob;
+														generateExport(count, body, childrens);
+										            },
+										            'image/png'
+										        );
+										}
+									}
+		                	   }
 		                   }
 		               }
 			    });
