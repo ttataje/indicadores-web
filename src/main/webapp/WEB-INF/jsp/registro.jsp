@@ -257,20 +257,27 @@ $(function () {
 		if(!esMes){
 			var div = $("<div class='new_page' style='position: relative; width: 297mm; min-height: 210mm; margin: 10mm auto; background: white;'></div>");
 			var span = $("<span style='position: absolute; color: #000000; font-family: arial; font-weight: bold; display: inline; top: 350px; left: 63px; font-size: xx-large; -webkit-box-decoration-break: clone; box-decoration-break: clone;'>" + dataBase.text + "</span>");
-			var img = $("<img id='img_"+data.codigo+"'/>").on('load', function() {
+			var img = new Image();
+			img.addEventListener('load', function(){
 						            	var item = {};
 						            	item.type = 'folder';
 										var canvas = document.createElement("canvas");
+						            	canvas.width  = 1137;
+						            	canvas.height = 639;
 										var ctx = canvas.getContext("2d");
-										ctx.drawImage(document.getElementById('img_'+dataBase.codigo), 0, 0);
+										ctx.drawImage(img, 0, 0);
+										ctx.font = '20pt Arial';
+										ctx.fillText(data.text, 70, 330);
 						            	item.img = canvas.toDataURL();
 						            	item.title = dataBase.text;
 										images.push(item);
-										generateExport(i, body, childrens);
-									})
-		    					 .on('error', function() { console.log("error loading image"); })
-		    					 .attr("src", '${pageContext.request.contextPath}/images/pdf_titulo.png')
-		    					 .attr("style", 'position: absolute; top: 10mm; width: 270mm; min-height: 190mm;');
+										generateExport(count, body, childrens);
+								},false);
+			img.src = '${pageContext.request.contextPath}/images/pdf_titulo.png';
+			img.style.position = 'absolute';
+			img.style.top = '10mm';
+			img.style.width = '270mm';
+			img.style.minHeight = '190mm';
 			body.append(div);
 			div.append(img);
 			div.append(span)
@@ -281,6 +288,8 @@ $(function () {
 		$("#modalPrintDIV").modal("show");
 	});
 
+	var controlLoad = {};
+	
 	function generateExport(i, body, childrens){
 		var ref = $('#jstree').jstree(true);
 		i++;
@@ -292,42 +301,52 @@ $(function () {
 			if(data.type === 'folder'){
 				var div = $("<div class='new_page' style='position: relative; width: 297mm; min-height: 210mm; margin: 10mm auto; background: white;'></div>");
 				var span = $("<span style='position: absolute; color: #000000; font-family: arial; font-weight: bold; display: inline; top: 350px; left: 63px; font-size: xx-large; -webkit-box-decoration-break: clone; box-decoration-break: clone;'>" + data.text + "</span>");
-				var img = $("<img id='img_"+data.codigo+"'/>").on('load', function() {
+				var img = new Image();
+				img.addEventListener('load', function(){
 							            	var item = {};
 							            	item.type = 'folder';
-											var canvas = document.createElement("canvas");
+							            	var canvas = document.createElement("canvas");
+							            	canvas.width  = 1137;
+							            	canvas.height = 639;
 											var ctx = canvas.getContext("2d");
-											ctx.drawImage(document.getElementById('img_'+data.codigo), 0, 0);
+											ctx.drawImage(img, 0, 0);
+											ctx.font = '20pt Arial';
+											ctx.fillText(data.text, 70, 330);
 							            	item.img = canvas.toDataURL();
 							            	item.title = data.text;
 											images.push(item);
 											generateExport(i, body, childrens);
-										})
-			    					 .on('error', function() { console.log("error loading image"); })
-			    					 .attr("src", '${pageContext.request.contextPath}/images/pdf_titulo.png')
-			    					 .attr("style", 'position: absolute; top: 10mm; width: 270mm; min-height: 190mm;');
+										},false);
+				img.src = '${pageContext.request.contextPath}/images/pdf_titulo.png';
+				img.style.position = 'absolute';
+				img.style.top = '10mm';
+				img.style.width = '270mm';
+				img.style.minHeight = '190mm';
 				body.append(div);
 				div.append(img);
 				div.append(span);
 			}else{
-				var div = $("<div class='new_page' style='position:relative; width: 297mm; min-height: 210mm; padding: 20mm; margin: 10mm auto; background: white;'></div>");
-				var span = $("<span style='font-family: arial; font-weight: bold; color: #000000; font-size: large;'>" + data.text + "</span>");
-				var canvas = $("<canvas id='chart_"+ data.codigo + "' style='width: 270mm; min-height: 150mm;'></canvas>");
-				body.append(div);
-				div.append(span);
-				div.append(canvas);
+				if(!controlLoad['chart_'+data.codigo]){
+					controlLoad['chart_'+data.codigo] = true;
+					var div = $("<div class='new_page' style='position:relative; width: 297mm; min-height: 210mm; padding: 20mm; margin: 10mm auto; background: white;'></div>");
+					var span = $("<span style='font-family: arial; font-weight: bold; color: #000000; font-size: large;'>" + data.text + "</span>");
+					var canvas = $("<canvas id='chart_"+ data.codigo + "' style='width: 270mm; min-height: 150mm;'></canvas>");
+					body.append(div);
+					div.append(span);
+					div.append(canvas);
 
-				$.post('${pageContext.request.contextPath}/loadChartData', {"codigo" : data.codigo})
-				.done(function (d) {
-	            	var item = {};
-	            	item.type = 'chart';
-	            	item.title = data.text;
-					images.push(item);
-					writeChart(d, 'chart_'+data.codigo, true, i, body, childrens);
-				})
-				.fail(function (e) {
-					//FIXME falta mensaje en caso falle la carga del modal
-				});				
+					$.post('${pageContext.request.contextPath}/loadChartData', {"codigo" : data.codigo})
+					.done(function (d) {
+		            	var item = {};
+		            	item.type = 'chart';
+		            	item.title = data.text;
+						images.push(item);
+						writeChart(d, 'chart_'+data.codigo, true, i, body, childrens);
+					})
+					.fail(function (e) {
+						//FIXME falta mensaje en caso falle la carga del modal
+					});					
+				}
 			}
 		}
 	}
@@ -341,32 +360,26 @@ $(function () {
 		    	var value = images[control];
 				if(value != null){
 					if(value.type == 'folder'){
-						pdf.setFontSize(30);
-						pdf.text(350, 63, value.title);
+						if(control != 0)
+							pdf.addPage();
 						var width = pdf.internal.pageSize.width;
 						var height = pdf.internal.pageSize.height;
-						console.log('img_' + control + " = " + value.img);
-						pdf.addImage(value.img, 'PNG', 0, 0, width, height);
-						if(images.length > control){
-							pdf.addPage();	
-						}
+						pdf.addImage(value.img, 'PNG', 10, 10, width - 20, height - 20);
 						recursiveFillPDF();
 					}else{
 						var reader = new window.FileReader();
 						reader.readAsDataURL(value.img);
 						reader.onloadend = function() {
+							if(control != 0)
+								pdf.addPage();
 							base64data = reader.result;
 							pdf.setFontSize(16);
 							var width = pdf.internal.pageSize.width;
 							var title = pdf.splitTextToSize(value.title, width - 40);
 							pdf.text(20, 25, title);
 				            pdf.addImage(base64data, 'PNG', 20, 30);
-							if(images.length > control){
-								pdf.addPage();	
-							}
-							
 							recursiveFillPDF();
-						}						
+						}
 					}
 				}else{
 					recursiveFillPDF();
