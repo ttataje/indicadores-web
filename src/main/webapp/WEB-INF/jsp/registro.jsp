@@ -206,9 +206,11 @@ $(function () {
 	});
 	
 	var images = [];
+	var controlLoad = {};
 
 	$('body').on('click','.odom-show-imprimir',function(e){
 		images = [];
+		controlLoad = {};
 		var ref = $('#jstree').jstree(true);
 		sel = ref.get_selected();
 		if(!sel.length) {
@@ -254,22 +256,20 @@ $(function () {
 		var childrens = nodeSel.children_d;
 		var count = -1;
 		
-		if(!esMes){
+		if(!esMes && dataBase.type === 'folder'){
 			var div = $("<div class='new_page' style='position: relative; width: 297mm; min-height: 210mm; margin: 10mm auto; background: white;'></div>");
 			var span = $("<span style='position: absolute; color: #000000; font-family: arial; font-weight: bold; display: inline; top: 350px; left: 63px; font-size: xx-large; -webkit-box-decoration-break: clone; box-decoration-break: clone;'>" + dataBase.text + "</span>");
 			var img = new Image();
 			img.addEventListener('load', function(){
 						            	var item = {};
-						            	item.type = 'folder';
 										var canvas = document.createElement("canvas");
 						            	canvas.width  = 1137;
 						            	canvas.height = 639;
 										var ctx = canvas.getContext("2d");
 										ctx.drawImage(img, 0, 0);
 										ctx.font = '20pt Arial';
-										ctx.fillText(data.text, 70, 330);
+										ctx.fillText(dataBase.text, 70, 330);
 						            	item.img = canvas.toDataURL();
-						            	item.title = dataBase.text;
 										images.push(item);
 										generateExport(count, body, childrens);
 								},false);
@@ -282,13 +282,14 @@ $(function () {
 			div.append(img);
 			div.append(span)
 		}else{
+			if(dataBase.type === 'chart'){
+				childrens.push(nodeSel.id);
+			}
 			generateExport(count, body, childrens);
 		}
 
 		$("#modalPrintDIV").modal("show");
 	});
-
-	var controlLoad = {};
 	
 	function generateExport(i, body, childrens){
 		var ref = $('#jstree').jstree(true);
@@ -340,6 +341,7 @@ $(function () {
 		            	var item = {};
 		            	item.type = 'chart';
 		            	item.title = data.text;
+		            	item.codigo = 'chart_'+data.codigo;
 						images.push(item);
 						writeChart(d, 'chart_'+data.codigo, true, i, body, childrens);
 					})
@@ -359,7 +361,7 @@ $(function () {
 		    if (control < images.length) {
 		    	var value = images[control];
 				if(value != null){
-					if(value.type == 'folder'){
+					if(typeof(value.img) == 'string'){
 						if(control != 0)
 							pdf.addPage();
 						var width = pdf.internal.pageSize.width;
@@ -367,17 +369,21 @@ $(function () {
 						pdf.addImage(value.img, 'PNG', 10, 10, width - 20, height - 20);
 						recursiveFillPDF();
 					}else{
-						var reader = new window.FileReader();
-						reader.readAsDataURL(value.img);
-						reader.onloadend = function() {
-							if(control != 0)
-								pdf.addPage();
-							base64data = reader.result;
-							pdf.setFontSize(16);
-							var width = pdf.internal.pageSize.width;
-							var title = pdf.splitTextToSize(value.title, width - 40);
-							pdf.text(20, 25, title);
-				            pdf.addImage(base64data, 'PNG', 20, 30);
+						if(typeof(value.img) != 'undefined'){
+							var reader = new window.FileReader();
+							reader.readAsDataURL(value.img);
+							reader.onloadend = function() {
+								if(control != 0)
+									pdf.addPage();
+								base64data = reader.result;
+								pdf.setFontSize(16);
+								var width = pdf.internal.pageSize.width;
+								var title = pdf.splitTextToSize(value.title, width - 40);
+								pdf.text(20, 25, title);
+					            pdf.addImage(base64data, 'PNG', 20, 30);
+								recursiveFillPDF();
+							}							
+						}else{
 							recursiveFillPDF();
 						}
 					}
@@ -727,6 +733,15 @@ $(function () {
 		}
 	});
 
+	function setImagesBlob(chart_id, blob){
+		for(var i = 0; i < images.length; i++){
+			if(images[i].codigo && images[i].codigo === chart_id){
+				images[i].img = blob;
+				break;
+			}
+		}
+	}
+
 	function writeChart(d,chart_id, toImage, count, body, childrens){
 		var grafico = d.grafico;
 		var detalleGrafico = d.detalleGrafico;
@@ -766,7 +781,7 @@ $(function () {
 								if (canvas.toBlob) {
 								    canvas.toBlob(
 								            function (blob) {
-								            	images[count].img = blob;
+								            	setImagesBlob(chart_id, blob);
 												generateExport(count, body, childrens);	
 								            },
 								            'image/png'
@@ -806,7 +821,7 @@ $(function () {
 								if (canvas.toBlob) {
 								    canvas.toBlob(
 								            function (blob) {
-								            	images[count].img = blob;
+								            	setImagesBlob(chart_id, blob);
 												generateExport(count, body, childrens);	
 								            },
 								            'image/png'
@@ -842,7 +857,7 @@ $(function () {
 									if (canvas.toBlob) {
 									    canvas.toBlob(
 									            function (blob) {
-									            	images[count].img = blob;
+									            	setImagesBlob(chart_id, blob);
 													generateExport(count, body, childrens);
 									            },
 									            'image/png'
@@ -895,7 +910,7 @@ $(function () {
 										if (canvas.toBlob) {
 										    canvas.toBlob(
 										            function (blob) {
-										            	images[count].img = blob;
+										            	setImagesBlob(chart_id, blob);
 														generateExport(count, body, childrens);
 										            },
 										            'image/png'
@@ -926,7 +941,7 @@ $(function () {
 										if (canvas.toBlob) {
 										    canvas.toBlob(
 										            function (blob) {
-										            	images[count].img = blob;
+										            	setImagesBlob(chart_id, blob);
 														generateExport(count, body, childrens);
 										            },
 										            'image/png'
