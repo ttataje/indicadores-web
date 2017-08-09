@@ -460,7 +460,7 @@ $(function () {
 									}
 								}
 							}
-						},
+						}/*,
 						"rename_node": {
 							"label": "Renombrar",
 							"action" : function(data){
@@ -479,7 +479,7 @@ $(function () {
 								$("#modalRegistroDIV").modal("show");
 								$("#descripcion").focus();
 							}
-						},
+						}*/,
 						"delete_node": {
 							"label": "Eliminar",
 							"action" : function(data){
@@ -491,7 +491,7 @@ $(function () {
 								var $select = $('#'+ID.get_selected());
 								tree.delete_node($select);
 							}
-						},
+						}/*,
 						"edit_node":{
 							"label": "Modificar",
 							"submenu" : {
@@ -523,12 +523,14 @@ $(function () {
 									}
 								}
 							}
-						}
+						}*/
 					};
-					
+					/*
 					if(node.children.length > 0){
 						delete menu.delete_node;
-					}
+					}*/
+					delete menu.edit_node;
+					delete menu.rename_node;
 
 					if(node.type === "chart") {
 						delete menu.create_node;
@@ -602,20 +604,18 @@ $(function () {
 		var chartDataset = [];
 		
 		if(tipoGrafico === 'pie'){
-			for (i=0; i < data[0].length; i++){
-				labelDataset.push(data[0][i]);
+			for (i=0; i < data.length - 1; i++){
+				labelDataset.push(data[i][0]);
 			}
-			for (i=1; i< data.length - 1; i++) {
-				var item = {}
-				item.data = new Array();
-				item.backgroundColor = new Array();
-				item.label = 'Dataset 1';
-				for (j=0; j<data[i].length; j++) {
-					item.backgroundColor = colors[i];
-					item.data.push(fixNumberExcel(data[i][j]));
-				}
-				chartDataset.push(item);
+			var item = {}
+			item.data = new Array();
+			item.backgroundColor = new Array();
+			item.label = 'Dataset 1';
+			for (i=0; i < data.length - 1; i++) {
+				item.backgroundColor.push(colors[i]);
+				item.data.push(fixNumberExcel(data[i][1]));
 			}
+			chartDataset.push(item);
 		}else if(tipoGrafico === 'stackedBar'){
 			for (i=1; i < data[0].length; i++){
 				labelDataset.push(data[0][i]);
