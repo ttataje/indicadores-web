@@ -228,7 +228,12 @@ $(function () {
 	document.addEventListener('paste', function (evt) {
 		var info = evt.clipboardData.getData('text/plain');
 		if (info != null) {
-			clipRows = info.split(String.fromCharCode(13));
+			if(isChrome){
+				clipRows = info.split(String.fromCharCode(13));
+			}else{
+				clipRows = info.split("\n");
+			}
+			
 
 			// split rows into columns
 
