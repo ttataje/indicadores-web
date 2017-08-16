@@ -87,6 +87,7 @@
 		        <option value="bar">Barras</option>
 		        <option value="horizontalBar">Barras Horizontales</option>
 		        <option value="stackedBar">Stacked Barras</option>
+		        <option value="groupBar">Group Bar</option>
 		        <option value="pie">Pie</option>
 		        </select>
 		        </td>
@@ -633,6 +634,23 @@ $(function () {
 				}
 				chartDataset.push(item);
 			}
+		}else if(tipoGrafico === 'groupBar'){
+			for (i=1; i < data[0].length; i++){
+				labelDataset.push(data[0][i]);
+			}
+			for (i=1; i< data.length - 1; i++) {
+				var item = {}
+				item.data = new Array();
+				for (j=0; j<data[i].length; j++) {
+					if(j==0){
+						item.label = data[i][j];
+						item.backgroundColor = colors[i];
+					}else{
+						item.data.push(fixNumberExcel(data[i][j]));
+					}
+				}
+				chartDataset.push(item);
+			}
 		} else if(tipoGrafico === 'horizontalBar'){
 			for (i=1; i< data.length - 1; i++) {
 				var item = {}
@@ -767,13 +785,29 @@ $(function () {
 		
 		var chart;
 		
-		var typeGraph = tipoGrafico === 'stackedBar' ? 'bar' : tipoGrafico;
+		var typeGraph = tipoGrafico === 'stackedBar' ? 'bar' : (tipoGrafico === 'groupBar' ? 'bar' : tipoGrafico);
 		if(tipoGrafico === 'pie'){
 			chart = new Chart(ctx, {
 		        type: typeGraph,
 		        data: chartData,
 		        options: {
 					responsive: true,
+		            scales: {
+		                xAxes: [{
+		                    ticks:{}
+		                }],
+		                yAxes: [{
+		                    ticks:{
+		                    	beginAtZero: true,
+		                    	userCallback: function(value,index,values){
+		                    		value = value.toString();
+		                    		value = value.split(/(?=(?:...)*$)/);
+		                    		value = value.join(',');
+		                    		return value;
+		                    	}
+		                    }
+		                }]
+		            },
 					animation: {
 						onComplete: function(animation){
 							if(toImage){
@@ -809,9 +843,67 @@ $(function () {
 		            scales: {
 		                xAxes: [{
 		                    stacked: true,
+		                    ticks:{}
 		                }],
 		                yAxes: [{
-		                    stacked: true
+		                    stacked: true,
+		                    ticks:{
+		                    	beginAtZero: true,
+		                    	userCallback: function(value,index,values){
+		                    		value = value.toString();
+		                    		value = value.split(/(?=(?:...)*$)/);
+		                    		value = value.join(',');
+		                    		return value;
+		                    	}
+		                    }
+		                }]
+		            },
+                   animation: {
+                	   onComplete: function(animation){
+							if(toImage){
+								var canvas = document.getElementById(chart_id);
+								if (canvas.toBlob) {
+								    canvas.toBlob(
+								            function (blob) {
+								            	setImagesBlob(chart_id, blob);
+												generateExport(count, body, childrens);	
+								            },
+								            'image/png'
+								        );
+								}
+							}
+                	   }
+                   }
+		        }
+		    });			
+		}else if(tipoGrafico === 'groupBar'){
+			chart = new Chart(ctx, {
+		        type: typeGraph,
+		        data: chartData,
+		        options: {
+		            title:{
+		                display: false,
+		                text: 'Chart.js Horizontal Bar Chart'
+		            },
+		            tooltips: {
+		                mode: 'index',
+		                intersect: false
+		            },
+		            responsive: true,
+		            scales: {
+		                xAxes: [{
+		                    ticks:{}
+		                }],
+		                yAxes: [{
+		                    ticks:{
+		                    	beginAtZero: true,
+		                    	userCallback: function(value,index,values){
+		                    		value = value.toString();
+		                    		value = value.split(/(?=(?:...)*$)/);
+		                    		value = value.join(',');
+		                    		return value;
+		                    	}
+		                    }
 		                }]
 		            },
                    animation: {
@@ -850,6 +942,22 @@ $(function () {
 	                       display: false,
 	                       text: 'Chart.js Horizontal Bar Chart'
 	                   },
+			            scales: {
+			                xAxes: [{
+			                    ticks:{}
+			                }],
+			                yAxes: [{
+			                    ticks:{
+			                    	beginAtZero: true,
+			                    	userCallback: function(value,index,values){
+			                    		value = value.toString();
+			                    		value = value.split(/(?=(?:...)*$)/);
+			                    		value = value.join(',');
+			                    		return value;
+			                    	}
+			                    }
+			                }]
+			            },
 	                   animation: {
 	                	   onComplete: function(animation){
 								if(toImage){
@@ -891,6 +999,15 @@ $(function () {
 		                           display: true,
 		                           position: "left",
 		                           id: "y-axis-1",
+								   ticks:{
+										beginAtZero: true,
+										userCallback: function(value,index,values){
+											value = value.toString();
+											value = value.split(/(?=(?:...)*$)/);
+											value = value.join(',');
+											return value;
+										}
+								   }
 		                       }, {
 		                           type: "linear", // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
 		                           display: true,
@@ -901,6 +1018,15 @@ $(function () {
 		                           gridLines: {
 		                               drawOnChartArea: false, // only want the grid lines for one axis to show up
 		                           },
+				                    ticks:{
+				                    	beginAtZero: true,
+				                    	userCallback: function(value,index,values){
+				                    		value = value.toString();
+				                    		value = value.split(/(?=(?:...)*$)/);
+				                    		value = value.join(',');
+				                    		return value;
+				                    	}
+				                    }
 		                       }],
 		                   },
 		                   animation: {
@@ -934,6 +1060,22 @@ $(function () {
 		                       display: false,
 		                       text: 'Chart.js Bar Chart'
 		                   },
+				            scales: {
+				                xAxes: [{
+				                    ticks:{}
+				                }],
+				                yAxes: [{
+				                    ticks:{
+				                    	beginAtZero: true,
+				                    	userCallback: function(value,index,values){
+				                    		value = value.toString();
+				                    		value = value.split(/(?=(?:...)*$)/);
+				                    		value = value.join(',');
+				                    		return value;
+				                    	}
+				                    }
+				                }]
+				            },
 		                   animation: {
 		                	   onComplete: function(animation){
 									if(toImage){
