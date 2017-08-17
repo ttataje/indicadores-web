@@ -177,6 +177,11 @@ $(function () {
 	                    	}
 	                    }
 	                }]
+	            },
+	            pieceLabel: {
+	            	render: 'percentage',
+	            	fontColor: 'white',
+	            	precision: 2
 	            }
 	        }
 	    });

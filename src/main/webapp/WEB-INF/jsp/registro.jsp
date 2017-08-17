@@ -808,6 +808,11 @@ $(function () {
 		                    }
 		                }]
 		            },
+		            pieceLabel: {
+		            	render: 'percentage',
+		            	fontColor: 'white',
+		            	precision: 2
+		            },
 					animation: {
 						onComplete: function(animation){
 							if(toImage){
