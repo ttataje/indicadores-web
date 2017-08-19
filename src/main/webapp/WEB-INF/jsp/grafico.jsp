@@ -1,3 +1,32 @@
+<style>
+#copy-paste-box {
+    border: 3px dashed #91917d;
+    cursor: pointer;
+    font-size: 21px;
+    font-weight: 700;
+    line-height: 136px;
+    margin-top: 35px;
+    margin-bottom: 35px;
+    margin-right: 5px;
+    margin-left: 5px;
+    padding: 2px;
+    text-transform: uppercase;
+    border-radius: 6px;
+}
+
+#copy-paste-box {
+    font-family: 'Open Sans Condensed',Arial,Helvetica,Verdana,sans-serif;
+}
+
+#copy-paste-box {
+    text-align: center;
+}
+
+.row {
+    margin-right: -15px;
+    margin-left: -15px;
+}
+</style>
 <!-- Inicio Contenido -->
 <div class="page-content">
 	<div class="row">
@@ -11,7 +40,12 @@
 				</div>
 				<div class="widget-body dz-clickable">
 					<div class="widget-main no-padding">
-						<div class="table-responsive">
+						<div id="copy-paste-box" class="row dz-clickable">
+							<div id="copy-paste" class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
+								Copie y pegue su informaci&oacute;n aqu&iacute;
+							</div><!-- /#copy-paste -->
+						</div>
+						<div id="chart-box" class="table-responsive">
 							<canvas id="chartCanvas"></canvas>
 						</div>
 					</div>
@@ -25,6 +59,24 @@
 						<input tabindex="13" type="button" class="btn btn-primary btn-white btn-round odom-guardar-grafico" value="Guardar">
 					</div>
 				</div>
+				<!-- Inicio Ventana Alert -->
+				<div class="alert alert-success">
+					<button type="button" class="close" data-dismiss="alert">x</button>
+					<strong>Perfecto!</strong> La informaci&oacute;n fu&eacute; almacenada correctamente.
+				</div>
+				<div class="alert alert-danger">
+					<button type="button" class="close" data-dismiss="alert">x</button>
+					<strong>Cuidado!</strong> Ocurri&oacute; un error inesperado al almacenar la informaci&oacute;n.
+				</div>
+				<div class="alert alert-warning">
+					<button type="button" class="close" data-dismiss="alert">x</button>
+					<strong>Ojo!</strong> No debe almacenar si aun no carga la informaci&oacute;n.
+				</div>
+				<div class="alert alert-info">
+					<button type="button" class="close" data-dismiss="alert">x</button>
+					<strong>Por favor!</strong> Primero debe copiar la informaci&oacute;n para poder pegar.
+				</div>
+				<!-- Fin Ventana Alert -->
 			</div>
 		</div>
 		<!-- Inicio Modal Atributos -->
@@ -81,6 +133,15 @@ var titulo = '${indicador.descripcion}';
 var tipoGrafico = '${grafico.tipo}';
 var grafico = ${json_grafico};
 var detalleGrafico = ${json_detalleGrafico};
+var data = [];
+
+var copyPasteBox = $("#copy-paste-box");
+var chartBox = $("#chart-box");
+
+var alertOK = $(".alert-success");
+var alertError = $(".alert-danger");
+var alertErrorSize = $(".alert-warning");
+var alertInfo = $(".alert-info")
 
 var colors = ['rgb(255, 99, 132)','rgb(255, 159, 64)','rgb(255, 205, 86)','rgb(75, 192, 192)','rgb(54, 162, 235)','rgb(153, 102, 255)','rgb(201, 203, 207)',
 	'rgb(255, 99, 132)','rgb(255, 159, 64)','rgb(255, 205, 86)','rgb(75, 192, 192)','rgb(54, 162, 235)','rgb(153, 102, 255)','rgb(201, 203, 207)',
@@ -91,6 +152,12 @@ var colors = ['rgb(255, 99, 132)','rgb(255, 159, 64)','rgb(255, 205, 86)','rgb(7
 $(function () {
 	
 	$("#modalAtributosDIV").modal("hide");
+	
+	chartBox.hide();
+	alertOK.hide();
+	alertError.hide();
+	alertErrorSize.hide();
+	alertInfo.hide();
 
 	$("#color").spectrum({
 		preferredFormat: "rgb",
@@ -120,18 +187,28 @@ $(function () {
 	});
 	
 	$('body').on('click','.odom-guardar-grafico',function(e){
-		var item = {
-					'data' : data,
-					'attributes' : attributes
-					};
-		var info = JSON.stringify(item);
-		$.post('${pageContext.request.contextPath}/saveDetalle', {'info' : info})
-		.done(function (d) {
-			alert('Save Ok!');
-		})
-		.fail(function (e) {
-			alert('Problem on Save!');
-		});
+		if($.isArray(data) && data.length > 0){
+			var item = {
+						'data' : data,
+						'attributes' : attributes
+						};
+			var info = JSON.stringify(item);
+			$.post('${pageContext.request.contextPath}/saveDetalle', {'info' : info})
+			.done(function (d) {
+				alertOK.fadeTo(2000, 500).slideUp(500, function(){
+					alertOK.slideUp(500);
+				});
+			})
+			.fail(function (e) {
+				alertError.fadeTo(2000, 500).slideUp(500, function(){
+					alertError.slideUp(500);
+				});
+			});
+		}else{
+			alertErrorSize.fadeTo(2000, 500).slideUp(500, function(){
+				alertErrorSize.slideUp(500);
+			});
+		}
 	});
 	
 	$('body').on('click','.odom-regresar',function(e){
@@ -141,8 +218,6 @@ $(function () {
 	var labelDataset = [];
 	
 	var chartDataset = [];
-	
-	var data = [];
 	
 	var attributes = [];
 	
@@ -161,23 +236,18 @@ $(function () {
 	        type: typeGraph,
 	        data: chartData,
 	        options: {
+				tooltips: {
+					callbacks: {
+						label: function(tooltipItem, data) {
+							var value = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index].toString();
+								value = value.split(/(?=(?:...)*$)/);
+								value = value.join(',');
+							var datasetLabel =  data.labels[tooltipItem.index];
+							return datasetLabel + ': ' + value;
+						}
+					}
+				},
 	            responsive: true,
-	            scales: {
-	                xAxes: [{
-	                    ticks:{}
-	                }],
-	                yAxes: [{
-	                    ticks:{
-	                    	beginAtZero: true,
-	                    	userCallback: function(value,index,values){
-	                    		value = value.toString();
-	                    		value = value.split(/(?=(?:...)*$)/);
-	                    		value = value.join(',');
-	                    		return value;
-	                    	}
-	                    }
-	                }]
-	            },
 	            pieceLabel: {
 	            	render: 'percentage',
 	            	fontColor: 'white',
@@ -190,13 +260,22 @@ $(function () {
 	        type: typeGraph,
 	        data: chartData,
 	        options: {
+				tooltips: {
+					mode: 'index',
+	                intersect: false,
+					callbacks: {
+						label: function(tooltipItem, data) {
+							var value = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index].toString();
+								value = value.split(/(?=(?:...)*$)/);
+								value = value.join(',');
+							var datasetLabel =  data.datasets[tooltipItem.datasetIndex].label;
+							return datasetLabel + ': ' + value;
+						}
+					}
+				},
 	            title:{
 	                display: false,
 	                text: 'Chart.js Horizontal Bar Chart'
-	            },
-	            tooltips: {
-	                mode: 'index',
-	                intersect: false
 	            },
 	            responsive: true,
 	            scales: {
@@ -224,13 +303,22 @@ $(function () {
 	        type: typeGraph,
 	        data: chartData,
 	        options: {
+				tooltips: {
+					mode: 'index',
+	                intersect: false,
+					callbacks: {
+						label: function(tooltipItem, data) {
+							var value = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index].toString();
+								value = value.split(/(?=(?:...)*$)/);
+								value = value.join(',');
+							var datasetLabel =  data.datasets[tooltipItem.datasetIndex].label;
+							return datasetLabel + ': ' + value;
+						}
+					}
+				},
 	            title:{
 	                display: false,
 	                text: 'Chart.js Horizontal Bar Chart'
-	            },
-	            tooltips: {
-	                mode: 'index',
-	                intersect: false
 	            },
 	            responsive: true,
 	            scales: {
@@ -256,6 +344,17 @@ $(function () {
 	        type: typeGraph,
 	        data: chartData,
                options: {
+				   tooltips: {
+						callbacks: {
+							label: function(tooltipItem, data) {
+								var value = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index].toString();
+									value = value.split(/(?=(?:...)*$)/);
+									value = value.join(',');
+								var datasetLabel =  data.datasets[tooltipItem.datasetIndex].label;
+								return datasetLabel + ': ' + value;
+							}
+						}
+				   },
                    elements: {
                        rectangle: {
                            borderWidth: 2,
@@ -291,7 +390,18 @@ $(function () {
 	    window.myBar = new Chart(ctx, {
 	        type: typeGraph,
 	        data: chartData,
-               options: {
+				   options: {
+					tooltips: {
+						callbacks: {
+							label: function(tooltipItem, data) {
+								var value = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index].toString();
+									value = value.split(/(?=(?:...)*$)/);
+									value = value.join(',');
+								var datasetLabel =  data.datasets[tooltipItem.datasetIndex].label;
+								return datasetLabel + ': ' + value;
+							}
+						}
+				   },
                    responsive: true,
                    legend: {
                        position: 'top',
@@ -328,21 +438,36 @@ $(function () {
 			}else{
 				clipRows = info.split("\n");
 			}
-			
 
 			// split rows into columns
-
 			for (i=0; i<clipRows.length; i++) {
 				clipRows[i] = clipRows[i].split(String.fromCharCode(9));
 			}
 			
-			data = clipRows;
-			processInformation(data, window.myBar);
+			if($.isArray(clipRows) && clipRows.length > 1 && $.isArray(clipRows[0]) && clipRows[0].length > 1){
+				data = clipRows;
+				processInformation(data, window.myBar);
+				copyPasteBox.hide();
+				chartBox.show();
+			}else{
+				alertInfo.fadeTo(2000, 500).slideUp(500, function(){
+					alertInfo.slideUp(500);
+				});
+			}
+		}else{
+			alertInfo.fadeTo(2000, 500).slideUp(500, function(){
+				alertInfo.slideUp(500);
+			});
 		}
 	});
 	
 	if(!(typeof detalleGrafico.data === "undefined")){
-		processInformation(JSON.parse(detalleGrafico.data), window.myBar);
+		data = JSON.parse(detalleGrafico.data);
+		if($.isArray(data) && data.length > 0){
+			processInformation(data, window.myBar);
+			copyPasteBox.hide();
+			chartBox.show();
+		}
 	}
 	
 	function processInformation(data, chart){
@@ -455,9 +580,16 @@ $(function () {
 				                    ticks:{
 				                    	beginAtZero: true,
 				                    	userCallback: function(value,index,values){
-				                    		value = value.toString();
-				                    		value = value.split(/(?=(?:...)*$)/);
-				                    		value = value.join(',');
+											if(value > 999){
+												value = value.toString();
+												value = value.split(/(?=(?:...)*$)/);
+												value = value.join(',');
+											}else{
+												var tmp = value.toString();
+												if(tmp.indexOf('.') > -1){
+													value = Math.floor(value * 100) / 100;
+												}
+											}
 				                    		return value;
 				                    	}
 				                    }

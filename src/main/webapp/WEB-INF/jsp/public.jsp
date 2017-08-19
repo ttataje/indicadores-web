@@ -508,23 +508,18 @@ $(function () {
 		        type: typeGraph,
 		        data: chartData,
 		        options: {
+					tooltips: {
+						callbacks: {
+							label: function(tooltipItem, data) {
+								var value = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index].toString();
+									value = value.split(/(?=(?:...)*$)/);
+									value = value.join(',');
+								var datasetLabel =  data.datasets[tooltipItem.datasetIndex].label;
+								return datasetLabel + ': ' + value;
+							}
+						}
+					},
 					responsive: true,
-		            scales: {
-		                xAxes: [{
-		                    ticks:{}
-		                }],
-		                yAxes: [{
-		                    ticks:{
-		                    	beginAtZero: true,
-		                    	userCallback: function(value,index,values){
-		                    		value = value.toString();
-		                    		value = value.split(/(?=(?:...)*$)/);
-		                    		value = value.join(',');
-		                    		return value;
-		                    	}
-		                    }
-		                }]
-		            },
 		            pieceLabel: {
 		            	render: 'percentage',
 		            	fontColor: 'white',
@@ -553,13 +548,22 @@ $(function () {
 		        type: typeGraph,
 		        data: chartData,
 		        options: {
+					tooltips: {
+						mode: 'index',
+						intersect: false,
+						callbacks: {
+							label: function(tooltipItem, data) {
+								var value = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index].toString();
+									value = value.split(/(?=(?:...)*$)/);
+									value = value.join(',');
+								var datasetLabel =  data.datasets[tooltipItem.datasetIndex].label;
+								return datasetLabel + ': ' + value;
+							}
+						}
+					},
 		            title:{
 		                display: false,
 		                text: 'Chart.js Horizontal Bar Chart'
-		            },
-		            tooltips: {
-		                mode: 'index',
-		                intersect: false
 		            },
 		            responsive: true,
 		            scales: {
@@ -603,13 +607,22 @@ $(function () {
 		        type: typeGraph,
 		        data: chartData,
 		        options: {
+					tooltips: {
+						mode: 'index',
+						intersect: false,
+						callbacks: {
+							label: function(tooltipItem, data) {
+								var value = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index].toString();
+									value = value.split(/(?=(?:...)*$)/);
+									value = value.join(',');
+								var datasetLabel =  data.datasets[tooltipItem.datasetIndex].label;
+								return datasetLabel + ': ' + value;
+							}
+						}
+					},
 		            title:{
 		                display: false,
 		                text: 'Chart.js Horizontal Bar Chart'
-		            },
-		            tooltips: {
-		                mode: 'index',
-		                intersect: false
 		            },
 		            responsive: true,
 		            scales: {
@@ -651,6 +664,17 @@ $(function () {
 		        type: typeGraph,
 		        data: chartData,
 	               options: {
+					   tooltips: {
+							callbacks: {
+								label: function(tooltipItem, data) {
+									var value = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index].toString();
+										value = value.split(/(?=(?:...)*$)/);
+										value = value.join(',');
+									var datasetLabel =  data.datasets[tooltipItem.datasetIndex].label;
+									return datasetLabel + ': ' + value;
+								}
+							}
+					   },
 	                   elements: {
 	                       rectangle: {
 	                           borderWidth: 2,
@@ -705,6 +729,17 @@ $(function () {
 			        type: typeGraph,
 			        data: chartData,
 		               options: {
+							tooltips: {
+								callbacks: {
+									label: function(tooltipItem, data) {
+										var value = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index].toString();
+											value = value.split(/(?=(?:...)*$)/);
+											value = value.join(',');
+										var datasetLabel =  data.datasets[tooltipItem.datasetIndex].label;
+										return datasetLabel + ': ' + value;
+									}
+								}
+						   },
 		                   responsive: true,
 		                   hoverMode: 'index',
 		                   stacked: false,
@@ -743,9 +778,16 @@ $(function () {
 				                    ticks:{
 				                    	beginAtZero: true,
 				                    	userCallback: function(value,index,values){
-				                    		value = value.toString();
-				                    		value = value.split(/(?=(?:...)*$)/);
-				                    		value = value.join(',');
+											if(value > 999){
+												value = value.toString();
+												value = value.split(/(?=(?:...)*$)/);
+												value = value.join(',');
+											}else{
+												var tmp = value.toString();
+												if(tmp.indexOf('.') > -1){
+													value = Math.floor(value * 100) / 100;
+												}
+											}
 				                    		return value;
 				                    	}
 				                    }
@@ -774,6 +816,17 @@ $(function () {
 			        type: typeGraph,
 			        data: chartData,
 		               options: {
+							tooltips: {
+								callbacks: {
+									label: function(tooltipItem, data) {
+										var value = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index].toString();
+											value = value.split(/(?=(?:...)*$)/);
+											value = value.join(',');
+										var datasetLabel =  data.datasets[tooltipItem.datasetIndex].label;
+										return datasetLabel + ': ' + value;
+									}
+								}
+						   },
 		                   responsive: true,
 		                   legend: {
 		                       position: 'top',
