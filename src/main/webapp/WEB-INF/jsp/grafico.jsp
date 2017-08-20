@@ -47,6 +47,8 @@
 						</div>
 						<div id="chart-box" class="table-responsive">
 							<canvas id="chartCanvas"></canvas>
+							<label for="footerText">Pie de P&aacute;gina:</label>
+							<textarea class="form-control" rows="5" id="footerText"></textarea>
 						</div>
 					</div>
 					<div class="widget-main no-padding">
@@ -134,6 +136,8 @@ var tipoGrafico = '${grafico.tipo}';
 var grafico = ${json_grafico};
 var detalleGrafico = ${json_detalleGrafico};
 var data = [];
+var attributes = [];
+var footer = '';
 
 var copyPasteBox = $("#copy-paste-box");
 var chartBox = $("#chart-box");
@@ -187,10 +191,13 @@ $(function () {
 	});
 	
 	$('body').on('click','.odom-guardar-grafico',function(e){
+		var ctrlFooter = $('#footerText');
+		footer = ctrlFooter.val();
 		if($.isArray(data) && data.length > 0){
 			var item = {
 						'data' : data,
-						'attributes' : attributes
+						'attributes' : attributes,
+						'footer' : footer
 						};
 			var info = JSON.stringify(item);
 			$.post('${pageContext.request.contextPath}/saveDetalle', {'info' : info})
@@ -218,8 +225,6 @@ $(function () {
 	var labelDataset = [];
 	
 	var chartDataset = [];
-	
-	var attributes = [];
 	
 	var chartData = {
 	        labels: labelDataset,
@@ -465,6 +470,8 @@ $(function () {
 		data = JSON.parse(detalleGrafico.data);
 		if($.isArray(data) && data.length > 0){
 			processInformation(data, window.myBar);
+			var ctrlFooter = $('#footerText');
+			ctrlFooter.val(detalleGrafico.footer);
 			copyPasteBox.hide();
 			chartBox.show();
 		}

@@ -334,6 +334,7 @@ public class WebController {
 			params.put("detalle.codigo", detalleGrafico.getCodigo());
 			params.put("detalle.data", jsonObject.get("data"));
 			params.put("detalle.attributes", jsonObject.get("attributes"));
+			params.put("detalle.footer", jsonObject.get("footer"));
 
 			detalleGrafico = restTemplate.postForObject(WebConstants.restSaveDetalleGrafico, null, DetalleGrafico.class, params);
 			params.clear();

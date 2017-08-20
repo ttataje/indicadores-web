@@ -766,9 +766,11 @@ $(function () {
 		tipoGrafico = grafico.tipo;
 	      
 	    $('.modal-body-canvas').empty();
-		$('.modal-body-canvas').append('<canvas id="chartCanvas"></canvas>');
-	    
+		$('.modal-body-canvas').append('<canvas id="' + chart_id + '"></canvas>');
+		$('.modal-body-canvas').append('<span id="pie_' + chart_id + '"></span>')
+
 		var ctx = document.getElementById(chart_id).getContext('2d');
+		var pie = document.getElementById("pie_" + chart_id);
 
 		var labelDataset = [];
 		
@@ -1156,7 +1158,7 @@ $(function () {
 		}
 		
 		processInformation(data,chart);
-
+		pie.value = detalleGrafico.footer;
 	}
 });
 </script>

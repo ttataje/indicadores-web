@@ -1,6 +1,5 @@
 package pe.gob.regionica.indicadores.web.bean;
 
-import java.math.BigDecimal;
 
 public class DetalleGrafico extends GenericBean {
 
@@ -13,6 +12,8 @@ public class DetalleGrafico extends GenericBean {
 	private String data;
 
 	private String attributes;
+
+	private String footer;
 
 	public Long getCodigo() {
 		return codigo;
@@ -44,6 +45,14 @@ public class DetalleGrafico extends GenericBean {
 
 	public void setAttributes(String attributes) {
 		this.attributes = attributes;
+	}
+
+	public String getFooter() {
+		return footer;
+	}
+
+	public void setFooter(String footer) {
+		this.footer = footer;
 	}
 
 }

@@ -23,7 +23,7 @@ public class WebConstants {
 	// Operaciones DetalleGrafico
 	public static final String restAddDetalleGrafico = restServer + "/rest/detalleGrafico/guardar?detalle.codigo={detalle.codigo}&detalle.grafico.codigo={detalle.grafico.codigo}";
 	
-	public static final String restSaveDetalleGrafico = restServer + "/rest/detalleGrafico/guardar?detalle.codigo={detalle.codigo}&detalle.data={detalle.data}&detalle.attributes={detalle.attributes}";
+	public static final String restSaveDetalleGrafico = restServer + "/rest/detalleGrafico/guardar?detalle.codigo={detalle.codigo}&detalle.data={detalle.data}&detalle.attributes={detalle.attributes}&detalle.footer={detalle.footer}";
 	
 	public static final String restGetDetallePorGrafico = restServer + "/rest/detalleGrafico/getByChart?codigo={codigo}";
 	
