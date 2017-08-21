@@ -47,8 +47,14 @@
 						</div>
 						<div id="chart-box" class="table-responsive">
 							<canvas id="chartCanvas"></canvas>
-							<label for="footerText">Pie de P&aacute;gina:</label>
-							<textarea class="form-control" rows="5" id="footerText"></textarea>
+							<div class="form-horizontal">
+								<div class="form-group">
+									<label class="col-sm-2 control-label" for="footerText">Pie de P&aacute;gina:</label>
+									<div class="col-sm-9">
+										<textarea class="form-control" rows="5" id="footerText"></textarea>
+									</div>
+								</div>
+							</div>
 						</div>
 					</div>
 					<div class="widget-main no-padding">
@@ -455,14 +461,22 @@ $(function () {
 				copyPasteBox.hide();
 				chartBox.show();
 			}else{
+				if($('#footerText').is(':focus')){
+					
+				}else{
+					alertInfo.fadeTo(2000, 500).slideUp(500, function(){
+						alertInfo.slideUp(500);
+					});
+				}
+			}
+		}else{
+			if($('#footerText').is(':focus')){
+				
+			}else{
 				alertInfo.fadeTo(2000, 500).slideUp(500, function(){
 					alertInfo.slideUp(500);
 				});
 			}
-		}else{
-			alertInfo.fadeTo(2000, 500).slideUp(500, function(){
-				alertInfo.slideUp(500);
-			});
 		}
 	});
 	
