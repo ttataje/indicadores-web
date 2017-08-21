@@ -228,9 +228,11 @@ $(function () {
 					var div = $("<div class='new_page' style='position:relative; width: 297mm; min-height: 210mm; padding: 20mm; margin: 10mm auto; background: white;'></div>");
 					var span = $("<span style='font-family: arial; font-weight: bold; color: #000000; font-size: large;'>" + data.text + "</span>");
 					var canvas = $("<canvas id='chart_"+ data.codigo + "' style='width: 270mm; min-height: 150mm;'></canvas>");
+					var pie = $("<span id='pie_"+ data.codigo + "'></span>");
 					body.append(div);
 					div.append(span);
 					div.append(canvas);
+					div.append(pie);
 
 					$.post('${pageContext.request.contextPath}/publico/loadChartData', {"codigo" : data.codigo})
 					.done(function (d) {
@@ -484,8 +486,13 @@ $(function () {
 	      
 	    $('.modal-body-canvas').empty();
 		$('.modal-body-canvas').append('<canvas id="chartCanvas"></canvas>');
+
+		if( $('#pie_'+chart_id).length ){}else{
+			$('#'+chart_id).after('<span id="pie_' +  + '"></span>');
+		};
 	    
 		var ctx = document.getElementById(chart_id).getContext('2d');
+		var pie = document.getElementById("pie_" + chart_id);
 
 		var labelDataset = [];
 		
@@ -873,7 +880,7 @@ $(function () {
 		}
 		
 		processInformation(data,chart);
-
+		pie.innerHTML = detalleGrafico.footer;
 	}
 });
 </script>
